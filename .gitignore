@@ -1,0 +1,52 @@
+# =========================
+# Large model directories
+# =========================
+Llama-3.2-3B-Instruct/
+Phi-3-mini-4k-instruct/
+
+# =========================
+# Dataset directories
+# =========================
+cnn_dailymail/
+xsum/
+newsroom/
+news-qa-summarization/
+
+# =========================
+# Papers / large documents
+# =========================
+*.pdf
+
+# =========================
+# Model / ML large files
+# =========================
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.arrow
+*.parquet
+
+# =========================
+# Python cache and env
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+
+.venv/
+venv/
+env/
+.env
+
+# =========================
+# OS / IDE files
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
