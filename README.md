@@ -69,6 +69,47 @@ python main.py --model_name_or_path ./Llama-3.2-3B-Instruct --quantization_metho
 
 ---
 
+## Setup on Cluster
+
+### GitHub — Add SSH Keys
+
+```bash
+ssh-keygen -t ed25519 -C "your_email@example.com"
+cat ~/.ssh/id_ed25519.pub
+git clone git@github.com:milannal1m/nlp-project-working-name.git
+```
+
+### Environment
+
+```bash
+module load devel/miniforge/25.3.1-python-3.12
+conda create -n nlp-env python -y
+conda activate nlp-env
+python -m pip install -r requirements.txt
+```
+
+### Running on Cluster
+
+```bash
+sbatch run_summarization.sh
+```
+
+### Useful SLURM Commands
+
+| Command | Description |
+|---|---|
+| `squeue --me` | Show your jobs in the queue |
+| `watch -n 5 squeue --me` | Live-refresh queue status every 5s |
+| `tail -f logs/<jobname>_<jobid>.out` | Stream live log output |
+| `scancel <jobid>` | Cancel a specific job |
+| `scancel -u <username>` | Cancel all your jobs |
+| `scontrol show job <jobid>` | Full job details (node, pending reason, etc.) |
+| `sacct -j <jobid> --format=JobID,State,Elapsed,MaxRSS` | Runtime and memory after job ends |
+| `sinfo -p gpu_a100_il` | Check partition availability |
+
+For anything else related to the cluster, refer to the wiki: https://wiki.bwhpc.de/e/BwUniCluster3.0/Running_Jobs#Batch_Jobs:_sbatch
+---
+
 
 ## Remaining Work
 
