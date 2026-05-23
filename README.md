@@ -1,70 +1,77 @@
-# NLP Project Status
+# News Summarization with LLaMA
 
-This project aims to build a news summarization pipeline based on LLaMA-family models and to implement evaluation metrics according to the requirements in `NLP_Paper.pdf`.
-
-## Completed Work
-
-- Implemented `summary_llama.py` to load a local pretrained model and generate summaries.
-- Supported `None`, `4bit`, and `8bit` quantization modes.
-- Integrated the following datasets:
-  - `cnn_dailymail`
-  - `xsum`
-  - `newsroom`
-  - `news-qa-summarization`
-- Added local dataset loading logic with fallback from `datasets.load_dataset` to `load_from_disk`.
-- Output generated summaries to the `./summaries` directory in `JSONL` format.
-- Added progress logging for dataset name, sample count, sample index, and elapsed time.
-- Fixed compatibility for `questions` in `news-qa-summarization` to avoid `list` object attribute errors.
-
-## Current Status
-
-- The script can load the model and generate summaries for different datasets.
-- The end-to-end generation flow is working, but the formal evaluation metric implementation is still pending.
-- Additional work is required to document the `phi-3` model summary and compare results across quantization precision modes.
-
-## Remaining Work
-
-1. Implement the summary quality evaluation module strictly according to `NLP_Paper.pdf`.
-2. Write the experimental summary and performance conclusions for the `phi-3` model.
-3. Add comparison results for different quantization precision modes.
-4. Improve logging, exception handling, and model loading robustness in `summary_llama.py`.
-5. Finalize the generated results and evaluation outputs into a deliverable experiment report.
-
-## Next Priorities
-
-### 1. Evaluation Metric
-
-The next main task is to implement evaluation metrics exactly as required by `NLP_Paper.pdf`.
-
-
-### 2. `phi-3` Model Summary
-
-Document the `phi-3` experiment with:
-
-- model loading and parameter setup
-- qualitative summary quality observations
-- runtime resource and speed performance
-
-### 3. Quantization Precision Summary
-
-Add analysis for precision modes:
-
-- `None` (no quantization)
-- `4bit`
-- `8bit`
-
-Compare:
-
-- summary generation quality
-- computational performance
-- resource usage
-
-## Example Run Command
-
-```bash
-python summary_llama.py --model_name_or_path E:\University_assginment\Ulm\second_semester\NLP\Project\Llama-3.2-3B-Instruct --quantization_method 4bit
-```
+A news summarization pipeline using LLaMA-family models with support for 4-bit and 8-bit quantization. Generates summaries across multiple benchmark datasets and saves results in JSONL format for downstream evaluation.
 
 ---
 
-> Current focus: **implement the evaluation metrics required by `NLP_Paper.pdf`, then complete the `phi-3` summary and quantization precision comparisons.**
+## Project Structure
+
+| File | Description |
+|------|-------------|
+| `main.py` | Entry point — parses arguments, loads the model and datasets, runs the pipeline |
+| `model.py` | `SummarizationModel` class and `RunConfig` dataclass — handles model/tokenizer loading and inference |
+| `dataset.py` | Dataset configs, loading logic, and field extraction for each dataset |
+| `run_summarization.sh` | SLURM job script for running on bwUniCluster 3.0 |
+| `requirements.txt` | Python dependencies |
+
+Output summaries are written to `./summaries/` as `Llama_{quantization}_{dataset}_summaries.jsonl`.
+
+---
+
+## Datasets
+
+| Dataset | HuggingFace Path | Split |
+|---------|-----------------|-------|
+| CNN/DailyMail | `abisee/cnn_dailymail` | test[:500] |
+| XSum | `EdinburghNLP/xsum` | test[:500] |
+| News QA Summarization | `glnmario/news-qa-summarization` | train[:500] |
+(Newsroom doesnt work yet, missing HuggingFace repo)
+
+Datasets are downloaded automatically from HuggingFace on first run.
+
+---
+
+## Installation
+
+```bash
+conda create -n nlp-env python
+conda activate nlp-env
+python -m pip install -r requirements.txt
+```
+
+Requires a CUDA-capable GPU for reasonable performance (CPU fallback works but is very slow).
+
+---
+
+## Running
+
+### Option 1 — HuggingFace model ID (downloaded automatically)
+
+```bash
+python main.py --model_name_or_path unsloth/Llama-3.2-3B-Instruct --quantization_method 4bit
+```
+
+### Option 2 — Locally downloaded model
+
+```bash
+huggingface-cli download unsloth/Llama-3.2-3B-Instruct --local-dir ./Llama-3.2-3B-Instruct
+
+python main.py --model_name_or_path ./Llama-3.2-3B-Instruct --quantization_method 4bit
+```
+
+### Quantization options
+
+| Flag | Description |
+|------|-------------|
+| `None` | No quantization (fp16) — highest quality, most VRAM |
+| `4bit` | 4-bit NF4 quantization — recommended for most GPUs |
+| `8bit` | 8-bit quantization — middle ground |
+
+---
+
+
+## Remaining Work
+
+1. Implement evaluation metrics (ROUGE, BERTScore) as specified in `NLP_Paper.pdf`
+2. Run and document phi-3 model experiments
+3. Compare summary quality and performance across quantization modes (None / 4bit / 8bit)
