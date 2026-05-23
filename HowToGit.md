@@ -33,6 +33,8 @@ git push -u origin your-branch-name
 
 The `-u` flag sets the upstream so subsequent pushes only need `git push`.
 
+Or use the UI.
+
 ---
 
 ## Quick reference
