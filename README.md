@@ -34,7 +34,7 @@ Datasets are downloaded automatically from HuggingFace on first run.
 ## Installation
 
 ```bash
-conda create -n nlp-env python
+conda create -n nlp-env python=3.11 -y
 conda activate nlp-env
 python -m pip install -r requirements.txt
 ```
@@ -83,7 +83,8 @@ git clone git@github.com:milannal1m/nlp-project-working-name.git
 
 ```bash
 module load devel/miniforge/25.3.1-python-3.12
-conda create -n nlp-env python -y
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda create -n nlp-env python=3.11 -y
 conda activate nlp-env
 python -m pip install -r requirements.txt
 ```

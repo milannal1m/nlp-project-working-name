@@ -28,7 +28,7 @@ class SummarizationModel:
             config.model_name_or_path,
             quantization_config=quant_config,
             device_map="auto",
-            torch_dtype=torch.float16 if config.quantization_method == "None" else None,
+            dtype=torch.float16 if config.quantization_method == "None" else None,
         )
         self.config = config
 

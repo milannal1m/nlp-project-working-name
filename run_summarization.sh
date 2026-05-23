@@ -11,6 +11,7 @@
 mkdir -p logs
 
 module load devel/miniforge/25.3.1-python-3.12
+source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate nlp-env
 
 nvidia-smi
