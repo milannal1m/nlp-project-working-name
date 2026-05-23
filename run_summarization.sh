@@ -16,5 +16,5 @@ conda activate nlp-env
 nvidia-smi
 
 python main.py \
-    --model_name_or_path ./Llama-3.2-3B-Instruct \
+    --model_name_or_path unsloth/Llama-3.2-3B-Instruct \
     --quantization_method 4bit
