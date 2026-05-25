@@ -1,3 +1,4 @@
+import re
 from datasets import load_dataset
 
 DATASET_CONFIGS = {
@@ -13,7 +14,27 @@ _FIELD_MAP = {
     #"newsroom":               ("text",     "summary"),
     "news-qa-summarization":  ("story",    "summary"),
 }
+_DATASETS_WITH_DATELINES = {"cnn_dailymail", "news-qa-summarization"}
 
+def strip_dateline(text: str) -> str:
+    """
+    Remove datelines like '(CNN) --' or 'LONDON (CNN) --' from the start
+    of CNN/DailyMail articles. Only strips if ' -- ' appears in the first
+    120 characters to avoid cutting real content.
+    """
+    # Pattern 1: '(CNN) --' or 'LONDON (CNN) --'
+    prefix = text[:120]
+    if ' -- ' in prefix:
+        cleaned = text[text.index(' -- ') + 4:]
+        if len(cleaned) > len(text) * 0.5:
+            return cleaned.lstrip()
+    
+    # Pattern 2: '(CNN)The' or '(SOURCE)Word' — no space or dash
+    cleaned = re.sub(r'^\([^)]+\)', '', text).lstrip()
+    if len(cleaned) > len(text) * 0.5:
+        return cleaned
+
+    return text
 
 def load_all_datasets() -> dict:
     result = {}
@@ -40,8 +61,10 @@ def extract_fields(dataset_name: str, item: dict) -> tuple[str, str, list | None
                 for qa in questions
                 if isinstance(qa, dict) and "q" in qa and "a" in qa
             ]
-
-    return item[text_key], item[summary_key], qa_pairs
+    news_text = item[text_key]
+    if dataset_name in _DATASETS_WITH_DATELINES:
+        news_text = strip_dateline(news_text)
+    return news_text, item[summary_key], qa_pairs
 
 
 if __name__ == "__main__":
