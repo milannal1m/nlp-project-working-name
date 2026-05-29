@@ -69,14 +69,14 @@ class Evaluator:
         print(f"Average SummaC Score: {avg_score:.4f}\n")
 
     def evaluate_qa(self, file_path): #Highly recommended to call only in a cluster environment as it would likely crash any local machine.
-        """Calculates factual consistency using the dual-context QA pipeline. Designed specifically for NEWSQASum dataset"""
+        """Calculates factual consistency using the dual-context QA pipeline."""
 
         file_name = os.path.basename(file_path)
         print(f"\n--- Evaluating QA Factuality for {file_name} ---")
         try:
             from qafacteval import QAFactEval
         except ImportError:
-            print("ERROR: 'qafacteval library not found. Make sure it's installed on the cluster.")
+            print("ERROR: 'qafacteval' library not found. Make sure it's installed on the cluster.")
             return
 
         print(f"Initializing QAFactEval pipeline (requires CUDA for full execution)...")
