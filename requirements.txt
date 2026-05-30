@@ -6,4 +6,4 @@ bitsandbytes>=0.43.0
 accelerate>=0.27.0
 sumy==0.12.0
 evaluate>=0.4.0
-summac
+# summac must be installed separately: pip install --no-deps git+https://github.com/tingofurro/summac.git
