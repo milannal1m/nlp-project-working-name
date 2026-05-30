@@ -4,7 +4,10 @@ import json
 import os
 import time
 
+import nltk
 import torch
+
+nltk.download('punkt_tab', quiet=True)
 
 from dataset import extract_fields, load_datasets_streaming
 from model import RunConfig, SummarizationModel
