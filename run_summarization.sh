@@ -2,9 +2,9 @@
 #SBATCH --job-name=llama-summarization
 #SBATCH --partition=gpu_a100_il
 #SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=16
-#SBATCH --mem=64000
-#SBATCH --time=08:00:00
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=32000
+#SBATCH --time=20:00:00
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --error=logs/%x_%j.err
 
@@ -18,4 +18,12 @@ nvidia-smi
 
 python main.py \
     --model_name_or_path unsloth/Llama-3.2-3B-Instruct \
-    --quantization_method 4bit
+    --quantization_method 4bit &
+EXPERIMENT_PID=$!
+
+sleep 3600
+nvidia-smi
+
+# Auf Training warten
+wait $EXPERIMENT_PID
+

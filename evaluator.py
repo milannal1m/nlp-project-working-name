@@ -2,6 +2,8 @@ import json
 import evaluate
 import os
 import logging
+import torch
+import statistics
 from summac.model_summac import SummaCConv
 
 class Evaluator:
@@ -35,19 +37,20 @@ class Evaluator:
         rouge_score = self.rouge.compute(predictions=generated_summaries, references=reference_summaries)
         meteor_score = self.meteor.compute(predictions=generated_summaries, references=reference_summaries)
         bert_score = self.bertscore.compute(predictions=generated_summaries, references=reference_summaries, lang="en")
-        avg_bert_f1 = sum(bert_score['f1']) / len(bert_score['f1'])
 
         return {
             "bleu": bleu_score['bleu'],
             "rougeL": rouge_score['rougeL'],
             "meteor": meteor_score['meteor'],
-            "bertscore_f1": avg_bert_f1,
+            "bertscore_f1": statistics.mean(bert_score['f1']),
+            "bertscore_f1_std": statistics.stdev(bert_score['f1']),
         }
 
     def evaluate_summac(self, file_path):
         """Calculates factual consistency against the original news text using SummaC."""
         if self.summac_model is None:
-            self.summac_model = SummaCConv(models=["vitc"], bins="percentile", granularity="sentence", device="cpu")
+            device = "cuda" if torch.cuda.is_available() else "cpu"
+            self.summac_model = SummaCConv(models=["vitc"], bins="percentile", granularity="sentence", device=device)
 
         original_text = []
         generated_summaries = []
@@ -59,9 +62,12 @@ class Evaluator:
                 generated_summaries.append(data['generated_summary'])
 
         results = self.summac_model.score(original_text, generated_summaries)
-        avg_score = sum(results["scores"]) / len(results["scores"])
+        scores = results["scores"]
 
-        return {"summac": avg_score}
+        return {
+            "summac": statistics.mean(scores),
+            "summac_std": statistics.stdev(scores),
+        }
 
     def evaluate_qa(self, file_path):  # Highly recommended to call only in a cluster environment.
         """Calculates factual consistency using the dual-context QA pipeline."""
@@ -91,8 +97,11 @@ class Evaluator:
         final_scores = [res[0]['qa-eval']['lerc_quac'] for res in results]
 
         if final_scores:
-            return {"qa_eval": sum(final_scores) / len(final_scores)}
-        return {"qa_eval": None}
+            return {
+                "qa_eval": statistics.mean(final_scores),
+                "qa_eval_std": statistics.stdev(final_scores),
+            }
+        return {"qa_eval": None, "qa_eval_std": None}
 
     def run_and_log(self, file_path, log_path="evaluation.log"):
         """Runs all metrics and appends results to evaluation.log."""
@@ -111,8 +120,18 @@ class Evaluator:
         all_metrics.update(self.evaluate_summac(file_path))
         all_metrics.update(self.evaluate_qa(file_path))
 
+        logged = set()
         for key, value in all_metrics.items():
-            logger.info(f"  {key}: {value:.4f}" if isinstance(value, float) else f"  {key}: {value}")
+            if key in logged or key.endswith("_std"):
+                continue
+            std = all_metrics.get(f"{key}_std")
+            if std is not None:
+                logger.info(f"  {key}: {value:.4f} ± {std:.4f}")
+            elif isinstance(value, float):
+                logger.info(f"  {key}: {value:.4f}")
+            else:
+                logger.info(f"  {key}: {value}")
+            logged.add(key)
 
         logger.info("")
         return all_metrics

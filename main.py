@@ -6,9 +6,9 @@ import time
 
 import torch
 
-from dataset import extract_fields
+from dataset import extract_fields, load_datasets_streaming
 from model import RunConfig, SummarizationModel
-from baseline_lead import load_datasets_streaming, run_lead
+from baseline_lead import run_lead
 from baseline_textrank import run_textrank
 from baseline_tfidf import run_tfidf
 from evaluator import Evaluator
@@ -23,8 +23,8 @@ def parse_args():
         choices=["None", "4bit", "8bit"],
         default="None",
     )
-    parser.add_argument("--sample", type=int, default=500,
-                        help="Articles per dataset. Use 10-20 locally, 500 on cluster.")
+    parser.add_argument("--sample", type=int, default=None,
+                        help="Articles per dataset. Omit to use the full test set.")
     parser.add_argument("--output_dir", type=str, default="./summaries")
     parser.add_argument("--log_path", type=str, default="evaluation.log")
     return parser.parse_args()
@@ -89,8 +89,9 @@ def main() -> None:
     else:
         print("Warning: no GPU found, running on CPU (this will be slow)", flush=True)
 
-    print(f"\nLoading datasets (streaming, sample={args.sample})...", flush=True)
-    datasets = load_datasets_streaming(args.sample)
+    label = f"sample={args.sample}" if args.sample is not None else "full test sets"
+    print(f"\nLoading datasets ({label}, streaming)...", flush=True)
+    datasets = load_datasets_streaming(sample=args.sample)
 
     print("\n--- Running Lead-1 and Lead-3 baselines ---", flush=True)
     for n in [1, 3]:
