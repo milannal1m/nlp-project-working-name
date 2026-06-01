@@ -136,4 +136,11 @@
 - **Compression ratio:** Defined as `avg_gen_len / avg_doc_len` (token-level).
 - **Test sets:** CNN/DailyMail test (11,490 samples), XSum test (11,334 samples) — matching the dataset statistics in Table 1 of the paper.
 - **Prompt template:** `"News: {news}\nSummarize the news in two sentences. Summary:"` (zero-shot, as described in Section 3.1 of the paper).
-- **Source files:** Generated from JSONL files in `summaries/` directory. Each record contains `news`, `reference_summary`, and `generated_summary` fields.
+- **Source files:** Generated from JSONL files in the `summaries/` directory. Each line in these files is a self-contained JSON object with the following structure:
+  ```json
+  {
+    "news": "The full text of the original news article...",
+    "reference_summary": "The ground-truth human-written summary...",
+    "generated_summary": "The output produced by the specific model..."
+  }
+  ```
