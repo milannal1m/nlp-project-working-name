@@ -2,7 +2,7 @@
 
 **Project**: Evaluating Quantized Small Language Models for News Summarization  
 **Datasets evaluated**: CNN/DailyMail (test, n=11,490), XSum (test, n=11,334)  
-**Metrics computed**: ROUGE-1, ROUGE-2, ROUGE-L (F1, lightweight tokenizer)  
+**Metrics computed**: ROUGE-L (F1, lightweight tokenizer)  
 **Pending metrics**: BLEU, METEOR, BERTScore, SummaC_Conv, QA-Eval (require cluster environment)
 
 ---
@@ -38,13 +38,13 @@
 
 ### 2.1 Lexical Overlap (ROUGE F1)
 
-| Family | Model | ROUGE-1 | ROUGE-2 | ROUGE-L |
-|--------|-------|--------:|--------:|--------:|
-| Conventional / Extractive | **Lead-3** | **0.3838** ± 0.1193 | **0.1692** ± 0.1126 | **0.2428** ± 0.1024 |
-| SLM / 4-bit | **Llama 3.2 3B-Ins (4-bit)** | 0.3690 ± 0.1021 | 0.1371 ± 0.0816 | 0.2359 ± 0.0804 |
-| Conventional / Extractive | TextRank | 0.2844 ± 0.1109 | 0.0875 ± 0.0911 | 0.1808 ± 0.0867 |
-| Conventional / Extractive | TF-IDF | 0.2684 ± 0.1097 | 0.0800 ± 0.0910 | 0.1733 ± 0.0893 |
-| Conventional / Extractive | Lead-1 | 0.2640 ± 0.1219 | 0.0941 ± 0.0962 | 0.1832 ± 0.0977 |
+| Family | Model | ROUGE-L |
+|--------|-------|--------:|
+| Conventional / Extractive | **Lead-3** | **0.2428** ± 0.1024 |
+| SLM / 4-bit | **Llama 3.2 3B-Ins (4-bit)** | 0.2359 ± 0.0804 |
+| Conventional / Extractive | TextRank | 0.1808 ± 0.0867 |
+| Conventional / Extractive | TF-IDF | 0.1733 ± 0.0893 |
+| Conventional / Extractive | Lead-1 | 0.1832 ± 0.0977 |
 
 ### 2.2 Summary Length & Compression
 
@@ -64,13 +64,13 @@
 
 ### 3.1 Lexical Overlap (ROUGE F1)
 
-| Family | Model | ROUGE-1 | ROUGE-2 | ROUGE-L |
-|--------|-------|--------:|--------:|--------:|
-| SLM / 4-bit | **Llama 3.2 3B-Ins (4-bit)** | **0.2361** ± 0.0811 | **0.0637** ± 0.0570 | **0.1646** ± 0.0626 |
-| Conventional / Extractive | Lead-3 | 0.1782 ± 0.0666 | 0.0254 ± 0.0307 | 0.1154 ± 0.0440 |
-| Conventional / Extractive | TF-IDF | 0.1736 ± 0.0717 | 0.0211 ± 0.0338 | 0.1151 ± 0.0486 |
-| Conventional / Extractive | TextRank | 0.1660 ± 0.0677 | 0.0270 ± 0.0352 | 0.1147 ± 0.0467 |
-| Conventional / Extractive | Lead-1 | 0.1592 ± 0.0809 | 0.0160 ± 0.0322 | 0.1177 ± 0.0597 |
+| Family | Model | ROUGE-L |
+|--------|-------|--------:|
+| SLM / 4-bit | **Llama 3.2 3B-Ins (4-bit)** | **0.1646** ± 0.0626 |
+| Conventional / Extractive | Lead-3 | 0.1154 ± 0.0440 |
+| Conventional / Extractive | TF-IDF | 0.1151 ± 0.0486 |
+| Conventional / Extractive | TextRank | 0.1147 ± 0.0467 |
+| Conventional / Extractive | Lead-1 | 0.1177 ± 0.0597 |
 
 ### 3.2 Summary Length & Compression
 

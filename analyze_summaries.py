@@ -172,13 +172,11 @@ def write_markdown(all_results: list[dict], path: Path):
 
         # Overview table
         f.write("## Overview — ROUGE Scores\n\n")
-        f.write("| File | Samples | ROUGE-1 F1 | ROUGE-2 F1 | ROUGE-L F1 |\n")
-        f.write("|------|--------:|-----------:|-----------:|-----------:|\n")
+        f.write("| File | Samples | ROUGE-L F1 |\n")
+        f.write("|------|--------:|-----------:|\n")
         for r in all_results:
             f.write(
                 f"| {r['file']} | {r['num_samples']} "
-                f"| {r['rouge1_f1']:.4f} ± {r['rouge1_f1_std']:.4f} "
-                f"| {r['rouge2_f1']:.4f} ± {r['rouge2_f1_std']:.4f} "
                 f"| {r['rougeL_f1']:.4f} ± {r['rougeL_f1_std']:.4f} |\n"
             )
         f.write("\n---\n\n")
@@ -201,15 +199,13 @@ def write_markdown(all_results: list[dict], path: Path):
         # Per-dataset breakdowns
         for ds_name, ds_results in [("CNN/DailyMail", cnn_results), ("XSum", xsum_results)]:
             f.write(f"## {ds_name} — Model Comparison\n\n")
-            f.write("| Model | ROUGE-1 F1 | ROUGE-2 F1 | ROUGE-L F1 | Avg Gen Len | Compression |\n")
-            f.write("|-------|----------:|-----------:|-----------:|------------:|------------:|\n")
+            f.write("| Model | ROUGE-L F1 | Avg Gen Len | Compression |\n")
+            f.write("|-------|-----------:|------------:|------------:|\n")
             # Sort by ROUGE-L descending
             for r in sorted(ds_results, key=lambda x: x["rougeL_f1"], reverse=True):
                 mn = model_name(r["file"])
                 f.write(
                     f"| {mn} "
-                    f"| {r['rouge1_f1']:.4f} "
-                    f"| {r['rouge2_f1']:.4f} "
                     f"| {r['rougeL_f1']:.4f} "
                     f"| {r['avg_gen_len']:.1f} "
                     f"| {r['avg_compression']:.4f} |\n"
