@@ -12,7 +12,7 @@ mkdir -p logs
 
 module load devel/miniforge/25.3.1-python-3.12
 source "$(conda info --base)/etc/profile.d/conda.sh"
-conda activate nlp-env
+conda activate nlp-project
 
 python main.py \
     --model_name_or_path unsloth/Llama-3.2-3B-Instruct \
