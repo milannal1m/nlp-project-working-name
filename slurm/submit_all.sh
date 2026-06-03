@@ -15,18 +15,26 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p logs results/metrics
 
+# Optional partition overrides (sbatch CLI flags win over the #SBATCH defaults).
+# Set CPU_PARTITION / GPU_PARTITION in the environment to override without
+# editing the scripts, e.g.  CPU_PARTITION=cpu_il bash slurm/submit_all.sh
+CPU_PART_ARG=""
+GPU_PART_ARG=""
+[[ -n "${CPU_PARTITION:-}" ]] && CPU_PART_ARG="--partition=${CPU_PARTITION}"
+[[ -n "${GPU_PARTITION:-}" ]] && GPU_PART_ARG="--partition=${GPU_PARTITION}"
+
 echo "Submitting generation stages..."
-JID_BASE=$(sbatch --parsable slurm/gen_baselines.sbatch)
+JID_BASE=$(sbatch --parsable ${CPU_PART_ARG} slurm/gen_baselines.sbatch)
 echo "  gen_baselines : array job $JID_BASE"
-JID_LLM=$(sbatch --parsable slurm/gen_llms.sbatch)
+JID_LLM=$(sbatch --parsable ${GPU_PART_ARG} slurm/gen_llms.sbatch)
 echo "  gen_llms      : array job $JID_LLM"
 
 echo "Submitting evaluation (after generation)..."
-JID_EVAL=$(sbatch --parsable --dependency="afterany:${JID_BASE}:${JID_LLM}" slurm/evaluate.sbatch)
+JID_EVAL=$(sbatch --parsable ${GPU_PART_ARG} --dependency="afterany:${JID_BASE}:${JID_LLM}" slurm/evaluate.sbatch)
 echo "  evaluate      : array job $JID_EVAL"
 
 echo "Submitting aggregation (after evaluation)..."
-JID_AGG=$(sbatch --parsable --dependency="afterany:${JID_EVAL}" slurm/aggregate.sbatch)
+JID_AGG=$(sbatch --parsable ${CPU_PART_ARG} --dependency="afterany:${JID_EVAL}" slurm/aggregate.sbatch)
 echo "  aggregate     : job $JID_AGG"
 
 cat <<EOF

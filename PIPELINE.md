@@ -38,20 +38,28 @@ gen_llms     (GPU array 4-9)  ┘
 
 ## Usage
 
+**One command (recommended)** — pulls the branch, sets up the env, submits everything:
+
 ```bash
-# 1. One-time environment setup (login node)
-bash slurm/setup_env.sh
+bash slurm/run_all.sh                 # first run: pull + setup + submit
+bash slurm/run_all.sh --skip-setup    # later runs: env already built
+bash slurm/run_all.sh --cpu-part cpu_il   # if your CPU partition isn't "cpu"
+```
 
-# 2. (optional) inspect the matrix
-python pipeline_config.py
+**Or step by step:**
 
-# 3. Submit the whole pipeline
-bash slurm/submit_all.sh
+```bash
+bash slurm/setup_env.sh     # 1. one-time env setup (login node)
+python pipeline_config.py   # 2. (optional) inspect the model matrix
+bash slurm/submit_all.sh    # 3. submit the whole pipeline
 
 # 4. Monitor
 watch -n 10 squeue --me
 tail -f logs/sum-*_*.out
 ```
+
+> Access requires being on a bwUniCluster-permitted network — from outside
+> (home internet) connect via your university VPN first, then SSH in.
 
 ## Outputs
 
