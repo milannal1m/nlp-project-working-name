@@ -47,8 +47,6 @@ class Evaluator:
 
         return {
             "bleu": bleu_score['bleu'],
-            "rouge1": rouge_score['rouge1'],
-            "rouge2": rouge_score['rouge2'],
             "rougeL": rouge_score['rougeL'],
             "meteor": meteor_score['meteor'],
             "bertscore_f1": statistics.mean(bert_score['f1']),
@@ -209,8 +207,6 @@ def analyze_file(filepath: str) -> dict:
     ref_sents = []
     gen_sents = []
     compression_ratios = []
-    r1_scores = []
-    r2_scores = []
     rl_scores = []
 
     with open(filepath, "r", encoding="utf-8") as f:
@@ -233,11 +229,7 @@ def analyze_file(filepath: str) -> dict:
             if len(news_tok) > 0:
                 compression_ratios.append(len(gen_tok) / len(news_tok))
 
-            r1 = rouge_n(ref, gen, 1)
-            r2 = rouge_n(ref, gen, 2)
             rl = rouge_l(ref, gen)
-            r1_scores.append(r1["f1"])
-            r2_scores.append(r2["f1"])
             rl_scores.append(rl["f1"])
 
     n = len(news_lens)
@@ -259,11 +251,7 @@ def analyze_file(filepath: str) -> dict:
         "avg_ref_sents": safe_mean(ref_sents),
         "avg_gen_sents": safe_mean(gen_sents),
         "avg_compression": safe_mean(compression_ratios),
-        # ROUGE scores
-        "rouge1_f1": safe_mean(r1_scores),
-        "rouge1_f1_std": safe_stdev(r1_scores),
-        "rouge2_f1": safe_mean(r2_scores),
-        "rouge2_f1_std": safe_stdev(r2_scores),
+        # ROUGE scores (ROUGE-1 / ROUGE-2 intentionally excluded)
         "rougeL_f1": safe_mean(rl_scores),
         "rougeL_f1_std": safe_stdev(rl_scores),
     }
@@ -281,7 +269,7 @@ def _model_name(filename: str) -> str:
 
 
 def write_markdown(all_results: list[dict], path: Path):
-    """Write a Markdown analysis report with ROUGE-1, ROUGE-2, ROUGE-L."""
+    """Write a Markdown analysis report (ROUGE-L only; ROUGE-1/2 excluded)."""
     cnn_results = [r for r in all_results if "cnn_dailymail" in r["file"]]
     xsum_results = [r for r in all_results if "xsum" in r["file"]]
 
@@ -294,14 +282,12 @@ def write_markdown(all_results: list[dict], path: Path):
         f.write("---\n\n")
 
         # Overview table
-        f.write("## Overview — ROUGE Scores\n\n")
-        f.write("| File | Samples | ROUGE-1 F1 | ROUGE-2 F1 | ROUGE-L F1 |\n")
-        f.write("|------|--------:|-----------:|-----------:|-----------:|\n")
+        f.write("## Overview — ROUGE-L Scores\n\n")
+        f.write("| File | Samples | ROUGE-L F1 |\n")
+        f.write("|------|--------:|-----------:|\n")
         for r in all_results:
             f.write(
                 f"| {r['file']} | {r['num_samples']} "
-                f"| {r['rouge1_f1']:.4f} ± {r['rouge1_f1_std']:.4f} "
-                f"| {r['rouge2_f1']:.4f} ± {r['rouge2_f1_std']:.4f} "
                 f"| {r['rougeL_f1']:.4f} ± {r['rougeL_f1_std']:.4f} |\n"
             )
         f.write("\n---\n\n")
@@ -324,15 +310,13 @@ def write_markdown(all_results: list[dict], path: Path):
         # Per-dataset breakdowns
         for ds_name, ds_results in [("CNN/DailyMail", cnn_results), ("XSum", xsum_results)]:
             f.write(f"## {ds_name} — Model Comparison\n\n")
-            f.write("| Model | ROUGE-1 F1 | ROUGE-2 F1 | ROUGE-L F1 | Avg Gen Len | Compression |\n")
-            f.write("|-------|----------:|-----------:|-----------:|------------:|------------:|\n")
+            f.write("| Model | ROUGE-L F1 | Avg Gen Len | Compression |\n")
+            f.write("|-------|-----------:|------------:|------------:|\n")
             # Sort by ROUGE-L descending
             for r in sorted(ds_results, key=lambda x: x["rougeL_f1"], reverse=True):
                 mn = _model_name(r["file"])
                 f.write(
                     f"| {mn} "
-                    f"| {r['rouge1_f1']:.4f} "
-                    f"| {r['rouge2_f1']:.4f} "
                     f"| {r['rougeL_f1']:.4f} "
                     f"| {r['avg_gen_len']:.1f} "
                     f"| {r['avg_compression']:.4f} |\n"
@@ -381,8 +365,6 @@ def write_csv(all_results: list[dict], path: Path):
         "file", "num_samples",
         "avg_news_len", "avg_ref_len", "avg_gen_len", "std_gen_len",
         "avg_ref_sents", "avg_gen_sents", "avg_compression",
-        "rouge1_f1", "rouge1_f1_std",
-        "rouge2_f1", "rouge2_f1_std",
         "rougeL_f1", "rougeL_f1_std",
     ]
     with open(path, "w", newline="", encoding="utf-8") as f:

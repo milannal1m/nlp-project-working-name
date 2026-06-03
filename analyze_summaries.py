@@ -87,8 +87,6 @@ def analyze_file(filepath: str) -> dict:
     ref_sents = []
     gen_sents = []
     compression_ratios = []
-    r1_scores = []
-    r2_scores = []
     rl_scores = []
 
     with open(filepath, "r", encoding="utf-8") as f:
@@ -111,11 +109,7 @@ def analyze_file(filepath: str) -> dict:
             if len(news_tok) > 0:
                 compression_ratios.append(len(gen_tok) / len(news_tok))
 
-            r1 = rouge_n(ref, gen, 1)
-            r2 = rouge_n(ref, gen, 2)
             rl = rouge_l(ref, gen)
-            r1_scores.append(r1["f1"])
-            r2_scores.append(r2["f1"])
             rl_scores.append(rl["f1"])
 
     n = len(news_lens)
@@ -137,11 +131,7 @@ def analyze_file(filepath: str) -> dict:
         "avg_ref_sents": safe_mean(ref_sents),
         "avg_gen_sents": safe_mean(gen_sents),
         "avg_compression": safe_mean(compression_ratios),
-        # ROUGE scores
-        "rouge1_f1": safe_mean(r1_scores),
-        "rouge1_f1_std": safe_stdev(r1_scores),
-        "rouge2_f1": safe_mean(r2_scores),
-        "rouge2_f1_std": safe_stdev(r2_scores),
+        # ROUGE scores (ROUGE-1 / ROUGE-2 intentionally excluded)
         "rougeL_f1": safe_mean(rl_scores),
         "rougeL_f1_std": safe_stdev(rl_scores),
     }
@@ -245,8 +235,6 @@ def write_csv(all_results: list[dict], path: Path):
         "file", "num_samples",
         "avg_news_len", "avg_ref_len", "avg_gen_len", "std_gen_len",
         "avg_ref_sents", "avg_gen_sents", "avg_compression",
-        "rouge1_f1", "rouge1_f1_std",
-        "rouge2_f1", "rouge2_f1_std",
         "rougeL_f1", "rougeL_f1_std",
     ]
     with open(path, "w", newline="", encoding="utf-8") as f:

@@ -13,6 +13,13 @@ class RunConfig:
     prompt_template: str = "News: {news}\nSummarize the news in two sentences. Summary:"
     max_input_length: int = 2048
     max_new_tokens: int = 150
+    # Output prefix for summary files (e.g. "Llama_4bit"). Defaults to the
+    # historical "Llama_{quant}" scheme when left unset.
+    model_label: Optional[str] = None
+
+    def __post_init__(self):
+        if self.model_label is None:
+            self.model_label = f"Llama_{self.quantization_method}"
 
 
 class SummarizationModel:
@@ -20,7 +27,10 @@ class SummarizationModel:
         quant_config = self._build_quantization_config(config.quantization_method)
         print(f"Loading model with quantization method: {config.quantization_method}")
 
-        self.tokenizer = AutoTokenizer.from_pretrained(config.model_name_or_path)
+        # trust_remote_code is required for some instruct models (e.g. Phi-3).
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            config.model_name_or_path, trust_remote_code=True
+        )
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
 
@@ -29,6 +39,8 @@ class SummarizationModel:
             quantization_config=quant_config,
             device_map="auto",
             dtype=torch.float16 if config.quantization_method == "None" else None,
+            trust_remote_code=True,
+            attn_implementation="eager",
         )
         self.config = config
 

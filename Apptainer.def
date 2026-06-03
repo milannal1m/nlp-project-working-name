@@ -1,0 +1,40 @@
+# Optional Apptainer/Singularity image for the evaluation pipeline.
+#
+# The conda route in slurm/setup_env.sh is the tested default on bwUniCluster.
+# This container is provided for reproducibility / portability.
+#
+# Build (needs fakeroot or a build host with root):
+#     apptainer build nlp-pipeline.sif Apptainer.def
+#
+# Run a stage (bind the repo and HF cache, request a GPU with --nv):
+#     apptainer exec --nv \
+#         --bind "$PWD":/work --bind "$HOME/.cache/huggingface":/hf \
+#         --env HF_HOME=/hf --pwd /work \
+#         nlp-pipeline.sif python run_evaluation.py --index 0
+#
+# To use it from SLURM, replace the `conda activate nlp-env` + `python ...`
+# lines in the sbatch scripts with the `apptainer exec ... python ...` form.
+
+Bootstrap: docker
+From: pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime
+
+%files
+    requirements.txt /opt/requirements.txt
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
+    python -m pip install --upgrade pip
+    # torch already provided by the base image; install the rest.
+    grep -vE '^torch|^--extra-index-url' /opt/requirements.txt > /opt/req-notorch.txt
+    python -m pip install -r /opt/req-notorch.txt
+    python -m pip install --no-deps git+https://github.com/tingofurro/summac.git || true
+    python -m pip install qafacteval || true
+    python -c "import nltk; nltk.download('punkt_tab'); nltk.download('punkt')" || true
+
+%environment
+    export TOKENIZERS_PARALLELISM=false
+    export HF_HOME=/hf
+
+%labels
+    Description "News summarization evaluation pipeline (BLEU/ROUGE-L/METEOR/BERTScore/SummaC/QAFactEval)"
