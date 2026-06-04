@@ -4,12 +4,35 @@ from typing import Optional
 # --------------------------------------------------------------------------
 # Global run settings
 # --------------------------------------------------------------------------
-SAMPLE: int = 500
+# SAMPLE caps how many records per dataset are generated AND evaluated.
+# Set to an int (e.g. 500) for a quick run, or None to use the FULL test split.
+SAMPLE: Optional[int] = None
 DATASETS: list[str] = ["cnn_dailymail", "xsum"]
 OUTPUT_DIR: str = "summaries"
 RESULTS_DIR: str = "results"
 METRICS_DIR: str = "results/metrics"
 CHARTS_DIR: str = "results/charts"
+
+# Canonical HuggingFace *test* split sizes. Used so that a full run (SAMPLE=None)
+# can still skip already-complete summary files: a file is "done" once it has
+# this many records. Add an entry when you add a dataset; an unknown dataset
+# falls back to "never skip" (always regenerate) so we never reuse a partial file.
+FULL_SPLIT_SIZES: dict[str, int] = {
+    "cnn_dailymail": 11490,
+    "xsum": 11334,
+}
+
+
+def target_count(dataset: str, sample: Optional[int]) -> int:
+    """How many records make a complete run for ``dataset`` given ``sample``.
+
+    With an explicit ``sample`` it is just that number; with ``sample=None``
+    (full run) it is the dataset's full test-split size, or a huge sentinel for
+    an unknown dataset so its file is never wrongly treated as complete.
+    """
+    if sample is not None:
+        return sample
+    return FULL_SPLIT_SIZES.get(dataset, 10**12)
 
 
 @dataclass
@@ -75,7 +98,7 @@ EVAL_TARGETS: list[dict] = [
 
 
 if __name__ == "__main__":
-    print(f"Sample per dataset: {SAMPLE}")
+    print(f"Sample per dataset: {SAMPLE if SAMPLE is not None else 'full split'}")
     print(f"Datasets: {DATASETS}")
     print(f"\n{len(MODELS)} model configs:")
     for i, m in enumerate(MODELS):

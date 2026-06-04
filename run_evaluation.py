@@ -7,13 +7,17 @@ from pipeline_config import EVAL_TARGETS, OUTPUT_DIR, METRICS_DIR, SAMPLE
 from evaluator import Evaluator, tokenize, sent_count
 
 
-def _truncate(src: str, dst: str, sample: int) -> int:
-    """Copy the first ``sample`` JSONL records from ``src`` to ``dst``."""
+def _truncate(src: str, dst: str, sample: int | None) -> int:
+    """Copy JSONL records from ``src`` to ``dst``.
+
+    With an int ``sample`` only the first ``sample`` records are copied; with
+    ``sample=None`` (full run) every record is copied.
+    """
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     n = 0
     with open(src, "r", encoding="utf-8") as fin, open(dst, "w", encoding="utf-8") as fout:
         for line in fin:
-            if n >= sample:
+            if sample is not None and n >= sample:
                 break
             fout.write(line)
             n += 1

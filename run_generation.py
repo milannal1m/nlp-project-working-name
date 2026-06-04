@@ -5,7 +5,7 @@ import time
 
 import nltk
 
-from pipeline_config import MODELS, DATASETS, OUTPUT_DIR, SAMPLE, output_filename
+from pipeline_config import MODELS, DATASETS, OUTPUT_DIR, SAMPLE, output_filename, target_count
 from dataset import extract_fields, load_datasets_streaming
 
 nltk.download("punkt_tab", quiet=True)
@@ -38,12 +38,13 @@ def _generate_llm(spec, datasets: dict, output_dir: str, sample: int) -> None:
     model = SummarizationModel(config)
 
     for dataset_name, data in datasets.items():
+        target = target_count(dataset_name, sample)
         output_path = os.path.join(output_dir, output_filename(spec.label, dataset_name))
-        if _has_enough(output_path, sample):
-            print(f"[skip] {output_path} already has >= {sample} samples", flush=True)
+        if _has_enough(output_path, target):
+            print(f"[skip] {output_path} already has >= {target} samples", flush=True)
             continue
         print("=" * 80, flush=True)
-        print(f"[{spec.label}] {dataset_name} (up to {sample}) -> {output_path}", flush=True)
+        print(f"[{spec.label}] {dataset_name} (target {target}) -> {output_path}", flush=True)
         start = time.time()
         with open(output_path, "w", encoding="utf-8", newline="\n") as f:
             for idx, item in enumerate(data, start=1):
@@ -59,7 +60,7 @@ def _generate_llm(spec, datasets: dict, output_dir: str, sample: int) -> None:
                 f.write(json.dumps(record, ensure_ascii=False) + "\n")
                 if idx == 1 or idx % 25 == 0:
                     print(
-                        f"  sample {idx}/{sample} | in={input_len} | gen={generated_len}",
+                        f"  sample {idx}/{target} | in={input_len} | gen={generated_len}",
                         flush=True,
                     )
         print(f"  Done in {(time.time() - start) / 60:.2f} min -> {output_path}", flush=True)
@@ -69,7 +70,10 @@ def _generate_baseline(spec, datasets: dict, output_dir: str, sample: int) -> No
     """Run a non-neural baseline (lead-n / textrank / tf-idf)."""
     # Skip cheaply if both dataset outputs already exist.
     if all(
-        _has_enough(os.path.join(output_dir, output_filename(spec.label, ds)), sample)
+        _has_enough(
+            os.path.join(output_dir, output_filename(spec.label, ds)),
+            target_count(ds, sample),
+        )
         for ds in datasets
     ):
         print(f"[skip] {spec.label}: outputs already present", flush=True)
