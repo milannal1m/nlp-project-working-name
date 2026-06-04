@@ -1,159 +1,165 @@
 # Workflow & Architecture
 
-End-to-end action flow of the summarization-evaluation pipeline: how the data is
-loaded and cleaned, how it is fed to the models, what each stage produces, and
-which functions own each transition. For *how to run* it on the cluster, see
-[`README.md`](README.md) and `slurm/run_all.sh`.
+This pipeline does two things, end to end:
+
+1. **Generate** short summaries of news articles — with 6 LLM configs and 4 simple
+   baselines.
+2. **Evaluate** those summaries against the reference summary and the source
+   article, then collect everything into one table of scores and charts.
 
 ---
 
-## 1. Action flow (states → functions → states)
+## How to run it (cluster)
 
-The pipeline is a chain of **states** (data artifacts on disk) connected by
-**functions** (the code that transforms one artifact into the next).
+One command, from inside the repo on a **login node** (after VPN + SSH):
 
-```mermaid
-flowchart TD
-    %% ---------- states are rectangles, functions are rounded ----------
-    cfg["⚙️ pipeline_config.py<br/>MODELS (10) · DATASETS (2) · SAMPLE=500<br/>EVAL_TARGETS (20 = 10×2)"]
-
-    subgraph S1["① DATA  (dataset.py)"]
-        raw[("HuggingFace test splits<br/>CNN/DailyMail · XSum")]
-        load(["load_datasets_streaming()<br/>stream + shuffle(seed=42) + take(500)"])
-        extract(["extract_fields() → strip_dateline()<br/>(news, reference_summary, qa_pairs)"])
-        raw --> load --> extract
-    end
-
-    subgraph S2["② GENERATION  (run_generation.py)"]
-        direction TB
-        llm(["_generate_llm()<br/>model.py · SummarizationModel.summarize()"])
-        base(["_generate_baseline()<br/>baseline_lead / textrank / tfidf"])
-    end
-
-    sums[("summaries/&lt;label&gt;_&lt;dataset&gt;_summaries.jsonl<br/>{news, reference_summary, generated_summary}")]
-
-    subgraph S3["③ EVALUATION  (run_evaluation.py)"]
-        direction TB
-        trunc(["_truncate() → first 500 → results/eval_inputs/"])
-        ev(["Evaluator.evaluate_metrics() · evaluate_summac() · evaluate_qa()<br/>+ _length_stats()"])
-        trunc --> ev
-    end
-
-    metrics[("results/metrics/&lt;label&gt;__&lt;dataset&gt;.json<br/>per-target scores + errors")]
-
-    subgraph S4["④ AGGREGATION  (aggregate.py)"]
-        agg(["load_results() → write_csv() · write_markdown() · write_charts()"])
-    end
-
-    out[("results/results.csv · results.md · charts/*.png")]
-
-    cfg --> S1
-    extract --> llm
-    extract --> base
-    llm --> sums
-    base --> sums
-    sums --> trunc
-    ev --> metrics
-    metrics --> agg
-    agg --> out
+```bash
+bash slurm/run_all.sh                 # pull latest code → set up env → submit everything
+bash slurm/run_all.sh --skip-setup    # env already built (skip the slow install)
+bash slurm/run_all.sh --skip-pull --skip-setup   # just submit, nothing else
 ```
 
-SLURM runs ① is implicit (each task loads its own data), and ②→③→④ are four
-dependency-chained job arrays — see [§5](#5-orchestration-slurm).
+> **Use `bash`, not `sbatch`, to launch.** `run_all.sh` and `submit_all.sh` are
+> plain orchestration scripts that run on the login node. They call `sbatch`
+> **for you**, once per stage. Only the `slurm/*.sbatch` files (the ones with
+> `#SBATCH` headers) are ever submitted with `sbatch` — and the wrapper does that.
+
+Track and find results:
+
+```bash
+watch -n 10 squeue --me                          # live job status
+tail -f logs/sum-*_*.out                          # live logs
+# results land in: results/results.md, results/results.csv, results/charts/
+```
 
 ---
 
-## 2. The data and its processing
+## The four stages
 
-**Source.** Two news-summarization benchmarks, pulled from the HuggingFace Hub
-on first use (`dataset.py: DATASET_CONFIGS`):
+```mermaid
+flowchart LR
+    cfg["⚙️ pipeline_config.py<br/>10 models · 2 datasets · SAMPLE=None (full split)"]
+    gen["② GENERATE<br/>run_generation.py<br/>article → summary"]
+    sums[("summaries/*.jsonl")]
+    eval["③ EVALUATE<br/>run_evaluation.py<br/>score each summary"]
+    metrics[("results/metrics/*.json")]
+    agg["④ AGGREGATE<br/>aggregate.py"]
+    out[("results.csv · results.md · charts/*.png")]
 
-| Dataset | HF path | Field (article) | Field (reference) |
-|---------|---------|-----------------|-------------------|
-| CNN/DailyMail (3.0.0) | `abisee/cnn_dailymail` | `article` | `highlights` |
-| XSum | `EdinburghNLP/xsum` | `document` | `summary` |
+    cfg --> gen --> sums --> eval --> metrics --> agg --> out
+```
 
-**Processing** (`load_datasets_streaming`):
-1. Open the **test** split in **streaming** mode (no full download to disk).
-2. `shuffle(seed=42)` — fixed seed so every model scores the *same* 500 articles.
-3. `take(SAMPLE)` — cap at 500 records per dataset.
-
-**Per-record extraction** (`extract_fields`):
-- Maps each dataset's column names to a common shape via `_FIELD_MAP`.
-- For CNN/DailyMail, `strip_dateline()` removes leading datelines (e.g.
-  `"LONDON (CNN) -- "`) so the model sees clean article text.
-- Returns the tuple `(news_text, reference_summary, qa_pairs)` (`qa_pairs` is
-  `None` for these two datasets).
+On SLURM the stages run as four dependency-chained jobs (see
+[§6](#6-how-slurm-runs-it)).
 
 ---
 
-## 3. How the data feeds the models
+## 1. Config — the single source of truth (`pipeline_config.py`)
 
-`run_generation.py` is one SLURM array task per model config
-(`pipeline_config.MODELS[index]`). It loads the datasets once, then dispatches on
-`spec.kind`:
+Everything is driven from here:
 
-**LLMs** (`_generate_llm` → `model.py`):
-- `SummarizationModel.__init__` loads the tokenizer + causal LM
-  (`trust_remote_code=False` → native `Phi3ForCausalLM` / `LlamaForCausalLM`),
-  applying a 4-bit/8-bit `BitsAndBytesConfig` when requested.
-- For each article, `summarize()` formats the prompt
-  `"News: {news}\nSummarize the news in two sentences. Summary:"`, truncates to
-  `max_input_length=2048`, and **greedy-decodes** (`do_sample=False`,
-  `max_new_tokens=150`).
+| Setting | Value |
+|---------|-------|
+| **Models** | 4 baselines + 6 LLMs = **10 configs** |
+| **Datasets** | CNN/DailyMail + XSum = **2** |
+| **Eval targets** | 10 × 2 = **20** (one score file per model × dataset) |
+| **`SAMPLE`** | `None` = **use the full test split**. Set an int (e.g. `500`) for a quick run. |
 
-**Baselines** (`_generate_baseline`): non-neural extractive summarizers, all
-emitting 2 sentences to match the LLM prompt — `Lead-1`/`Lead-3` (first n
-sentences), `TextRank` (sumy graph ranking), `TFIDF` (sumy LSA).
+The 6 LLMs are Llama-3.2-3B and Phi-3-mini, each in 3 modes: `None` (fp16),
+`4bit`, `8bit`. The 4 baselines are `Lead-1`, `Lead-3`, `TextRank`, `TFIDF`.
 
-**Output state** — one JSONL file per (model, dataset),
+**To change how many articles are used, edit one line — `SAMPLE`.** It controls
+both generation and evaluation. `None` means the whole split; an integer caps it.
+
+---
+
+## 2. Data (`dataset.py`)
+
+Two news benchmarks, streamed from HuggingFace on first use (no full download):
+
+| Dataset | HF path | Article field | Reference field | Full test split |
+|---------|---------|---------------|-----------------|-----------------|
+| CNN/DailyMail (3.0.0) | `abisee/cnn_dailymail` | `article` | `highlights` | 11,490 |
+| XSum | `EdinburghNLP/xsum` | `document` | `summary` | 11,334 |
+
+`load_datasets_streaming()`:
+1. Opens the **test** split in **streaming** mode.
+2. `shuffle(seed=42)` — fixed seed, so every model scores the *same* articles.
+3. `take(SAMPLE)` — only if `SAMPLE` is an int; with `None` it keeps the full split.
+
+`extract_fields()` then maps each dataset's columns to a common
+`(news, reference_summary)` shape and, for CNN/DailyMail, strips the leading
+dateline (e.g. `"LONDON (CNN) -- "`).
+
+---
+
+## 3. Generation (`run_generation.py`)
+
+One SLURM task per model (`MODELS[index]`). It loads the datasets, then:
+
+- **LLMs** (`model.py`): load the model (with 4-/8-bit quantization if asked),
+  and for each article build the prompt
+  `"News: {news}\nSummarize the news in two sentences. Summary:"`, then
+  greedy-decode (`max_new_tokens=150`).
+- **Baselines**: non-neural extractive summarizers, each emitting 2 sentences —
+  `Lead-1/3` (first n sentences), `TextRank`, `TFIDF`.
+
+**Output:** one file per (model, dataset),
 `summaries/<label>_<dataset>_summaries.jsonl`, each line:
+
 ```json
 {"news": "...", "reference_summary": "...", "generated_summary": "..."}
 ```
-Generation is **idempotent**: `_has_enough()` skips any file that already has
-≥ `SAMPLE` lines, so committed full-test-set summaries are reused.
+
+**Idempotent / resumable.** A summary file is considered done once it has the
+dataset's full number of records (`target_count()` in the config). Already-complete
+files are **skipped**, so committed full-split summaries are reused instead of
+regenerated. (A partial file — e.g. a job that died halfway — is *not* skipped.)
 
 ---
 
-## 4. The output and how it is scored
+## 4. Evaluation (`run_evaluation.py`)
 
-`run_evaluation.py` is one SLURM array task per `EVAL_TARGETS[index]`
-(model × dataset). It truncates the summary file to the first 500 records
-(`_truncate` → `results/eval_inputs/`) and runs `evaluator.Evaluator`:
+One SLURM task per eval target (model × dataset). It scores the summary file
+against the reference and the source article:
 
-| Metric | Function | Compared against | Notes |
-|--------|----------|------------------|-------|
-| BLEU, ROUGE-L, METEOR, BERTScore-F1 | `evaluate_metrics` | reference summary | ROUGE-1/2 intentionally excluded |
-| SummaC | `evaluate_summac` | **source article** | factual consistency (NLI) |
-| QAFactEval | `evaluate_qa` | source article | optional; `null` if not installed |
-| length / compression | `_length_stats` | — | descriptive stats |
+| Metric | Compared against | Note |
+|--------|------------------|------|
+| BLEU, ROUGE-L, METEOR, BERTScore-F1 | reference summary | ROUGE-1/2 excluded on purpose |
+| SummaC | **source article** | factual consistency (NLI) |
+| QAFactEval | source article | optional; `null` if not installed |
+| length / compression | — | descriptive stats |
 
-Each metric group runs in its own `try/except`: a failure records an error
-string and leaves that metric `null` instead of aborting the target.
+Each metric group runs in its own `try/except`: if one fails it records an error
+and leaves that metric `null` instead of killing the whole target.
 
-**Output state** — `results/metrics/<label>__<dataset>.json`, e.g.:
+**Output:** `results/metrics/<label>__<dataset>.json`, e.g.:
+
 ```json
-{"label": "Llama_8bit", "dataset": "cnn_dailymail", "num_samples": 500,
- "bleu": 0.063, "rougeL": 0.215, "meteor": 0.344,
- "bertscore_f1": 0.872, "summac": 0.026, "qa_eval": null,
- "avg_gen_len": 72.8, "avg_compression": 0.155, "errors": {...}}
+{"label": "Llama_8bit", "dataset": "cnn_dailymail", "num_samples": 11490,
+ "bleu": 0.063, "rougeL": 0.215, "meteor": 0.344, "bertscore_f1": 0.872,
+ "summac": 0.026, "qa_eval": null, "avg_gen_len": 72.8, "errors": {}}
 ```
 
-`aggregate.py` then collects all 20 JSONs (`load_results`) and writes the final
-artifacts: `results/results.csv` (`write_csv`), `results/results.md`
-(`write_markdown` — comparison tables + best-per-metric + failure notes), and
-`results/charts/*.png` (`write_charts` — per-metric grouped bars and
-model×metric heatmaps). A single consolidated overview, `comparison.png`, is
-produced separately by `make_comparison_chart.py` (run after aggregation).
+---
+
+## 5. Aggregation (`aggregate.py`)
+
+Collects all 20 metric JSONs and writes the final artifacts:
+
+- `results/results.csv` — every score in one table.
+- `results/results.md` — comparison tables + best-per-metric + failure notes.
+- `results/charts/*.png` — per-metric bar charts and model×metric heatmaps.
+
+`make_comparison_chart.py` (run after aggregation) adds one overview figure,
+`comparison.png`.
 
 ---
 
-## 5. Orchestration (SLURM)
+## 6. How SLURM runs it
 
-`slurm/submit_all.sh` wires the four stages into a dependency chain so a single
-`sbatch` storm runs the whole experiment, robust to individual task failures
-(`afterany`, not `afterok`):
+`slurm/submit_all.sh` (called by `run_all.sh`) submits four stages and chains
+them so one launch runs the whole experiment:
 
 ```
 gen_baselines (CPU array 0-3) ┐
@@ -161,31 +167,32 @@ gen_baselines (CPU array 0-3) ┐
 gen_llms      (GPU array 4-9) ┘
 ```
 
-`slurm/run_all.sh` is the one-command wrapper (pull → setup → submit).
+`afterany` (not `afterok`) makes it robust: one failed task doesn't block the
+rest, and the final report is built from whatever metrics succeeded.
 
-| Stage | Script | Array | Driver function |
-|-------|--------|-------|-----------------|
-| Generate baselines | `slurm/gen_baselines.sbatch` | 0–3 | `run_generation.main` |
-| Generate LLMs | `slurm/gen_llms.sbatch` | 4–9 | `run_generation.main` |
-| Evaluate | `slurm/evaluate.sbatch` | 0–19 | `run_evaluation.main` |
-| Aggregate | `slurm/aggregate.sbatch` | — | `aggregate.main` |
+| Stage | Script | Array | Hardware |
+|-------|--------|-------|----------|
+| Generate baselines | `slurm/gen_baselines.sbatch` | 0–3 | CPU |
+| Generate LLMs | `slurm/gen_llms.sbatch` | 4–9 | 1 GPU each |
+| Evaluate | `slurm/evaluate.sbatch` | 0–19 | 1 GPU each |
+| Aggregate | `slurm/aggregate.sbatch` | — | CPU |
 
 ---
 
-## 6. File map (active pipeline)
+## 7. File map
 
 | File | Role |
 |------|------|
-| `pipeline_config.py` | Single source of truth: model matrix, datasets, sample size, target indexing |
-| `dataset.py` | Load/stream datasets, strip datelines, extract common fields |
-| `model.py` | `SummarizationModel` — load LLM (+quantization) and generate one summary |
-| `baseline_lead.py` / `baseline_textrank.py` / `baseline_tfidf.py` | Non-neural extractive baselines |
-| `run_generation.py` | One array task → summaries for one model config |
-| `evaluator.py` | `Evaluator` — BLEU/ROUGE-L/METEOR/BERTScore/SummaC/QAFactEval |
-| `run_evaluation.py` | One array task → metric JSON for one (model, dataset) |
-| `aggregate.py` | Collect metric JSONs → CSV, Markdown, per-metric charts/heatmaps |
-| `make_comparison_chart.py` | Single overview figure comparing all models across metrics |
-| `slurm/*` | SLURM job scripts + submission/orchestration |
+| `pipeline_config.py` | Single source of truth: models, datasets, **sample size**, target indexing |
+| `dataset.py` | Stream datasets, strip datelines, extract common fields |
+| `model.py` | `SummarizationModel` — load LLM (+quantization), generate one summary |
+| `baseline_*.py` | Non-neural baselines (lead / textrank / tfidf) |
+| `run_generation.py` | One task → summaries for one model |
+| `evaluator.py` | The metrics: BLEU / ROUGE-L / METEOR / BERTScore / SummaC / QAFactEval |
+| `run_evaluation.py` | One task → metric JSON for one (model, dataset) |
+| `aggregate.py` | Collect metric JSONs → CSV, Markdown, charts |
+| `make_comparison_chart.py` | One overview figure across all models |
+| `slurm/*` | SLURM job scripts + the `bash` launch wrappers |
 
-> Note: `main.py` and `analyze_summaries.py` are the earlier single-process
-> prototype, kept for reference; the SLURM pipeline above supersedes them.
+> Note: `main.py` is the earlier single-process prototype, kept for reference.
+> The SLURM pipeline above supersedes it.
