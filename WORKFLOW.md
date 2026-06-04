@@ -193,6 +193,3 @@ rest, and the final report is built from whatever metrics succeeded.
 | `aggregate.py` | Collect metric JSONs → CSV, Markdown, charts |
 | `make_comparison_chart.py` | One overview figure across all models |
 | `slurm/*` | SLURM job scripts + the `bash` launch wrappers |
-
-> Note: `main.py` is the earlier single-process prototype, kept for reference.
-> The SLURM pipeline above supersedes it.
