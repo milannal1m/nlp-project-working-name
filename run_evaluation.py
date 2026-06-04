@@ -6,7 +6,7 @@ the first ``--sample`` records are scored, so the existing full-test-set files
 and the freshly generated 500-sample files are compared on the same slice
 (both come from the same ``shuffle(seed=42)`` ordering).
 
-Metrics — ROUGE-1/2 are intentionally excluded:
+Metrics:
     BLEU, ROUGE-L, METEOR, BERTScore-F1, SummaC, QAFactEval, plus length stats.
 
 Each metric group is isolated in try/except: a failure (e.g. QAFactEval not
