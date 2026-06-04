@@ -1,0 +1,23 @@
+{
+  "label": "Phi-3_4bit",
+  "dataset": "xsum",
+  "file": "Phi-3_4bit_xsum_summaries.jsonl",
+  "num_samples": 500,
+  "errors": {
+    "qa_eval": "qafacteval not installed"
+  },
+  "bleu": 0.011730174955754747,
+  "rougeL": 0.11564347116057014,
+  "meteor": 0.22027253424032875,
+  "bertscore_f1": 0.8524038134813309,
+  "bertscore_f1_std": 0.01788532716571319,
+  "summac": 0.6305800948739052,
+  "summac_std": 0.1076587635174859,
+  "qa_eval": null,
+  "avg_news_len": 400.644,
+  "avg_ref_len": 21.784,
+  "avg_gen_len": 96.862,
+  "std_gen_len": 14.468643311608629,
+  "avg_gen_sents": 3.984,
+  "avg_compression": 0.42359419280303046
+}

@@ -122,6 +122,7 @@ def evaluate_target(target: dict, sample: int) -> dict:
     return result
 
 
+# Parse CLI args: --index into EVAL_TARGETS, --sample size, --metrics_dir.
 def parse_args():
     parser = argparse.ArgumentParser(description="Evaluate one summary file")
     parser.add_argument(
@@ -135,6 +136,7 @@ def parse_args():
     return parser.parse_args()
 
 
+# Entry point: evaluate EVAL_TARGETS[index] and write its metrics JSON.
 def main() -> None:
     args = parse_args()
     if not (0 <= args.index < len(EVAL_TARGETS)):

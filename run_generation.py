@@ -103,6 +103,7 @@ def _generate_baseline(spec, datasets: dict, output_dir: str, sample: int) -> No
         raise ValueError(f"Unknown baseline: {spec.baseline}")
 
 
+# Parse CLI args: --index into MODELS, --sample size, --output_dir.
 def parse_args():
     parser = argparse.ArgumentParser(description="Generate summaries for one model config")
     parser.add_argument(
@@ -116,6 +117,7 @@ def parse_args():
     return parser.parse_args()
 
 
+# Entry point: pick MODELS[index], load datasets, run baseline or LLM generation.
 def main() -> None:
     args = parse_args()
     if not (0 <= args.index < len(MODELS)):

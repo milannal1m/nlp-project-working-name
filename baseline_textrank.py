@@ -27,6 +27,7 @@ def textrank_summarize(text: str, n_sentences: int = 2) -> str:
     return " ".join(str(s) for s in sentences)
 
 
+# Write 2-sentence TextRank summaries for each dataset as JSONL.
 def run_textrank(datasets: dict, output_dir: str, sample: int) -> None:
     os.makedirs(output_dir, exist_ok=True)
 
@@ -63,6 +64,7 @@ def run_textrank(datasets: dict, output_dir: str, sample: int) -> None:
         print(f"  Done in {elapsed:.1f}s -> {output_path}", flush=True)
 
 
+# CLI entry point: run the TextRank baseline over the datasets.
 def main() -> None:
     parser = argparse.ArgumentParser(description="TextRank baseline summarization")
     parser.add_argument("--sample", type=int, default=500)

@@ -25,6 +25,7 @@ def tfidf_summarize(text: str, n_sentences: int = 2) -> str:
     return " ".join(str(s) for s in sentences)
 
 
+# Write 2-sentence TF-IDF/LSA summaries for each dataset as JSONL.
 def run_tfidf(datasets: dict, output_dir: str, sample: int) -> None:
     os.makedirs(output_dir, exist_ok=True)
 
@@ -61,6 +62,7 @@ def run_tfidf(datasets: dict, output_dir: str, sample: int) -> None:
         print(f"  Done in {elapsed:.1f}s -> {output_path}", flush=True)
 
 
+# CLI entry point: run the TF-IDF baseline over the datasets.
 def main() -> None:
     parser = argparse.ArgumentParser(description="TF-IDF baseline summarization")
     parser.add_argument("--sample", type=int, default=500)

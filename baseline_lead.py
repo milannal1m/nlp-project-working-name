@@ -41,8 +41,8 @@ def lead_n(text: str, n: int) -> str:
 # -------------------------------------------------------------------
 # Core runner
 # -------------------------------------------------------------------
+# Write Lead-N summaries (first n sentences) for each dataset as JSONL.
 def run_lead(n: int, datasets: dict, output_dir: str, sample: int) -> None:
-    
     os.makedirs(output_dir, exist_ok=True)
     baseline_name = f"Lead-{n}"
 
@@ -82,6 +82,7 @@ def run_lead(n: int, datasets: dict, output_dir: str, sample: int) -> None:
 # -------------------------------------------------------------------
 # Entry point
 # -------------------------------------------------------------------
+# CLI entry point: run Lead-1 and/or Lead-3 over the datasets.
 def main() -> None:
     parser = argparse.ArgumentParser(description="Lead-N baseline summarization")
     parser.add_argument(

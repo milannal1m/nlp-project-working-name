@@ -46,6 +46,7 @@ MODEL_ORDER = [m.label for m in MODELS]
 PRETTY_DATASET = {"cnn_dailymail": "CNN/DailyMail", "xsum": "XSum"}
 
 
+# Load every results/metrics/*.json into a list of metric dicts.
 def load_results() -> list[dict]:
     rows = []
     for path in sorted(glob.glob(os.path.join(METRICS_DIR, "*.json"))):
@@ -54,6 +55,7 @@ def load_results() -> list[dict]:
     return rows
 
 
+# Sort key: keep the config's model order, then dataset name.
 def _order_key(row: dict) -> tuple:
     label = row.get("label", "")
     idx = MODEL_ORDER.index(label) if label in MODEL_ORDER else len(MODEL_ORDER)
@@ -63,6 +65,7 @@ def _order_key(row: dict) -> tuple:
 # --------------------------------------------------------------------------
 # CSV
 # --------------------------------------------------------------------------
+# Write one CSV row per (model, dataset) with all metric + length columns.
 def write_csv(rows: list[dict], path: Path) -> None:
     with open(path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=CSV_COLUMNS, extrasaction="ignore")
@@ -79,6 +82,7 @@ def write_csv(rows: list[dict], path: Path) -> None:
 # --------------------------------------------------------------------------
 # Markdown
 # --------------------------------------------------------------------------
+# Format a metric value as "mean ± std", or "—" when missing.
 def _fmt(val, std=None) -> str:
     if val is None:
         return "—"
@@ -87,6 +91,7 @@ def _fmt(val, std=None) -> str:
     return f"{val:.4f}"
 
 
+# Render per-dataset comparison tables, best-per-metric, failure notes, and chart links.
 def write_markdown(rows: list[dict], path: Path) -> None:
     by_dataset = {ds: [r for r in rows if r.get("dataset") == ds] for ds in DATASETS}
     labels = sorted({r.get("label") for r in rows}, key=lambda l: MODEL_ORDER.index(l) if l in MODEL_ORDER else 99)
@@ -153,6 +158,7 @@ def write_markdown(rows: list[dict], path: Path) -> None:
 # --------------------------------------------------------------------------
 # Charts
 # --------------------------------------------------------------------------
+# Save a grouped bar chart per metric plus a normalised model×metric heatmap per dataset.
 def write_charts(rows: list[dict], charts_dir: Path) -> None:
     try:
         import matplotlib
@@ -168,6 +174,7 @@ def write_charts(rows: list[dict], charts_dir: Path) -> None:
     x = np.arange(len(labels))
     width = 0.8 / max(len(DATASETS), 1)
 
+    # Look up one metric value for (label, dataset), or NaN if absent.
     def value(label, ds, key):
         for r in rows:
             if r.get("label") == label and r.get("dataset") == ds:
@@ -222,6 +229,7 @@ def write_charts(rows: list[dict], charts_dir: Path) -> None:
     print(f"[ok] charts -> {charts_dir}/")
 
 
+# Entry point: load metric JSONs and write the CSV, Markdown report, and charts.
 def main() -> None:
     os.makedirs(RESULTS_DIR, exist_ok=True)
     rows = load_results()

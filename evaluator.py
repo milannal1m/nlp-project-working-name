@@ -13,6 +13,7 @@ from pathlib import Path
 # ===========================================================================
 
 class Evaluator:
+    # Hold lazily-loaded metric backends (BLEU/ROUGE/METEOR/BERTScore/SummaC).
     def __init__(self):
         self.bleu = None
         self.rouge = None
@@ -20,6 +21,7 @@ class Evaluator:
         self.bertscore = None
         self.summac_model = None
 
+    # Load the HuggingFace `evaluate` metric backends once, on first use.
     def _load_metrics(self):
         if self.bleu is None:
             import evaluate

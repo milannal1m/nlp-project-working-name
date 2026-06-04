@@ -63,6 +63,7 @@ LLMS: list[ModelSpec] = [
 MODELS: list[ModelSpec] = BASELINES + LLMS
 
 
+# Build the JSONL filename for one (model label, dataset) summary file.
 def output_filename(label: str, dataset: str) -> str:
     return f"{label}_{dataset}_summaries.jsonl"
 

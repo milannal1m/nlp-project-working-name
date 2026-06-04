@@ -16,12 +16,8 @@ _FIELD_MAP = {
 }
 _DATASETS_WITH_DATELINES = {"cnn_dailymail", "news-qa-summarization"}
 
+# Strip a leading dateline like "LONDON (CNN) --" from the start of an article.
 def strip_dateline(text: str) -> str:
-    """
-    Remove datelines like '(CNN) --' or 'LONDON (CNN) --' from the start
-    of CNN/DailyMail articles. Only strips if ' -- ' appears in the first
-    120 characters to avoid cutting real content.
-    """
     # Pattern 1: '(CNN) --' or 'LONDON (CNN) --'
     prefix = text[:120]
     if ' -- ' in prefix:
@@ -36,6 +32,7 @@ def strip_dateline(text: str) -> str:
 
     return text
 
+# Stream each configured dataset's split (shuffled), optionally capped at `sample`.
 def load_datasets_streaming(sample: int = None, seed: int = 42) -> dict:
     result = {}
     for name, cfg in DATASET_CONFIGS.items():
@@ -51,6 +48,7 @@ def load_datasets_streaming(sample: int = None, seed: int = 42) -> dict:
     return result
 
 
+# Pull (news_text, reference_summary, qa_pairs) from one record, stripping datelines.
 def extract_fields(dataset_name: str, item: dict) -> tuple[str, str, list | None]:
     if dataset_name not in _FIELD_MAP:
         raise ValueError(f"Unsupported dataset: {dataset_name}")
