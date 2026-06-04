@@ -48,7 +48,6 @@ env/
 # =========================
 logs/
 results/eval_inputs/
-*.sif
 
 # =========================
 # OS / IDE files
