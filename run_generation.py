@@ -1,15 +1,3 @@
-"""Generate summaries for a single model configuration (one SLURM array task).
-
-The SLURM array passes an index via ``--index`` (or ``$SLURM_ARRAY_TASK_ID``)
-that selects one entry from ``pipeline_config.MODELS``. Each task writes one
-JSONL file per dataset. Generation is idempotent: if an output file already has
-at least ``--sample`` lines it is skipped, so the existing full-test-set
-summaries are reused instead of regenerated.
-
-Usage (driven by SLURM, but runnable locally too):
-    python run_generation.py --index 4 --sample 500
-"""
-
 import argparse
 import json
 import os

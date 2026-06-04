@@ -1,10 +1,3 @@
-"""Central configuration for the parallel summarization experiment pipeline.
-
-Defines the full model matrix (baselines + LLMs with every quantization mode),
-the datasets, and the default sample size. Both the SLURM array scripts and the
-aggregation step import from here so the indexing stays consistent end-to-end.
-"""
-
 from dataclasses import dataclass, field
 from typing import Optional
 

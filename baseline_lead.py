@@ -1,21 +1,3 @@
-"""
-Lead-N baseline for news summarization.
-
-Produces .jsonl files in the same format as main.py so they feed directly
-into the existing evaluation pipeline.
-
-Usage:
-    # Local testing — fast, tiny, no disk space issues
-    python baselines_lead.py --sample 10
-
-    # Cluster — full 500-sample run, both Lead-1 and Lead-3
-    python baselines_lead.py
-
-    # Specific n only
-    python baselines_lead.py --n 1 --sample 10
-    python baselines_lead.py --n 3 --sample 10
-"""
-
 import argparse
 import json
 import os

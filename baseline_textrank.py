@@ -1,11 +1,3 @@
-"""
-TextRank baseline for news summarization.
-
-Usage:
-    python baseline_textrank.py --sample 20   # local testing
-    python baseline_textrank.py --sample 500  # full run on cluster
-"""
-
 import argparse
 import json
 import os

@@ -1,11 +1,3 @@
-"""Render a single overview figure comparing every model across the headline metrics.
-
-Reads ``results/results.csv`` (produced by ``aggregate.py``) and writes
-``results/charts/comparison.png`` — a 2x3 grid of horizontal bar charts, one per
-metric, with each model's score averaged over the two datasets and baselines vs
-LLMs colour-coded. Run after aggregation:  python make_comparison_chart.py
-"""
-
 import csv
 import os
 from collections import defaultdict

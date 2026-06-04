@@ -3,7 +3,7 @@
 End-to-end action flow of the summarization-evaluation pipeline: how the data is
 loaded and cleaned, how it is fed to the models, what each stage produces, and
 which functions own each transition. For *how to run* it on the cluster, see
-[`PIPELINE.md`](PIPELINE.md).
+[`README.md`](README.md) and `slurm/run_all.sh`.
 
 ---
 

@@ -1,11 +1,3 @@
-"""
-TF-IDF baseline for news summarization.
-
-Usage:
-    python baseline_tfidf.py --sample 20   # local testing
-    python baseline_tfidf.py --sample 500  # full run on cluster
-"""
-
 import argparse
 import json
 import os

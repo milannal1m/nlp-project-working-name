@@ -1,15 +1,3 @@
-"""Aggregate per-file metric JSONs into a CSV, a Markdown report, and charts.
-
-Reads every ``results/metrics/*.json`` produced by ``run_evaluation.py`` and
-emits:
-  - ``results/results.csv``        one row per (model, dataset), all metrics
-  - ``results/results.md``         human-readable comparison tables
-  - ``results/charts/*.png``       grouped bar chart per metric + heatmaps
-
-ROUGE-1 and ROUGE-2 are intentionally absent. Reported metrics:
-    BLEU, ROUGE-L, METEOR, BERTScore-F1, SummaC, QAFactEval (+ length stats).
-"""
-
 import csv
 import glob
 import json
