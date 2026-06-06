@@ -1,0 +1,23 @@
+{
+  "label": "Lead-1",
+  "dataset": "cnn_dailymail",
+  "file": "Lead-1_cnn_dailymail_summaries.jsonl",
+  "num_samples": 11490,
+  "errors": {
+    "qa_eval": "qafacteval not installed"
+  },
+  "bleu": 0.03646944585722937,
+  "rougeL": 0.18309252451972813,
+  "meteor": 0.16823107897158981,
+  "bertscore_f1": 0.859286586412458,
+  "bertscore_f1_std": 0.023683776095675048,
+  "summac": 0.7739248827892519,
+  "summac_std": 0.14346897943738265,
+  "qa_eval": null,
+  "avg_news_len": 694.5741514360313,
+  "avg_ref_len": 52.900870322019145,
+  "avg_gen_len": 25.67536988685814,
+  "std_gen_len": 10.478702894487595,
+  "avg_gen_sents": 1.0742384682332462,
+  "avg_compression": 0.04748804168676151
+}

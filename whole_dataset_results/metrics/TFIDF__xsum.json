@@ -1,0 +1,22 @@
+{
+  "label": "TFIDF",
+  "dataset": "xsum",
+  "file": "TFIDF_xsum_summaries.jsonl",
+  "num_samples": 11334,
+  "errors": {
+    "summac": "Exception('Truncation error: Sequence to truncate too short to respect the provided max_length')",
+    "qa_eval": "qafacteval not installed"
+  },
+  "bleu": 0.007984698060096579,
+  "rougeL": 0.1151310268636346,
+  "meteor": 0.18120404510186836,
+  "bertscore_f1": 0.8512607876514451,
+  "bertscore_f1_std": 0.0189272055006003,
+  "qa_eval": null,
+  "avg_news_len": 385.4004764425622,
+  "avg_ref_len": 21.73001588141874,
+  "avg_gen_len": 44.182106934886185,
+  "std_gen_len": 13.82889518810407,
+  "avg_gen_sents": 2.054349744132698,
+  "avg_compression": 0.1945515459623547
+}
