@@ -8,11 +8,7 @@ from evaluator import Evaluator, tokenize, sent_count
 
 
 def _truncate(src: str, dst: str, sample: int | None) -> int:
-    """Copy JSONL records from ``src`` to ``dst``.
-
-    With an int ``sample`` only the first ``sample`` records are copied; with
-    ``sample=None`` (full run) every record is copied.
-    """
+    """Copy up to ``sample`` lines from ``src`` to ``dst``, returning how many."""
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     n = 0
     with open(src, "r", encoding="utf-8") as fin, open(dst, "w", encoding="utf-8") as fout:

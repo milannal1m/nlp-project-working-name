@@ -13,10 +13,7 @@ RESULTS_DIR: str = "results"
 METRICS_DIR: str = "results/metrics"
 CHARTS_DIR: str = "results/charts"
 
-# Canonical HuggingFace *test* split sizes. Used so that a full run (SAMPLE=None)
-# can still skip already-complete summary files: a file is "done" once it has
-# this many records. Add an entry when you add a dataset; an unknown dataset
-# falls back to "never skip" (always regenerate) so we never reuse a partial file.
+
 FULL_SPLIT_SIZES: dict[str, int] = {
     "cnn_dailymail": 11490,
     "xsum": 11334,

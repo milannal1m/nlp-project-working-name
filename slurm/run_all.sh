@@ -50,7 +50,7 @@ else
     echo "[1/4] Skipping git pull (--skip-pull)."
 fi
 
-# (b) Show partitions so the user can sanity-check names ----------------
+# (b) Show cluster partitions so we can sanity-check names ----------------
 echo "[2/4] Available partitions (sinfo -s):"
 sinfo -s 2>/dev/null || echo "      (sinfo unavailable on this node)"
 [[ -n "$CPU_PART" ]] && echo "      -> CPU partition override: $CPU_PART"

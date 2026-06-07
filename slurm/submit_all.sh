@@ -15,7 +15,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p logs results/metrics
 
-# Optional partition overrides (sbatch CLI flags win over the #SBATCH defaults).
+
 # Set CPU_PARTITION / GPU_PARTITION in the environment to override without
 # editing the scripts, e.g.  CPU_PARTITION=cpu_il bash slurm/submit_all.sh
 CPU_PART_ARG=""
