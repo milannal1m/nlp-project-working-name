@@ -2,7 +2,7 @@ import json
 from qa_evaluator import QAFactEvaluator
 
 if __name__ == "__main__":
-    benchmark_dataset = "newsqasum_gold.jsonl" #choose datasets accordingly
+    benchmark_dataset = "../summaries/newsqasum_gold.jsonl" #choose datasets accordingly
 
     summary_dataset = "../summaries/Lead-1_cnn_dailymail_summaries.jsonl" #choose datasets accordingly
 
