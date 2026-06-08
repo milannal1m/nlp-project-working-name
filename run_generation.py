@@ -11,12 +11,17 @@ from dataset import extract_fields, load_datasets_streaming
 nltk.download("punkt_tab", quiet=True)
 
 
+def _count_records(path: str) -> int:
+    """Number of JSONL records already written to ``path`` (0 if it does not exist)."""
+    if not os.path.exists(path):
+        return 0
+    with open(path, "r", encoding="utf-8") as f:
+        return sum(1 for _ in f)
+
+
 def _has_enough(path: str, sample: int) -> bool:
     """True if ``path`` already holds at least ``sample`` JSONL records."""
-    if not os.path.exists(path):
-        return False
-    with open(path, "r", encoding="utf-8") as f:
-        return sum(1 for _ in f) >= sample
+    return _count_records(path) >= sample
 
 
 def _generate_llm(spec, datasets: dict, output_dir: str, sample: int) -> None:
@@ -40,14 +45,20 @@ def _generate_llm(spec, datasets: dict, output_dir: str, sample: int) -> None:
     for dataset_name, data in datasets.items():
         target = target_count(dataset_name, sample)
         output_path = os.path.join(output_dir, output_filename(spec.label, dataset_name))
-        if _has_enough(output_path, target):
+        existing = _count_records(output_path)
+        if existing >= target:
             print(f"[skip] {output_path} already has >= {target} samples", flush=True)
             continue
+        mode = "a" if existing > 0 else "w"
+        if existing > 0:
+            print(f"[resume] {output_path} has {existing}/{target}; continuing from {existing + 1}", flush=True)
         print("=" * 80, flush=True)
         print(f"[{spec.label}] {dataset_name} (target {target}) -> {output_path}", flush=True)
         start = time.time()
-        with open(output_path, "w", encoding="utf-8", newline="\n") as f:
+        with open(output_path, mode, encoding="utf-8", newline="\n") as f:
             for idx, item in enumerate(data, start=1):
+                if idx <= existing:
+                    continue
                 news_text, ref_summary, qa_pairs = extract_fields(dataset_name, item)
                 generated_text, input_len, generated_len = model.summarize(news_text)
                 record = {

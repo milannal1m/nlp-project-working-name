@@ -1,6 +1,6 @@
 # Summarization Experiment Results
 
-**Models**: 10 &nbsp;|&nbsp; **Datasets**: CNN/DailyMail, XSum &nbsp;|&nbsp; **Samples/dataset**: 500
+**Models**: 10 &nbsp;|&nbsp; **Datasets**: CNN/DailyMail, XSum &nbsp;|&nbsp; **Samples/dataset**: None
 
 **Metrics**: BLEU, ROUGE-L, METEOR, BERTScore-F1, SummaC, QAFactEval (ROUGE-1 / ROUGE-2 excluded). Higher is better for all.
 
@@ -10,18 +10,18 @@
 
 | Model | BLEU | ROUGE-L | METEOR | BERTScore-F1 | SummaC | QAFactEval | Gen Len | Compression |
 |-------|------:|------:|------:|------:|------:|------:|--------:|------------:|
-| Lead-1 | 0.0543 | 0.1707 | 0.1805 | 0.8570 ± 0.0242 | 0.2681 ± 0.0606 | — | 25.1 | 0.0552 |
-| Lead-3 | 0.0720 | 0.1998 | 0.3398 | 0.8602 ± 0.0222 | 0.5463 ± 0.1338 | — | 78.2 | 0.1728 |
-| TextRank | 0.0410 | 0.1540 | 0.2440 | 0.8472 ± 0.0192 | 0.9269 ± 0.1011 | — | 73.2 | 0.1569 |
-| TFIDF | 0.0434 | 0.1477 | 0.2148 | 0.8476 ± 0.0223 | 0.3103 ± 0.0385 | — | 47.1 | 0.1059 |
-| Llama_None | 0.0599 | 0.2100 | 0.3421 | 0.8704 ± 0.0199 | 0.0463 ± 0.0570 | — | 75.5 | 0.1590 |
-| Llama_4bit | 0.0561 | 0.2038 | 0.3278 | 0.8685 ± 0.0201 | 0.9796 ± 0.0394 | — | 75.6 | 0.1583 |
-| Llama_8bit | 0.0632 | 0.2150 | 0.3441 | 0.8716 ± 0.0194 | 0.0258 ± 0.0484 | — | 72.8 | 0.1553 |
-| Phi-3_None | 0.0361 | 0.1574 | 0.2962 | 0.8519 ± 0.0164 | 0.2739 ± 0.0968 | — | 102.6 | 0.2341 |
-| Phi-3_4bit | 0.0352 | 0.1608 | 0.2858 | 0.8518 ± 0.0187 | 0.4541 ± 0.1825 | — | 94.6 | 0.2177 |
-| Phi-3_8bit | 0.0378 | 0.1603 | 0.3015 | 0.8520 ± 0.0170 | 0.6645 ± 0.2003 | — | 103.1 | 0.2348 |
+| Lead-1 | 0.0365 | 0.1831 | 0.1682 | 0.8593 ± 0.0237 | 0.7739 ± 0.1435 | — | 25.7 | 0.0475 |
+| Lead-3 | 0.1150 | 0.2428 | 0.3854 | 0.8691 ± 0.0223 | 0.8914 ± 0.0661 | — | 82.2 | 0.1529 |
+| TextRank | 0.0597 | 0.1808 | 0.2540 | 0.8488 ± 0.0218 | — | — | 78.3 | 0.1394 |
+| TFIDF | 0.0648 | 0.1733 | 0.2163 | 0.8504 ± 0.0223 | 0.8476 ± 0.0475 | — | 47.6 | 0.0881 |
+| Llama_None | 0.0836 | 0.2389 | 0.3381 | 0.8729 ± 0.0192 | 0.0375 ± 0.0440 | — | 73.4 | 0.1319 |
+| Llama_4bit | 0.0813 | 0.2359 | 0.3289 | 0.8717 ± 0.0198 | 0.0461 ± 0.0551 | — | 71.7 | 0.1285 |
+| Llama_8bit | 0.0842 | 0.2392 | 0.3373 | 0.8731 ± 0.0191 | 0.0618 ± 0.0951 | — | 72.6 | 0.1309 |
+| Phi-3_None | 0.0485 | 0.1846 | 0.3008 | 0.8521 ± 0.0180 | 0.7257 ± 0.1288 | — | 103.0 | 0.1959 |
+| Phi-3_4bit | 0.0455 | 0.1836 | 0.2880 | 0.8510 ± 0.0191 | 0.2898 ± 0.1241 | — | 98.4 | 0.1882 |
+| Phi-3_8bit | 0.0500 | 0.1854 | 0.3035 | 0.8521 ± 0.0180 | 0.9718 ± 0.0505 | — | 103.9 | 0.1972 |
 
-**Best per metric:** BLEU: **Lead-3** (0.0720); ROUGE-L: **Llama_8bit** (0.2150); METEOR: **Llama_8bit** (0.3441); BERTScore-F1: **Llama_8bit** (0.8716); SummaC: **Llama_4bit** (0.9796)
+**Best per metric:** BLEU: **Lead-3** (0.1150); ROUGE-L: **Lead-3** (0.2428); METEOR: **Lead-3** (0.3854); BERTScore-F1: **Llama_8bit** (0.8731); SummaC: **Phi-3_8bit** (0.9718)
 
 ---
 
@@ -29,26 +29,28 @@
 
 | Model | BLEU | ROUGE-L | METEOR | BERTScore-F1 | SummaC | QAFactEval | Gen Len | Compression |
 |-------|------:|------:|------:|------:|------:|------:|--------:|------------:|
-| Lead-1 | 0.0066 | 0.1188 | 0.1309 | 0.8559 ± 0.0176 | 0.8297 ± 0.1119 | — | 25.2 | 0.1068 |
-| Lead-3 | 0.0072 | 0.1142 | 0.2081 | 0.8549 ± 0.0156 | 0.4002 ± 0.0444 | — | 71.7 | 0.3015 |
-| TextRank | 0.0086 | 0.1115 | 0.1915 | 0.8492 ± 0.0158 | 0.3083 ± 0.1369 | — | 65.6 | 0.2527 |
-| TFIDF | 0.0101 | 0.1164 | 0.1798 | 0.8513 ± 0.0167 | 0.3579 ± 0.1123 | — | 43.7 | 0.1825 |
-| Llama_None | 0.0243 | 0.1612 | 0.2735 | 0.8732 ± 0.0189 | 0.3004 ± 0.0103 | — | 60.3 | 0.2473 |
-| Llama_4bit | 0.0242 | 0.1609 | 0.2665 | 0.8723 ± 0.0201 | 0.2585 ± 0.0060 | — | 57.9 | 0.2381 |
-| Llama_8bit | 0.0230 | 0.1599 | 0.2733 | 0.8725 ± 0.0194 | 0.7481 ± 0.1240 | — | 60.9 | 0.2498 |
-| Phi-3_None | 0.0114 | 0.1104 | 0.2187 | 0.8519 ± 0.0159 | 0.5839 ± 0.0994 | — | 102.8 | 0.4489 |
-| Phi-3_4bit | 0.0117 | 0.1156 | 0.2203 | 0.8524 ± 0.0179 | 0.6306 ± 0.1077 | — | 96.9 | 0.4236 |
-| Phi-3_8bit | 0.0115 | 0.1109 | 0.2201 | 0.8522 ± 0.0162 | 0.7554 ± 0.1224 | — | 103.3 | 0.4517 |
+| Lead-1 | 0.0070 | 0.1178 | 0.1312 | 0.8554 ± 0.0199 | — | — | 24.3 | 0.1124 |
+| Lead-3 | 0.0077 | 0.1155 | 0.2089 | 0.8546 ± 0.0184 | — | — | 69.4 | 0.3024 |
+| TextRank | 0.0092 | 0.1147 | 0.1974 | 0.8497 ± 0.0188 | — | — | 65.0 | 0.2605 |
+| TFIDF | 0.0080 | 0.1151 | 0.1812 | 0.8513 ± 0.0189 | — | — | 44.2 | 0.1946 |
+| Llama_None | 0.0256 | 0.1639 | 0.2762 | 0.8736 ± 0.0196 | 0.8417 ± 0.1240 | — | 60.4 | 0.2664 |
+| Llama_4bit | 0.0251 | 0.1646 | 0.2721 | 0.8735 ± 0.0200 | 0.7845 ± 0.1217 | — | 57.7 | 0.2606 |
+| Llama_8bit | 0.0250 | 0.1631 | 0.2751 | 0.8734 ± 0.0195 | 0.7028 ± 0.1013 | — | 60.3 | 0.2665 |
+| Phi-3_None | 0.0121 | 0.1131 | 0.2257 | 0.8527 ± 0.0161 | 0.4035 ± 0.0456 | — | 102.9 | 0.4815 |
+| Phi-3_4bit | 0.0122 | 0.1189 | 0.2261 | 0.8537 ± 0.0178 | 0.5644 ± 0.1354 | — | 97.3 | 0.4564 |
+| Phi-3_8bit | 0.0124 | 0.1136 | 0.2267 | 0.8526 ± 0.0164 | 0.2091 ± 0.1645 | — | 103.3 | 0.4837 |
 
-**Best per metric:** BLEU: **Llama_None** (0.0243); ROUGE-L: **Llama_None** (0.1612); METEOR: **Llama_None** (0.2735); BERTScore-F1: **Llama_None** (0.8732); SummaC: **Lead-1** (0.8297)
+**Best per metric:** BLEU: **Llama_None** (0.0256); ROUGE-L: **Llama_4bit** (0.1646); METEOR: **Llama_None** (0.2762); BERTScore-F1: **Llama_None** (0.8736); SummaC: **Llama_None** (0.8417)
 
 ---
 
 ## Notes — metrics that did not run
 
 - `Lead-1` / CNN/DailyMail — **qa_eval**: qafacteval not installed
+- `Lead-1` / XSum — **summac**: Exception('Truncation error: Sequence to truncate too short to respect the provided max_length')
 - `Lead-1` / XSum — **qa_eval**: qafacteval not installed
 - `Lead-3` / CNN/DailyMail — **qa_eval**: qafacteval not installed
+- `Lead-3` / XSum — **summac**: Exception('Truncation error: Sequence to truncate too short to respect the provided max_length')
 - `Lead-3` / XSum — **qa_eval**: qafacteval not installed
 - `Llama_4bit` / CNN/DailyMail — **qa_eval**: qafacteval not installed
 - `Llama_4bit` / XSum — **qa_eval**: qafacteval not installed
@@ -63,17 +65,14 @@
 - `Phi-3_None` / CNN/DailyMail — **qa_eval**: qafacteval not installed
 - `Phi-3_None` / XSum — **qa_eval**: qafacteval not installed
 - `TFIDF` / CNN/DailyMail — **qa_eval**: qafacteval not installed
+- `TFIDF` / XSum — **summac**: Exception('Truncation error: Sequence to truncate too short to respect the provided max_length')
 - `TFIDF` / XSum — **qa_eval**: qafacteval not installed
+- `TextRank` / CNN/DailyMail — **summac**: Exception('Truncation error: Sequence to truncate too short to respect the provided max_length')
 - `TextRank` / CNN/DailyMail — **qa_eval**: qafacteval not installed
+- `TextRank` / XSum — **summac**: Exception('Truncation error: Sequence to truncate too short to respect the provided max_length')
 - `TextRank` / XSum — **qa_eval**: qafacteval not installed
 
 ## Charts
-
-### Overview — all models compared
-
-![Model comparison](charts/comparison.png)
-
-### Per-metric
 
 ![BLEU](charts/bleu.png)
 
