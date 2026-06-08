@@ -69,15 +69,35 @@ class Evaluator:
         with open(file_path, 'r', encoding='utf-8') as f:
             for line in f:
                 data = json.loads(line)
+                summary = data['generated_summary']
+                if not summary or not summary.strip():
+                    continue
                 original_text.append(data['news'])
-                generated_summaries.append(data['generated_summary'])
+                generated_summaries.append(summary)
 
-        results = self.summac_model.score(original_text, generated_summaries)
-        scores = results["scores"]
+        scores = []
+        skipped = 0
+        chunk = 64
+        for i in range(0, len(original_text), chunk):
+            docs = original_text[i:i + chunk]
+            sums = generated_summaries[i:i + chunk]
+            try:
+                scores.extend(self.summac_model.score(docs, sums)["scores"])
+            except Exception:
+                for doc, summ in zip(docs, sums):
+                    try:
+                        scores.append(self.summac_model.score([doc], [summ])["scores"][0])
+                    except Exception:
+                        skipped += 1
+
+        if skipped:
+            print(f"  [summac] skipped {skipped} unscoreable example(s)", flush=True)
+        if not scores:
+            return {"summac": None, "summac_std": None}
 
         return {
             "summac": statistics.mean(scores),
-            "summac_std": statistics.stdev(scores),
+            "summac_std": statistics.stdev(scores) if len(scores) > 1 else 0.0,
         }
 
     def evaluate_qa(self, file_path):  # Highly recommended to call only in a cluster environment.

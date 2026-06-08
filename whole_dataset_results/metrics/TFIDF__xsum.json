@@ -4,7 +4,6 @@
   "file": "TFIDF_xsum_summaries.jsonl",
   "num_samples": 11334,
   "errors": {
-    "summac": "Exception('Truncation error: Sequence to truncate too short to respect the provided max_length')",
     "qa_eval": "qafacteval not installed"
   },
   "bleu": 0.007984698060096579,
@@ -18,5 +17,7 @@
   "avg_gen_len": 44.182106934886185,
   "std_gen_len": 13.82889518810407,
   "avg_gen_sents": 2.054349744132698,
-  "avg_compression": 0.1945515459623547
+  "avg_compression": 0.1945515459623547,
+  "summac": 0.22665127596655066,
+  "summac_std": 0.12730646993816475
 }

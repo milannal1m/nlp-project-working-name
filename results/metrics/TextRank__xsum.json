@@ -4,7 +4,6 @@
   "file": "TextRank_xsum_summaries.jsonl",
   "num_samples": 11334,
   "errors": {
-    "summac": "Exception('Truncation error: Sequence to truncate too short to respect the provided max_length')",
     "qa_eval": "qafacteval not installed"
   },
   "bleu": 0.009236842798801846,
@@ -18,5 +17,7 @@
   "avg_gen_len": 65.00591141697547,
   "std_gen_len": 26.438720945396387,
   "avg_gen_sents": 2.0949355920239987,
-  "avg_compression": 0.26051707960621207
+  "avg_compression": 0.26051707960621207,
+  "summac": 0.2245123925373626,
+  "summac_std": 0.12746016492721743
 }

@@ -1,0 +1,23 @@
+{
+  "label": "Llama_8bit",
+  "dataset": "xsum",
+  "file": "Llama_8bit_xsum_summaries.jsonl",
+  "num_samples": 11334,
+  "errors": {
+    "qa_eval": "qafacteval not installed"
+  },
+  "bleu": 0.025014735233679405,
+  "rougeL": 0.16312853088262913,
+  "meteor": 0.2751437407269932,
+  "bertscore_f1": 0.8733674713874044,
+  "bertscore_f1_std": 0.019511131967847647,
+  "summac": 0.7028116832071666,
+  "summac_std": 0.1013217685224151,
+  "qa_eval": null,
+  "avg_news_len": 385.4004764425622,
+  "avg_ref_len": 21.73001588141874,
+  "avg_gen_len": 60.2970707605435,
+  "std_gen_len": 12.6543022440092,
+  "avg_gen_sents": 2.1420504676195518,
+  "avg_compression": 0.2664909142356469
+}

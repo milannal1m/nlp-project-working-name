@@ -4,7 +4,6 @@
   "file": "Lead-3_xsum_summaries.jsonl",
   "num_samples": 11334,
   "errors": {
-    "summac": "Exception('Truncation error: Sequence to truncate too short to respect the provided max_length')",
     "qa_eval": "qafacteval not installed"
   },
   "bleu": 0.007690428417643297,
@@ -18,5 +17,7 @@
   "avg_gen_len": 69.36253749779425,
   "std_gen_len": 37.797774861386145,
   "avg_gen_sents": 3.6644609140638784,
-  "avg_compression": 0.30244881679133573
+  "avg_compression": 0.30244881679133573,
+  "summac": 0.22763460177623313,
+  "summac_std": 0.12646580752807973
 }

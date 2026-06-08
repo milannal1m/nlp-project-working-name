@@ -4,7 +4,6 @@
   "file": "TextRank_cnn_dailymail_summaries.jsonl",
   "num_samples": 11490,
   "errors": {
-    "summac": "Exception('Truncation error: Sequence to truncate too short to respect the provided max_length')",
     "qa_eval": "qafacteval not installed"
   },
   "bleu": 0.05974407547268682,
@@ -18,5 +17,7 @@
   "avg_gen_len": 78.26901653611836,
   "std_gen_len": 21.715938590101526,
   "avg_gen_sents": 2.3204525674499563,
-  "avg_compression": 0.1394400534467532
+  "avg_compression": 0.1394400534467532,
+  "summac": 0.10337612154191217,
+  "summac_std": 0.09005821120506724
 }
