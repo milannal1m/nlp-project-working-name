@@ -11,7 +11,6 @@
 | Reference words **not in the source** | 14.6% (extractive) | 35.7% (abstractive) |
 
 - Same articles for every system: shuffled with `seed=42`, so comparisons are fair ([`dataset.py`](../dataset.py)).
-- CNN datelines (e.g. `"LONDON (CNN) -- "`) are stripped; XSum is not.
 
 ## The 10 systems
 
