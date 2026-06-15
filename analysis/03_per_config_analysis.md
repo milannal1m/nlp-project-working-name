@@ -36,5 +36,4 @@
 | Llama ROUGE-L | 0.1639 | 0.1646 | 0.1631 | 0.0015 |
 | Llama BERTScore | 0.8736 | 0.8735 | 0.8734 | 0.0002 |
 
-  - Real lines (same Murray article): fp16 and 8-bit are almost token-identical; 4-bit rephrases but keeps every fact.
   - **Conclusion: run the cheap 4-bit model.** (SummaC does move under quantization, but that's metric noise — see [04](04_metric_reliability_caveats.md).)
