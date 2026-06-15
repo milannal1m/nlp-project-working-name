@@ -1,11 +1,5 @@
 # 4. Which metrics can we trust?
 
-## Q1 — Can we use QAFactEval?
-
-- **Answer:** No — it's empty.
-- **Reason:** The `qafacteval` package was never installed on the cluster.
-- **Proof:** every metrics JSON has `"qa_eval": null` with note *"qafacteval not installed"*.
-
 ## Q2 — Can we trust SummaC's numbers?
 
 - **Answer:** Only loosely. It contradicts itself, so never rank systems by it across styles.
