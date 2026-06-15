@@ -11,7 +11,7 @@
 | Lead-3 (opening sentences) | 0.89 |
 | TextRank (central mid-article sentences) | 0.10 |
 
-  - Real line (`TextRank_cnn_dailymail`, line 2): *"The group has gained territory, cash and recruits…"* — an **exact substring of the article** (verified), yet scored 0.10 because it opens with "The group" / "those young Muslim men" (no context).
+  - Real line (`TextRank_cnn_dailymail`, line 2): *"The group has gained territory, cash and recruits…"* — an **exact substring of the article**, yet scored 0.10 because it opens with "The group" / "those young Muslim men" (no context).
 
 
 ## Q3 — Can we compare BLEU across datasets?
