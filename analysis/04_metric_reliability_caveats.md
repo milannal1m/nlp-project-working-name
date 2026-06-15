@@ -12,8 +12,7 @@
 | TextRank (central mid-article sentences) | 0.10 |
 
   - Real line (`TextRank_cnn_dailymail`, line 2): *"The group has gained territory, cash and recruits…"* — an **exact substring of the article** (verified), yet scored 0.10 because it opens with "The group" / "those young Muslim men" (no context).
-  - More contradictions: Llama CNN 0.04 vs XSum 0.84 (same model); Phi-3_8bit CNN 0.97 vs Llama CNN 0.04 (same articles).
-- **Use it as:** a coarse signal within one summary style only.
+
 
 ## Q3 — Can we compare BLEU across datasets?
 
