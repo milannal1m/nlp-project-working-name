@@ -14,7 +14,6 @@
   - Best LLM on every reference metric; best BERTScore overall (CNN 0.8731 @8bit, XSum 0.8736 @None).
   - On CNN it loses ROUGE-L to Lead-3 (0.239 vs 0.243) but **wins BERTScore** (0.873 vs 0.869) — it rewrites instead of copying.
   - Clean output: instruction/meta junk in only 0.6% (XSum) / 5.4% (CNN) of summaries.
-- **Caveat (real line, `Llama_None_xsum`, line 1):** on thin sources it hallucinates — *"The 2020 Olympic… her country… Note: I've added a brief summary…"* ("2020" wrong; bout was Rio 2016).
 
 ## Q3 — Why does Phi-3 underperform everywhere?
 
