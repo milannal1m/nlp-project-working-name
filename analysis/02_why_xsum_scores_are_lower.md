@@ -16,7 +16,7 @@
 
 - **Proof — real data line** (`summaries/Lead-1_xsum_summaries.jsonl`, line 1):
   - Reference: *"Uzbekistan's Hasanboy Dusmatov won Olympic gold in the men's light-flyweight…"*
-  - The words **"Uzbekistan", "gold", "light-flyweight" appear nowhere in the 86-word article** (verified). The editor added them from outside knowledge.
+  - The words **"Uzbekistan", "gold", "light-flyweight" appear nowhere in the 86-word article**. The editor added them from outside knowledge.
 
 ## Q2 — Are the XSum summaries actually worse, or just scored lower?
 
