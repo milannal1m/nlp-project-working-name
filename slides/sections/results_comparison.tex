@@ -1,0 +1,34 @@
+% Results slide: comparison of our models vs. published, same models, zero-shot.
+% Numbers from results/results.csv (fp16 variants) and arXiv:2501.18128 (zero-shot).
+\begin{frame}{Results: comparison with published (same models, zero-shot)}
+
+  \begin{table}
+    \footnotesize
+    \begin{tabular}{@{}l cccccc@{}}
+      \toprule
+       & \multicolumn{3}{c}{CNN/DailyMail} & \multicolumn{3}{c}{XSum} \\
+      \cmidrule(lr){2-4}\cmidrule(lr){5-7}
+      Model & R-L & MET & BS & R-L & MET & BS \\
+      \midrule
+      \alert{Ours --- Llama-3.2-3B-Instruct} & \textbf{.239} & \textbf{.338} & \textbf{.873} & \textbf{.164} & \textbf{.276} & \textbf{.874} \\
+      Pub --- Llama-3-8B-Instruct           & .168 & .301 & .850 & .104 & .150 & .813 \\
+      \addlinespace
+      \alert{Ours --- Phi-3-mini-4k-instruct} & \textbf{.185} & \textbf{.301} & .852 & .113 & \textbf{.226} & .853 \\
+      Pub --- Phi-3-mini-4k-instruct$^{\dagger}$ & .159 & .260 & .852 & \textbf{.123} & .195 & .852 \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+  \footnotesize
+  R-L = ROUGE-L, MET = METEOR, BS = BERTScore-F1 (higher is better). Same metric
+  conventions (HF \texttt{rougeL}, roberta-large F1). 4-/8-bit variants within
+  $\le 0.003$. $^{\dagger}$\,identical checkpoint to ours.
+
+  \begin{exampleblock}{Takeaway}
+    Our \textbf{3B} Llama beats the published \textbf{8B} Llama-3 on every metric,
+    both datasets; our Phi-3 (identical weights) is comparable.
+  \end{exampleblock}
+
+  {\tiny Published: \emph{Unraveling the Capabilities of Language Models in News Summarization} (arXiv:2501.18128), zero-shot.}
+
+\end{frame}
