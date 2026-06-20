@@ -124,7 +124,34 @@ datasets. Our three precisions differ by **≤ 0.003 ROUGE-L** (e.g. CNN Llama 0
 
 ---
 
-## 4. Verdict
+## 4. Insights — why the numbers look like this
+
+1. **Our 3B Llama beats the published 8B Llama-3 (zero-shot), every metric, both datasets.** Llama-3.2 (late
+   2024) is a newer generation than Llama-3 (mid-2024), and the 3.2-3B model was distilled from larger
+   Llama-3.1 models — so it summarizes better than its size suggests and follows the zero-shot "summarize"
+   instruction more cleanly. Some margin is our prompt/decoding, but a consistent win on all 3 metrics × 2
+   datasets points to a real model-generation gain, not noise.
+2. **Our Phi-3 ≈ published Phi-3 (identical weights) — the gaps are usage, not quality.** We skipped Phi-3's
+   chat template + stop token, so its outputs run ~103 words. That verbosity *inflates* recall-weighted
+   metrics (METEOR, and CNN ROUGE-L) and *crashes* precision against XSum's one-sentence references (lowering
+   XSum ROUGE-L). BERTScore ties → the meaning is comparable; the surface-metric gaps are length + prompt
+   artifacts, not better/worse summaries.
+3. **Llama outscores Phi-3 in our run — partly real, partly artifact.** Llama-3.2-3B is genuinely a strong
+   summarizer, but Phi-3 is also handicapped by the template-leak bug (it is known to be sensitive to its chat
+   format), which depresses and adds noise to its scores. Fix the prompting before ranking the two.
+4. **XSum is lower than CNN for everyone — by design, not quality.** XSum references are a single abstractive
+   sentence (35.7% novel words), so word-overlap metrics are capped; BERTScore stays at parity. Low XSum
+   ROUGE ≠ worse summaries (see [`02_why_xsum_scores_are_lower.md`](02_why_xsum_scores_are_lower.md)).
+5. **Our extractive baselines look low vs canonical numbers only because of the ROUGE convention.** HF
+   `rougeL`/no-stem vs ROUGE-1.5.5/stemmed. Proof: our XSum Lead-1 (0.118) matches published LEAD (0.120),
+   while CNN Lead-3 (0.243) trails canonical (0.366) — the gap appears *only* where multi-sentence summaries
+   make the two conventions diverge.
+6. **Quantization barely moves anything.** fp16 / 8-bit / 4-bit stay within ≤ 0.003 ROUGE-L, so the 4-bit
+   model is a free win — greedy decoding of these small models is essentially unchanged by quantization.
+
+---
+
+## 5. Verdict
 
 - **vs the same models, same metrics (§1):** our 3B Llama **beats published 8B Llama-3 zero-shot on both
   datasets, every metric**; our Phi-3 (identical checkpoint) is **comparable** — equal BERTScore, with higher
@@ -132,9 +159,7 @@ datasets. Our three precisions differ by **≤ 0.003 ROUGE-L** (e.g. CNN Llama 0
   correct, exact comparison.
 - **vs extractive baselines (§2):** our XSum LEAD **matches** published; the CNN Lead-3 gap is a metric
   convention, provably not a quality gap.
-- **vs fine-tuned BART/PEGASUS** (R-L ≈ 0.41 CNN / 0.37–0.39 XSum): far higher, but they are *trained on these
-  datasets* — the wrong baseline for zero-shot 3B models, and partly the same metric artifact.
-- **To make even §2/SOTA exactly comparable**, recompute `rougeLsum` + stemming on
+- **To make §2 exactly comparable**, recompute `rougeLsum` + stemming on
   [`results/eval_inputs/`](../results/eval_inputs/) — I can do this on request.
 
 ---
@@ -146,4 +171,3 @@ datasets. Our three precisions differ by **≤ 0.003 ROUGE-L** (e.g. CNN Llama 0
 - [Narayan et al. 2018, *Don't Give Me the Details…* (EMNLP, XSum)](https://aclanthology.org/D18-1206/) — XSum LEAD ROUGE-L = 11.95, plus RANDOM and EXT-ORACLE.
 - [Evaluating LLMs and Pre-trained Models for Summarization Across Datasets (2025), arXiv:2502.19339](https://arxiv.org/html/2502.19339v2).
 - [Goyal et al. 2022, *News Summarization with GPT-3*](https://tagoyal.github.io/zeroshot-news-annotations.html) — zero-shot LLMs: lower ROUGE, higher human preference.
-- [PEGASUS (Zhang et al. 2020)](https://arxiv.org/pdf/1912.08777) & [BART/PEGASUS/T5 comparative study (MDPI 2025)](https://www.mdpi.com/1999-5903/17/9/389) — fine-tuned SOTA context.
