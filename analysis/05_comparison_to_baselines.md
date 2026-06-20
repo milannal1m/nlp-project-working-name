@@ -50,10 +50,16 @@ Published LLM rows are from **Unraveling the Capabilities of Language Models in 
 **Reading these:**
 - **Llama:** our **3B** model beats the published **8B** Llama-3 (base *and* instruct) on **every metric, both
   datasets** — a smaller, newer model outperforming a larger, older one zero-shot.
-- **Phi-3 (identical checkpoint):** we beat the published number on **ROUGE-L + METEOR on CNN** and **METEOR
-  on XSum**, **tie on BERTScore** everywhere, and are **slightly below on XSum ROUGE-L** (0.113–0.119 vs
-  0.123) — and our Phi-3 still carries a prompt-template leak (see
-  [`03_per_config_analysis.md`](03_per_config_analysis.md)), so this is a floor, not a ceiling.
+- **Phi-3 (identical checkpoint):** BERTScore **ties (~0.852)** on both datasets; we are higher on
+  **ROUGE-L + METEOR on CNN** but **lower on XSum ROUGE-L** (0.113–0.119 vs 0.123).
+  ⚠ **This is a length artifact, not a quality win.** Our Phi-3 averages **~103 words** because no
+  chat-template / stop-token is applied, so it never stops (see
+  [`03_per_config_analysis.md`](03_per_config_analysis.md)). METEOR is recall-weighted and ROUGE-L recall
+  rises with length, so the verbosity *inflates* the CNN scores; the **same** verbosity wrecks precision
+  against XSum's 21.7-word single-sentence references, which is exactly why our XSum ROUGE-L falls *below*
+  published. Fixing the prompting would shorten outputs and likely **lower** the inflated CNN METEOR while
+  **raising** XSum ROUGE-L — not a uniform gain. Treat ~0.02–0.03 ROUGE differences as prompt/length/decoding
+  noise, not a real win.
 
 *Secondary anchors (caveated): a zero-shot **Llama-13B** reports R-L 0.229 (CNN) / 0.119 (XSum) — our 3B
 matches/exceeds it; a token-cascade study reports **Llama-3.2-3B** R-L ≈ 0.253 on CNN at 40% FLOPs
@@ -68,24 +74,24 @@ Published extractive numbers use **ROUGE-1.5.5, stemmed, summary-level (rougeLsu
 method (a copy-paste baseline can't be "worse").
 
 ### CNN/DailyMail
-| System | ROUGE-1 | ROUGE-2 | ROUGE-L |
-|---|---:|---:|---:|
-| Ours — Lead-1 | — | — | 0.183 |
-| Ours — Lead-3 | — | — | 0.243 |
-| Ours — TextRank | — | — | 0.181 |
-| Ours — TFIDF | — | — | 0.173 |
-| Pub — lead-3 (See et al. 2017) | 0.403 | 0.177 | **0.366** |
+| System | ROUGE-L |
+|---|---:|
+| Ours — Lead-1 | 0.183 |
+| Ours — Lead-3 | 0.243 |
+| Ours — TextRank | 0.181 |
+| Ours — TFIDF | 0.173 |
+| Pub — lead-3 (See et al. 2017) | **0.366** |
 
 ### XSum
-| System | ROUGE-1 | ROUGE-2 | ROUGE-L |
-|---|---:|---:|---:|
-| **Ours — Lead-1** | — | — | **0.118** |
-| Ours — Lead-3 | — | — | 0.116 |
-| Ours — TextRank | — | — | 0.115 |
-| Ours — TFIDF | — | — | 0.115 |
-| Pub — LEAD (Narayan et al. 2018) | 0.163 | 0.016 | **0.120** |
-| Pub — RANDOM | 0.152 | 0.018 | 0.113 |
-| Pub — EXT-ORACLE (upper bound) | 0.298 | 0.088 | 0.227 |
+| System | ROUGE-L |
+|---|---:|
+| **Ours — Lead-1** | **0.118** |
+| Ours — Lead-3 | 0.116 |
+| Ours — TextRank | 0.115 |
+| Ours — TFIDF | 0.115 |
+| Pub — LEAD (Narayan et al. 2018) | **0.120** |
+| Pub — RANDOM | 0.113 |
+| Pub — EXT-ORACLE (upper bound) | 0.227 |
 
 → Our **XSum Lead-1 (0.118) matches the published LEAD (0.120)** almost exactly — confirming our pipeline is
 correct (XSum's 1-sentence references make `rougeL ≈ rougeLsum`). The CNN Lead-3 gap (0.243 vs 0.366) is
@@ -121,13 +127,14 @@ datasets. Our three precisions differ by **≤ 0.003 ROUGE-L** (e.g. CNN Llama 0
 ## 4. Verdict
 
 - **vs the same models, same metrics (§1):** our 3B Llama **beats published 8B Llama-3 zero-shot on both
-  datasets, every metric**; our Phi-3 (identical checkpoint) **matches or beats** published except a small
-  XSum-ROUGE-L deficit. This is the correct, exact comparison.
+  datasets, every metric**; our Phi-3 (identical checkpoint) is **comparable** — equal BERTScore, with higher
+  CNN ROUGE-L/METEOR that is largely a verbosity artifact (§1) and a small XSum-ROUGE-L deficit. This is the
+  correct, exact comparison.
 - **vs extractive baselines (§2):** our XSum LEAD **matches** published; the CNN Lead-3 gap is a metric
   convention, provably not a quality gap.
 - **vs fine-tuned BART/PEGASUS** (R-L ≈ 0.41 CNN / 0.37–0.39 XSum): far higher, but they are *trained on these
   datasets* — the wrong baseline for zero-shot 3B models, and partly the same metric artifact.
-- **To make even §2/SOTA exactly comparable**, recompute `rougeLsum` + stemming (and add ROUGE-1/2) on
+- **To make even §2/SOTA exactly comparable**, recompute `rougeLsum` + stemming on
   [`results/eval_inputs/`](../results/eval_inputs/) — I can do this on request.
 
 ---
@@ -135,8 +142,8 @@ datasets. Our three precisions differ by **≤ 0.003 ROUGE-L** (e.g. CNN Llama 0
 ## Sources
 
 - [Unraveling the Capabilities of Language Models in News Summarization (2025), arXiv:2501.18128](https://arxiv.org/html/2501.18128v1) — exact models: Llama-2-7b-hf, Meta-Llama-3-8B, Meta-Llama-3-8B-Instruct, Phi-3-Mini-4K-Instruct; zero-shot ROUGE-L / METEOR / BERTScore on CNN/DM & XSum.
-- [See et al. 2017, *Get To The Point* (ACL)](https://aclanthology.org/P17-1099/) — CNN/DM lead-3 = 40.34 / 17.70 / 36.57 (R-1/2/L).
-- [Narayan et al. 2018, *Don't Give Me the Details…* (EMNLP, XSum)](https://aclanthology.org/D18-1206/) — XSum LEAD 16.30 / 1.60 / 11.95, RANDOM, EXT-ORACLE.
+- [See et al. 2017, *Get To The Point* (ACL)](https://aclanthology.org/P17-1099/) — CNN/DM lead-3 ROUGE-L = 36.57.
+- [Narayan et al. 2018, *Don't Give Me the Details…* (EMNLP, XSum)](https://aclanthology.org/D18-1206/) — XSum LEAD ROUGE-L = 11.95, plus RANDOM and EXT-ORACLE.
 - [Evaluating LLMs and Pre-trained Models for Summarization Across Datasets (2025), arXiv:2502.19339](https://arxiv.org/html/2502.19339v2).
 - [Goyal et al. 2022, *News Summarization with GPT-3*](https://tagoyal.github.io/zeroshot-news-annotations.html) — zero-shot LLMs: lower ROUGE, higher human preference.
 - [PEGASUS (Zhang et al. 2020)](https://arxiv.org/pdf/1912.08777) & [BART/PEGASUS/T5 comparative study (MDPI 2025)](https://www.mdpi.com/1999-5903/17/9/389) — fine-tuned SOTA context.
