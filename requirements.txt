@@ -14,7 +14,5 @@ bert-score>=0.3.13
 nltk>=3.8.1
 matplotlib>=3.7.0
 numpy>=1.24.0
-scikit-learn>=1.3.0   # cluster_analysis.py: StandardScaler, KMeans, PCA, silhouette
-scipy>=1.10.0         # cluster_analysis.py: Ward linkage / dendrogram
 # summac must be installed separately: pip install --no-deps git+https://github.com/tingofurro/summac.git
 # qafacteval (optional, for the QA-Eval metric): pip install qafacteval  (degrades to null if absent)
