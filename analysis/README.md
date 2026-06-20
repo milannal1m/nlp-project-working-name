@@ -7,6 +7,7 @@ Read in order:
 - [02_why_xsum_scores_are_lower.md](02_why_xsum_scores_are_lower.md) — the XSum question.
 - [03_per_config_analysis.md](03_per_config_analysis.md) — why each system scores what it scores.
 - [04_metric_reliability_caveats.md](04_metric_reliability_caveats.md) — which metrics to trust.
+- [05_cluster_analysis.md](05_cluster_analysis.md) — data-driven clustering of the 20 configs into 4 meaningful groups, with proof (run `python cluster_analysis.py`).
 
 Every point below follows the same thread: **Question → Answer → Reason → Proof.**
 
