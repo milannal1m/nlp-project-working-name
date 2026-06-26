@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=llama-summarization
+#SBATCH --job-name=llama-summarization-p3
 #SBATCH --partition=gpu_a100_il
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=16
@@ -19,4 +19,4 @@ nvidia-smi
 python main.py \
     --model_name_or_path unsloth/Llama-3.2-3B-Instruct \
     --quantization_method 4bit \
-    --prompt_name P1
+    --prompt_name P3

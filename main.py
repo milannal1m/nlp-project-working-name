@@ -8,6 +8,7 @@ import torch
 
 from dataset import extract_fields, load_all_datasets
 from model import RunConfig, SummarizationModel
+from prompts import PROMPT_CONFIGS
 
 
 def parse_args() -> RunConfig:
@@ -19,10 +20,20 @@ def parse_args() -> RunConfig:
         choices=["None", "4bit", "8bit"],
         default="None",
     )
+    parser.add_argument(
+        "--prompt_name",
+        type=str,
+        choices=list(PROMPT_CONFIGS.keys()),
+        default="P1",
+    )
     args = parser.parse_args()
+    prompt_cfg = PROMPT_CONFIGS[args.prompt_name]
     return RunConfig(
         model_name_or_path=args.model_name_or_path,
         quantization_method=args.quantization_method,
+        prompt_name=args.prompt_name,
+        prompt_template=prompt_cfg["template"],
+        max_new_tokens=prompt_cfg["max_new_tokens"],
     )
 
 
@@ -37,7 +48,7 @@ def run(model: SummarizationModel, datasets: dict) -> None:
 
         output_path = os.path.join(
             model.config.output_dir,
-            f"Llama_{model.config.quantization_method}_{dataset_name}_summaries.jsonl",
+            f"Llama_{model.config.prompt_name}_{model.config.quantization_method}_{dataset_name}_summaries.jsonl",
         )
 
         print("=" * 80, flush=True)
