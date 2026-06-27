@@ -11,6 +11,7 @@ nltk.download('punkt_tab', quiet=True)
 
 from dataset import extract_fields, load_datasets_streaming
 from model import RunConfig, SummarizationModel
+from prompts import PROMPT_CONFIGS
 from baseline_lead import run_lead
 from baseline_textrank import run_textrank
 from baseline_tfidf import run_tfidf
@@ -26,19 +27,38 @@ def parse_args():
         choices=["None", "4bit", "8bit"],
         default="None",
     )
+    parser.add_argument(
+        "--prompt_name",
+        type=str,
+        choices=list(PROMPT_CONFIGS.keys()),
+        default="P1",
+    )
     parser.add_argument("--sample", type=int, default=None,
                         help="Articles per dataset. Omit to use the full test set.")
     parser.add_argument("--output_dir", type=str, default="./summaries")
     parser.add_argument("--log_path", type=str, default="evaluation.log")
-    return parser.parse_args()
+
+    args = parser.parse_args()
+    prompt_cfg = PROMPT_CONFIGS[args.prompt_name]
+
+    return RunConfig(
+        model_name_or_path=args.model_name_or_path,
+        quantization_method=args.quantization_method,
+        prompt_name=args.prompt_name,
+        prompt_template=prompt_cfg["template"],
+        max_new_tokens=prompt_cfg["max_new_tokens"],
+        sample=args.sample,
+        output_dir=args.output_dir,
+        log_path=args.log_path,
+    )
 
 
 def run_llama(model: SummarizationModel, datasets: dict, output_dir: str, sample: int) -> None:
     os.makedirs(output_dir, exist_ok=True)
     for dataset_name, data in datasets.items():
         output_path = os.path.join(
-            output_dir,
-            f"Llama_{model.config.quantization_method}_{dataset_name}_summaries.jsonl",
+            model.config.output_dir,
+            f"Llama_{model.config.prompt_name}_{model.config.quantization_method}_{dataset_name}_summaries.jsonl",
         )
         print("=" * 80, flush=True)
         print(f"[LLaMA] {dataset_name} (up to {sample} samples) -> {output_path}", flush=True)

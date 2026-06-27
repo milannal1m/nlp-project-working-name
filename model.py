@@ -10,6 +10,7 @@ class RunConfig:
     model_name_or_path: str
     quantization_method: str = "None"
     output_dir: str = "./summaries"
+    prompt_name: str = "P1"
     prompt_template: str = "News: {news}\nSummarize the news in two sentences. Summary:"
     max_input_length: int = 2048
     max_new_tokens: int = 150
