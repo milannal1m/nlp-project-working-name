@@ -21,26 +21,7 @@ import json
 import os
 import re
 import time
-from datasets import load_dataset
-from dataset import extract_fields
-
-
-# -------------------------------------------------------------------
-# Dataset config — same sources as dataset.py but loaded with
-# streaming=True so only the articles you actually read are downloaded
-# -------------------------------------------------------------------
-DATASET_CONFIGS = {
-    "cnn_dailymail":         {"path": "abisee/cnn_dailymail",           "split": "test",  "name": "3.0.0"},
-    "xsum":                  {"path": "EdinburghNLP/xsum",              "split": "test"},
-    "news-qa-summarization": {"path": "glnmario/news-qa-summarization", "split": "train"},
-}
-
-# Which columns hold the article text and the reference summary
-FIELD_MAP = {
-    "cnn_dailymail":         ("article",  "highlights"),
-    "xsum":                  ("document", "summary"),
-    "news-qa-summarization": ("story",    "summary"),
-}
+from dataset import extract_fields, load_datasets_streaming
 
 
 # -------------------------------------------------------------------
@@ -55,27 +36,6 @@ def sent_tokenize(text: str) -> list[str]:
 def lead_n(text: str, n: int) -> str:
     """Return the first n sentences of text as a single string."""
     return " ".join(sent_tokenize(text)[:n])
-
-
-# -------------------------------------------------------------------
-# Dataset loading — streaming means only `sample` articles downloaded
-# -------------------------------------------------------------------
-def load_datasets_streaming(sample: int) -> dict:
-    """
-    Load each dataset in streaming mode and take only `sample` items.
-    Nothing is written to disk — articles are fetched on the fly.
-    """
-    datasets = {}
-    for name, cfg in DATASET_CONFIGS.items():
-        kwargs = {"split": cfg["split"], "streaming": True}
-        if "name" in cfg:
-            kwargs["name"] = cfg["name"]
-
-        # .take(sample) fetches only those rows — rest never downloaded
-        datasets[name] = load_dataset(cfg["path"], **kwargs).take(sample)
-        print(f"  [ready] {name} (up to {sample} samples, streaming)", flush=True)
-
-    return datasets
 
 
 # -------------------------------------------------------------------

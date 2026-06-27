@@ -10,29 +10,11 @@ import argparse
 import json
 import os
 import time
-from datasets import load_dataset
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
-from sumy.summarizers.lsa import LsaSummarizer  
+from sumy.summarizers.lsa import LsaSummarizer
 
-from dataset import extract_fields
-
-DATASET_CONFIGS = {
-    "cnn_dailymail":         {"path": "abisee/cnn_dailymail",           "split": "test",  "name": "3.0.0"},
-    "xsum":                  {"path": "EdinburghNLP/xsum",              "split": "test"},
-    "news-qa-summarization": {"path": "glnmario/news-qa-summarization", "split": "train"},
-}
-
-
-def load_datasets_streaming(sample: int) -> dict:
-    datasets = {}
-    for name, cfg in DATASET_CONFIGS.items():
-        kwargs = {"split": cfg["split"], "streaming": True}
-        if "name" in cfg:
-            kwargs["name"] = cfg["name"]
-        datasets[name] = load_dataset(cfg["path"], **kwargs).take(sample)
-        print(f"  [ready] {name} (up to {sample} samples, streaming)", flush=True)
-    return datasets
+from dataset import extract_fields, load_datasets_streaming
 
 
 def tfidf_summarize(text: str, n_sentences: int = 2) -> str:

@@ -2,17 +2,17 @@ import re
 from datasets import load_dataset
 
 DATASET_CONFIGS = {
-    "cnn_dailymail":          {"path": "abisee/cnn_dailymail",              "split": "test[:500]",  "name": "3.0.0"},
-    "xsum":                   {"path": "EdinburghNLP/xsum",                "split": "test[:500]"},
-    #"newsroom":               {"path": "lil-lab/newsroom",                  "split": "test[:500]"},
-    "news-qa-summarization":  {"path": "glnmario/news-qa-summarization",    "split": "train[:500]"},
+    "cnn_dailymail":          {"path": "abisee/cnn_dailymail",              "split": "test",  "name": "3.0.0"},
+    "xsum":                   {"path": "EdinburghNLP/xsum",                "split": "test"},
+    #"newsroom":               {"path": "lil-lab/newsroom",                  "split": "test"},
+    #"news-qa-summarization":  {"path": "glnmario/news-qa-summarization",    "split": "train"},
 }
 
 _FIELD_MAP = {
     "cnn_dailymail":          ("article",  "highlights"),
     "xsum":                   ("document", "summary"),
     #"newsroom":               ("text",     "summary"),
-    "news-qa-summarization":  ("story",    "summary"),
+    #"news-qa-summarization":  ("story",    "summary"),
 }
 _DATASETS_WITH_DATELINES = {"cnn_dailymail", "news-qa-summarization"}
 
@@ -36,13 +36,18 @@ def strip_dateline(text: str) -> str:
 
     return text
 
-def load_all_datasets() -> dict:
+def load_datasets_streaming(sample: int = None, seed: int = 42) -> dict:
     result = {}
     for name, cfg in DATASET_CONFIGS.items():
-        kwargs = {"split": cfg["split"]}
+        kwargs = {"split": cfg["split"], "streaming": True}
         if "name" in cfg:
             kwargs["name"] = cfg["name"]
-        result[name] = load_dataset(cfg["path"], **kwargs)
+        ds = load_dataset(cfg["path"], **kwargs).shuffle(seed=seed)
+        if sample is not None:
+            ds = ds.take(sample)
+        result[name] = ds
+        label = f"up to {sample} samples" if sample is not None else "full split"
+        print(f"  [ready] {name} ({label}, streaming)", flush=True)
     return result
 
 
