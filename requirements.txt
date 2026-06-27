@@ -12,4 +12,3 @@ protobuf>=3.20.0
 absl-py>=1.0.0
 bert-score>=0.3.13
 nltk>=3.8.1
-# summac must be installed separately: pip install --no-deps git+https://github.com/tingofurro/summac.git
