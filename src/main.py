@@ -145,7 +145,7 @@ def run_summarize(args) -> None:
     )
     model = SummarizationModel(config)
 
-    datasets = load_datasets_streaming(sample=args.sample, seed=args.seed)
+    datasets = load_datasets_streaming(sample=args.sample, seed=args.seed, names=pending)
     for dataset_name in pending:
         data = datasets[dataset_name]
         out_path = output_path_for(
@@ -178,7 +178,7 @@ def run_summarize(args) -> None:
 
 def run_baselines(args) -> None:
     os.makedirs(args.output_dir, exist_ok=True)
-    datasets = load_datasets_streaming(sample=args.sample, seed=args.seed)
+    datasets = load_datasets_streaming(sample=args.sample, seed=args.seed, names=args.datasets)
 
     # (display name, output prefix, callable taking a filtered datasets dict)
     specs = [

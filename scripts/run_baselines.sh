@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=baselines
-#SBATCH --partition=single
+#SBATCH --partition=cpu
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=32000
 #SBATCH --time=12:00:00

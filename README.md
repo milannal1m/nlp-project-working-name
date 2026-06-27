@@ -34,14 +34,17 @@ Evaluation results land in `results/evaluation.log` and `results/evaluation.csv`
 
 ## Datasets
 
-| Dataset | HuggingFace Path | Split |
+| Dataset key | Source | Split |
 |---------|-----------------|-------|
-| CNN/DailyMail | `abisee/cnn_dailymail` | test[:500] |
-| XSum | `EdinburghNLP/xsum` | test[:500] |
+| `cnn_dailymail` | `abisee/cnn_dailymail` (HuggingFace) | test[:sample] |
+| `xsum` | `EdinburghNLP/xsum` (HuggingFace) | test[:sample] |
+| `xu_cnndm` | local `xu_et_all_datasets/` (Xu et al.) | fixed 500-sample |
+| `xu_xsum` | local `xu_et_all_datasets/` (Xu et al.) | fixed 500-sample |
 | News QA Summarization | `glnmario/news-qa-summarization` | train[:500] |
 (Newsroom doesnt work yet, missing HuggingFace repo)
 
-Datasets are downloaded automatically from HuggingFace on first run.
+HuggingFace datasets are downloaded automatically on first run. The `xu_*` keys
+read Xu et al.'s released local files (see the Xu et al. section below).
 
 ---
 
@@ -106,6 +109,33 @@ keep both.
 Run `./run_experiment.sh --help` for the full list. To test the pipeline
 locally without SLURM, call a single combination directly:
 `python src/main.py --task all --sample 10`.
+
+### Reproducing on Xu et al.'s samples
+
+Xu et al. released fixed 500-article samples for CNN/DailyMail and XSum (in
+`xu_et_all_datasets/`). They are registered as the dataset keys **`xu_cnndm`** and
+**`xu_xsum`**, so they flow through the exact same pipeline (models × quant × prompt,
+baselines, evaluation) — just select them with `--datasets`. The articles are read
+verbatim from the local files (no shuffling), so every model sees Xu et al.'s exact
+500 inputs, making the results directly comparable to theirs.
+
+```bash
+# Run ONLY the Xu et al. experiments (full grid + baselines + eval) on their 500 samples
+./run_experiment.sh --datasets "xu_cnndm xu_xsum" --sample 500
+
+# Just one of the two
+./run_experiment.sh --datasets xu_cnndm --sample 500
+
+# Smoke-test a single combination locally, 3 articles
+python src/main.py --task summarize --model Llama --quantization_method 4bit \
+    --prompt_name P1 --datasets xu_cnndm --sample 3
+```
+
+Outputs are written as `summaries/{model}_{prompt}_{quant}_xu_cnndm_500_summaries.jsonl`
+(distinct from the HuggingFace `cnn_dailymail`/`xsum` runs, so the two never collide)
+and evaluated into `results/evaluation.{log,csv}` like everything else. Each file is
+exactly 500 records, so `--sample 500` uses all of them; `--sample N` (N<500) caps to
+the first N for quick tests.
 
 ### Running a single combination
 

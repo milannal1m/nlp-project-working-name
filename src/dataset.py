@@ -1,9 +1,13 @@
+import json
+import os
 import re
-from datasets import load_dataset
 
 DATASET_CONFIGS = {
     "cnn_dailymail":          {"path": "abisee/cnn_dailymail",              "split": "test",  "name": "3.0.0"},
     "xsum":                   {"path": "EdinburghNLP/xsum",                "split": "test"},
+    # Xu et al.'s released 500-article samples (local files, read verbatim).
+    "xu_cnndm":               {"local_path": "xu_et_all_datasets/cnndm_sample_500_0k5_1k5_qwen_summary.jsonl"},
+    "xu_xsum":                {"local_path": "xu_et_all_datasets/xsum_sample_500_0k5_1k5_qwen_summary.jsonl"},
     #"newsroom":               {"path": "lil-lab/newsroom",                  "split": "test"},
     #"news-qa-summarization":  {"path": "glnmario/news-qa-summarization",    "split": "train"},
 }
@@ -11,6 +15,8 @@ DATASET_CONFIGS = {
 _FIELD_MAP = {
     "cnn_dailymail":          ("article",  "highlights"),
     "xsum":                   ("document", "summary"),
+    "xu_cnndm":               ("article",  "qwen_reference_summary"),
+    "xu_xsum":                ("article",  "qwen_reference_summary"),
     #"newsroom":               ("text",     "summary"),
     #"news-qa-summarization":  ("story",    "summary"),
 }
@@ -36,9 +42,35 @@ def strip_dateline(text: str) -> str:
 
     return text
 
-def load_datasets_streaming(sample: int = None, seed: int = 42) -> dict:
+def load_local_jsonl(path: str, sample: int = None) -> list:
+    """Load a local dataset stored as a (pretty-printed) JSON array of records.
+
+    These files hold a fixed, pre-selected sample, so we do NOT shuffle; --sample
+    just caps to the first N records if N is smaller than the file.
+    """
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data if sample is None else data[:sample]
+
+
+def load_datasets_streaming(sample: int = None, seed: int = 42, names=None) -> dict:
+    """Return {name: iterable-of-records} for the requested datasets.
+
+    HuggingFace datasets are streamed (shuffled, then truncated to `sample`); local
+    datasets (those with a `local_path`) are read verbatim. `names` restricts which
+    datasets are loaded (default: all configured) so a local-only run never touches
+    the network and an HF run never reads the local files.
+    """
+    selected = names if names is not None else list(DATASET_CONFIGS.keys())
     result = {}
-    for name, cfg in DATASET_CONFIGS.items():
+    for name in selected:
+        cfg = DATASET_CONFIGS[name]
+        if "local_path" in cfg:
+            result[name] = load_local_jsonl(cfg["local_path"], sample)
+            label = f"first {sample}" if sample is not None else "all"
+            print(f"  [ready] {name} ({label} records, local file)", flush=True)
+            continue
+        from datasets import load_dataset  # lazy: only needed for HuggingFace sources
         kwargs = {"split": cfg["split"], "streaming": True}
         if "name" in cfg:
             kwargs["name"] = cfg["name"]
@@ -76,6 +108,13 @@ if __name__ == "__main__":
     all_ok = True
     for name, cfg in DATASET_CONFIGS.items():
         try:
+            if "local_path" in cfg:
+                if not os.path.exists(cfg["local_path"]):
+                    raise FileNotFoundError(cfg["local_path"])
+                n = len(load_local_jsonl(cfg["local_path"]))
+                print(f"[OK]   {name} ({n} records, local)")
+                continue
+            from datasets import load_dataset
             kwargs = {"split": cfg["split"]}
             if "name" in cfg:
                 kwargs["name"] = cfg["name"]
