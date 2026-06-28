@@ -3,6 +3,10 @@ import json
 import hashlib
 import os
 import sys
+import torch
+from transformers import set_seed
+
+set_seed(42)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.abspath(os.path.join(current_dir, ".."))
