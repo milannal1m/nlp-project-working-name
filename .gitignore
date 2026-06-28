@@ -50,3 +50,12 @@ env/
 Thumbs.db
 .vscode/
 .idea/
+
+# =========================
+# local test files
+# =========================
+test_dataset.py
+test_main.py
+
+.github
+logs
