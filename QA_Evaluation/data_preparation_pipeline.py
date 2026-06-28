@@ -14,14 +14,8 @@ parent_dir = os.path.abspath(os.path.join(current_dir, ".."))
 if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
-from model import SummarizationModel, RunConfig
-
-# All the prompt variations
-PROMPT_TEMPLATES = {
-    "P1": "News: {news}\nSummarize the news in two sentences. Summary:",
-    "P2": "You are a news summarizer. Read the following article and write a concise two-sentence summary covering the key facts and main event.\nArticle: {news}\nSummary:",
-    "P3": "Read the following news article. First identify the main event, the key people involved, and the outcome. Then write a two-sentence summary based on those facts.\nArticle: {news}\nSummary:"
-}
+from src.model import SummarizationModel, RunConfig
+from src.prompts import PROMPT_CONFIGS
 
 def get_article_id(text):
     """Generates a unique ID based on source text to prevent mismatching"""
@@ -47,7 +41,7 @@ def main():
     config = RunConfig(
         model_name_or_path=args.model_path,
         quantization_method=args.quant,
-        prompt_template=PROMPT_TEMPLATES[args.prompt_id]
+        prompt_template=PROMPT_CONFIGS[args.prompt_id]["template"]
     )
 
     summarizer = SummarizationModel(config)
