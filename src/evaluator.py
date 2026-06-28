@@ -34,7 +34,12 @@ class Evaluator:
         bleu_score = self.bleu.compute(predictions=generated_summaries, references=reference_summaries)
         rouge_score = self.rouge.compute(predictions=generated_summaries, references=reference_summaries)
         meteor_score = self.meteor.compute(predictions=generated_summaries, references=reference_summaries)
-        bert_score = self.bertscore.compute(predictions=generated_summaries, references=reference_summaries, lang="en")
+        bert_score = self.bertscore.compute(
+            predictions=generated_summaries,
+            references=reference_summaries,
+            lang="en",
+            rescale_with_baseline=True,  # spread raw ~0.85 scores into an interpretable range
+        )
 
         return {
             "bleu": bleu_score['bleu'],

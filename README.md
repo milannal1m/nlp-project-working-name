@@ -137,6 +137,21 @@ and evaluated into `results/evaluation.{log,csv}` like everything else. Each fil
 exactly 500 records, so `--sample 500` uses all of them; `--sample N` (N<500) caps to
 the first N for quick tests.
 
+### Evaluation only (re-score existing summaries)
+
+To re-run **only** the evaluation on summaries you've already generated, submit the eval worker on
+its own:
+
+```bash
+sbatch scripts/run_evaluation.sh         
+```
+
+It runs `main.py --task evaluate`, globs **all** `.jsonl` in the summaries dir.
+```bash
+mkdir -p eval_subset && cp summaries/Llama_* summaries/Phi_* eval_subset/
+sbatch scripts/run_evaluation.sh --output-dir eval_subset --log-path results/eval_subset.log
+```
+
 ### Running a single combination
 
 The workers can also be used directly (or submitted with `sbatch`):
