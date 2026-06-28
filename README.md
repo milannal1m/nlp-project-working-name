@@ -147,10 +147,6 @@ sbatch scripts/run_evaluation.sh
 ```
 
 It runs `main.py --task evaluate`, globs **all** `.jsonl` in the summaries dir.
-```bash
-mkdir -p eval_subset && cp summaries/Llama_* summaries/Phi_* eval_subset/
-sbatch scripts/run_evaluation.sh --output-dir eval_subset --log-path results/eval_subset.log
-```
 
 ### Running a single combination
 
