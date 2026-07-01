@@ -3,6 +3,7 @@ import json
 import evaluate
 import os
 import logging
+import random
 import statistics
 
 class Evaluator:
@@ -82,6 +83,44 @@ class Evaluator:
                 "qa_eval_std": statistics.stdev(final_scores) if len(final_scores) > 1 else 0.0,
             }
         return {"qa_eval": None, "qa_eval_std": None}
+
+    @staticmethod
+    def write_sanity_check(jsonl_files, out_path, n=5, seed=42):
+        """Write a human-readable Markdown spot-check of generated summaries.
+
+        For each .jsonl in `jsonl_files`, writes the filename as a `##` heading and
+        each sampled generated summary under a `###` heading. The SAME `n` record
+        indices (chosen once with `seed`) are used for every file, so you can compare
+        the exact same articles across all systems side by side.
+        """
+        files = sorted(jsonl_files)
+        indices = None
+        lines = ["# Sanity check — generated summaries", ""]
+        for file_path in files:
+            with open(file_path, "r", encoding="utf-8") as f:
+                records = [json.loads(line) for line in f if line.strip()]
+
+            # Pick the shared indices once, from the first (non-empty) file.
+            if indices is None and records:
+                k = min(n, len(records))
+                indices = sorted(random.Random(seed).sample(range(len(records)), k))
+
+            lines.append(f"## {os.path.basename(file_path)}")
+            lines.append("")
+            for i in (indices or []):
+                if i < len(records):
+                    summary = records[i].get("generated_summary", "").strip()
+                    lines.append(f"### Summary {i}")
+                    lines.append("")
+                    lines.append(summary)
+                    lines.append("")
+
+        out_dir = os.path.dirname(out_path)
+        if out_dir:
+            os.makedirs(out_dir, exist_ok=True)
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write("\n".join(lines))
+        print(f"Sanity check written to {out_path}", flush=True)
 
     # Columns written to the CSV, in order.
     CSV_FIELDS = [
