@@ -19,7 +19,7 @@ class Evaluator:
         self.bleu = None
         self.rouge = None
         self.meteor = None
-        self.bertscore = None
+        self.bertscorer = None
 
     @classmethod
     def extract_summary(cls, text):
@@ -45,7 +45,11 @@ class Evaluator:
             self.bleu = evaluate.load("bleu")
             self.rouge = evaluate.load("rouge")
             self.meteor = evaluate.load("meteor")
-            self.bertscore = evaluate.load("bertscore")
+            # Use bert_score directly (what `evaluate` wraps) so a single scoring
+            # pass yields both raw and baseline-rescaled F1: the rescale is affine,
+            # so raw = scaled * (1 - baseline) + baseline.
+            from bert_score import BERTScorer
+            self.bertscorer = BERTScorer(lang="en", rescale_with_baseline=True)
 
     def evaluate_metrics(self, file_path):
         """Calculates BLEU, ROUGE, METEOR and BERTScore against the reference summary."""
@@ -62,19 +66,27 @@ class Evaluator:
         bleu_score = self.bleu.compute(predictions=generated_summaries, references=reference_summaries)
         rouge_score = self.rouge.compute(predictions=generated_summaries, references=reference_summaries)
         meteor_score = self.meteor.compute(predictions=generated_summaries, references=reference_summaries)
-        bert_score = self.bertscore.compute(
-            predictions=generated_summaries,
-            references=reference_summaries,
-            lang="en",
-            rescale_with_baseline=True,  # spread raw ~0.85 scores into an interpretable range
-        )
+        # One scoring pass -> baseline-rescaled F1 (interpretable, can go negative).
+        # The rescale is affine, so recover the raw (~0.85, compressed) F1 from it:
+        # raw = scaled * (1 - baseline) + baseline.
+        _, _, f_scaled_t = self.bertscorer.score(generated_summaries, reference_summaries)
+        base_f = float(self.bertscorer.baseline_vals.view(-1)[2])
+        f_scaled = [float(x) for x in f_scaled_t]
+        f_raw = [x * (1 - base_f) + base_f for x in f_scaled]
 
+        def mean_std(values):
+            return statistics.mean(values), (statistics.stdev(values) if len(values) > 1 else 0.0)
+
+        raw_mean, raw_std = mean_std(f_raw)
+        scaled_mean, scaled_std = mean_std(f_scaled)
         return {
             "bleu": bleu_score['bleu'],
             "rougeL": rouge_score['rougeL'],
             "meteor": meteor_score['meteor'],
-            "bertscore_f1": statistics.mean(bert_score['f1']),
-            "bertscore_f1_std": statistics.stdev(bert_score['f1']) if len(bert_score['f1']) > 1 else 0.0,
+            "bertscore_f1_raw": raw_mean,
+            "bertscore_f1_raw_std": raw_std,
+            "bertscore_f1_scaled": scaled_mean,
+            "bertscore_f1_scaled_std": scaled_std,
         }
 
     def evaluate_qa(self, file_path):  # Highly recommended to call only in a cluster environment.
@@ -117,8 +129,10 @@ class Evaluator:
         "bleu",
         "rougeL",
         "meteor",
-        "bertscore_f1",
-        "bertscore_f1_std",
+        "bertscore_f1_raw",
+        "bertscore_f1_raw_std",
+        "bertscore_f1_scaled",
+        "bertscore_f1_scaled_std",
         "qa_eval",
         "qa_eval_std",
         "error",
