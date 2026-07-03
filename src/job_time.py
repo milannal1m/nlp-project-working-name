@@ -98,21 +98,30 @@ def _full_size(records, dataset):
     return max(ns) if ns else None
 
 
+def _weighted_rate(records, pred):
+    """Article-weighted per-article rate = total minutes / total articles.
+
+    Weighting by article count means short runs (e.g. a 5-sample smoke test, whose
+    rate is dominated by fixed startup/warmup overhead) contribute almost nothing,
+    while a full ~11k-article run dominates — so mixing the two no longer inflates
+    the estimate.
+    """
+    matched = [r for r in records if pred(r)]
+    tot_n = sum(r["n_articles"] for r in matched)
+    return (sum(r["minutes"] for r in matched) / tot_n) if tot_n else None
+
+
 def estimate_minutes(records, model, quant, prompt, dataset, sample):
     """Predicted minutes for a config = per-article rate x article count, or None.
 
-    Rate is averaged over the exact (model, quant, prompt, dataset) logs, falling
-    back to the same (model, quant, prompt) across datasets (so xu_* reuses cnn/xsum,
-    and a cell measured only on one dataset covers the other). Article count is the
-    requested `sample`, or the dataset's full size (largest n ever seen) for full runs.
+    Rate is the article-weighted rate over the exact (model, quant, prompt, dataset)
+    logs, falling back to the same (model, quant, prompt) across datasets (so xu_*
+    reuses cnn/xsum, and a cell measured only on one dataset covers the other).
+    Article count is the requested `sample`, or the dataset's full size for full runs.
     """
-    def mean_rate(pred):
-        rs = [r["rate"] for r in records if pred(r)]
-        return (sum(rs) / len(rs)) if rs else None
-
-    rate = mean_rate(lambda r: r["config"] == (model, quant, prompt, dataset))
+    rate = _weighted_rate(records, lambda r: r["config"] == (model, quant, prompt, dataset))
     if rate is None:
-        rate = mean_rate(lambda r: r["config"][:3] == (model, quant, prompt))
+        rate = _weighted_rate(records, lambda r: r["config"][:3] == (model, quant, prompt))
     if rate is None:
         return None
 
@@ -149,7 +158,7 @@ def write_report(records, out_path):
              "| --- | --- | --- | --- | --- | --- | --- | --- |"]
     for cfg in sorted(agg):
         rs = agg[cfg]
-        rate = sum(r["rate"] for r in rs) / len(rs)
+        rate = _weighted_rate(records, lambda r, c=cfg: r["config"] == c)
         full = _full_size(records, cfg[3])
         est_h = f"{rate * full / 60:.1f}" if full else "—"
         status = "ok" if all(r["complete"] for r in rs) else "timeout"
