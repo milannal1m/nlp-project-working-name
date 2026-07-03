@@ -13,8 +13,10 @@ A news summarization benchmark comparing instruction-tuned LLMs (Llama, Phi, …
 | `src/dataset.py` | `DATASET_CONFIGS`, streaming loaders, and per-dataset field extraction |
 | `src/prompts.py` | `PROMPT_CONFIGS` — the P1/P2/P3 prompt templates |
 | `src/naming.py` | Single source of truth for summary output filenames (used by Python **and** the shell scripts) |
-| `src/evaluator.py` | Metrics (BLEU, ROUGE-L, METEOR, BERTScore, optional QAFactEval) → log + CSV |
+| `src/evaluator.py` | Metrics (BLEU, ROUGE-L, METEOR, BERTScore, optional QAFactEval) → log + CSV; `Summary:` extraction |
 | `src/baselines/` | `lead.py`, `textrank.py`, `tfidf.py` extractive baselines |
+| `src/job_time.py` | Estimates each job's SLURM `--time` from historical log durations (used by the orchestrator) |
+| `src/analysis.py` | Post-hoc analyses of generated summaries (token-limit / marker) → Markdown reports |
 | `run_experiment.sh` | **Main entry point** — orchestrator that runs the full grid in parallel and evaluates (see below) |
 | `scripts/run_summarization.sh` | SLURM worker for ONE (model, quant, prompt) combination |
 | `scripts/run_baselines.sh` | SLURM worker for the extractive baselines |
@@ -72,10 +74,27 @@ Jobs are per-dataset (not per-combo) so each stays within its time limit on the
 full test set. Any combination that already has an output is skipped, so
 re-running only fills the gaps.
 
-Time limits are tuned for the **full test set**: summarization `36h`/job,
-baselines `12h`, evaluation `24h` (BERTScore over ~44 files). Verify your
-partition's max wall time first (`sinfo -p gpu_a100_il -o "%l"`) and lower
-`--sample` if a cell is at risk of being killed.
+### Job time limits
+
+Summarization jobs get a **dynamic `--time`**: before submitting each job,
+`run_experiment.sh` asks [`src/job_time.py`](src/job_time.py) how long that exact
+`(model, quant, prompt, dataset)` took in the past (parsed from the `Done in … min`
+lines in `logs/`), scales it by the run's article count, adds a **25% margin**, and
+passes `--time=HH:MM:SS` to `sbatch`. So a fast cell (Llama/16bit/xsum ≈ 5h) reserves
+~6.5h while a slow one (Phi/8bit/P3 ≈ 34h) reserves ~42h — better queue priority than a
+blanket value. If a config has never been measured (a new model, or the very first run),
+it falls back to `36:00:00`. When more than one log exists for a config, the estimate is
+the **average** of those runs. Baselines (`12h`) and evaluation stay at static limits.
+
+Inspect the measured averages without submitting anything:
+
+```bash
+python src/job_time.py --report results/job_time_analysis.md
+```
+
+Verify your partition's max wall time first (`sinfo -p gpu_a100_il -o "%l"`); the estimator
+clamps to 48h by default (`--max`), and you can lower `--sample` if a cell is at risk of
+being killed.
 
 ```bash
 # Full grid (Llama+Phi × cnn_dailymail+xsum × 16bit/8bit/4bit × P1/P2/P3), all defaults

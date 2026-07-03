@@ -4,14 +4,35 @@ import evaluate
 import os
 import logging
 import random
+import re
 import statistics
 
 class Evaluator:
+    # Matches a 'Summary:' marker at the start of a line (tolerant of markdown
+    # bold like **Summary:** and of spacing). Prompts instruct the model to put
+    # its summary after this marker; P3 also emits reasoning before it.
+    _SUMMARY_MARKER = re.compile(r"(?:^|\n)[^\n]*?\bsummary\s*\*{0,2}\s*:\s*\*{0,2}\s*", re.IGNORECASE)
+
     def __init__(self):
         self.bleu = None
         self.rouge = None
         self.meteor = None
         self.bertscore = None
+
+    @classmethod
+    def extract_summary(cls, text):
+        """Return the text after the LAST 'Summary:' marker.
+
+        Strips any reasoning/preamble the model emits before the marker (P3). If no
+        marker is present (baselines, or a non-compliant output), returns the text
+        unchanged so nothing is lost.
+        """
+        if not text:
+            return text
+        matches = list(cls._SUMMARY_MARKER.finditer(text))
+        if matches:
+            return text[matches[-1].end():].strip()
+        return text.strip()
 
     def _load_metrics(self):
         if self.bleu is None:
@@ -29,7 +50,7 @@ class Evaluator:
         with open(file_path, 'r', encoding='utf-8') as f:
             for line in f:
                 data = json.loads(line)
-                generated_summaries.append(data['generated_summary'])
+                generated_summaries.append(self.extract_summary(data['generated_summary']))
                 reference_summaries.append(data['reference_summary'])
 
         bleu_score = self.bleu.compute(predictions=generated_summaries, references=reference_summaries)
@@ -67,7 +88,7 @@ class Evaluator:
             for line in f:
                 data = json.loads(line)
                 original_texts.append(data.get('news', ''))
-                generated_summaries.append(data.get('generated_summary', ''))
+                generated_summaries.append(self.extract_summary(data.get('generated_summary', '')))
 
         results = qa_evaluator.score_batch_qg(
             inputs=original_texts,
