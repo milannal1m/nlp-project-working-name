@@ -3,7 +3,6 @@ import json
 import evaluate
 import os
 import logging
-import random
 import re
 import statistics
 
@@ -12,6 +11,9 @@ class Evaluator:
     # bold like **Summary:** and of spacing). Prompts instruct the model to put
     # its summary after this marker; P3 also emits reasoning before it.
     _SUMMARY_MARKER = re.compile(r"(?:^|\n)[^\n]*?\bsummary\s*\*{0,2}\s*:\s*\*{0,2}\s*", re.IGNORECASE)
+    # Same marker anchored at the very start, to peel off a repeated one
+    # (models sometimes emit "Summary:\nSummary: <text>").
+    _LEADING_MARKER = re.compile(r"^\**\s*summary\s*\*{0,2}\s*:\s*\*{0,2}\s*", re.IGNORECASE)
 
     def __init__(self):
         self.bleu = None
@@ -23,16 +25,20 @@ class Evaluator:
     def extract_summary(cls, text):
         """Return the text after the LAST 'Summary:' marker.
 
-        Strips any reasoning/preamble the model emits before the marker (P3). If no
-        marker is present (baselines, or a non-compliant output), returns the text
-        unchanged so nothing is lost.
+        Strips any reasoning/preamble the model emits before the marker (P3), and
+        peels off a repeated marker ("Summary:\\nSummary: …"). If no marker is
+        present (baselines, or a non-compliant output), returns the text unchanged.
         """
         if not text:
             return text
         matches = list(cls._SUMMARY_MARKER.finditer(text))
-        if matches:
-            return text[matches[-1].end():].strip()
-        return text.strip()
+        result = text[matches[-1].end():].strip() if matches else text.strip()
+        while True:
+            m = cls._LEADING_MARKER.match(result)
+            if not m:
+                break
+            result = result[m.end():].strip()
+        return result
 
     def _load_metrics(self):
         if self.bleu is None:
@@ -104,44 +110,6 @@ class Evaluator:
                 "qa_eval_std": statistics.stdev(final_scores) if len(final_scores) > 1 else 0.0,
             }
         return {"qa_eval": None, "qa_eval_std": None}
-
-    @staticmethod
-    def write_sanity_check(jsonl_files, out_path, n=5, seed=42):
-        """Write a human-readable Markdown spot-check of generated summaries.
-
-        For each .jsonl in `jsonl_files`, writes the filename as a `##` heading and
-        each sampled generated summary under a `###` heading. The SAME `n` record
-        indices (chosen once with `seed`) are used for every file, so you can compare
-        the exact same articles across all systems side by side.
-        """
-        files = sorted(jsonl_files)
-        indices = None
-        lines = ["# Sanity check — generated summaries", ""]
-        for file_path in files:
-            with open(file_path, "r", encoding="utf-8") as f:
-                records = [json.loads(line) for line in f if line.strip()]
-
-            # Pick the shared indices once, from the first (non-empty) file.
-            if indices is None and records:
-                k = min(n, len(records))
-                indices = sorted(random.Random(seed).sample(range(len(records)), k))
-
-            lines.append(f"## {os.path.basename(file_path)}")
-            lines.append("")
-            for i in (indices or []):
-                if i < len(records):
-                    summary = records[i].get("generated_summary", "").strip()
-                    lines.append(f"### Summary {i}")
-                    lines.append("")
-                    lines.append(summary)
-                    lines.append("")
-
-        out_dir = os.path.dirname(out_path)
-        if out_dir:
-            os.makedirs(out_dir, exist_ok=True)
-        with open(out_path, "w", encoding="utf-8") as f:
-            f.write("\n".join(lines))
-        print(f"Sanity check written to {out_path}", flush=True)
 
     # Columns written to the CSV, in order.
     CSV_FIELDS = [

@@ -7,28 +7,24 @@ Run from the repo root:
     python src/analysis.py                       # all summaries/*.jsonl
     python src/analysis.py --output_dir summaries --results_dir results
 
-Currently provides two analyses:
-  1. token_limit   — how many summaries hit their prompt's max_new_tokens cap
+Currently provides three analyses:
+  1. token_limit    — how many summaries hit their prompt's max_new_tokens cap
   2. summary_marker — how many summaries lack a "Summary:"-style marker
+  3. sanity_check   — a Markdown spot-check of the same N summaries across all files
 """
 
 import argparse
 import glob
 import json
 import os
+import random
+import re
 
 from prompts import PROMPT_CONFIGS
 
-# A summary "has a marker" if it contains any of these (case-insensitive).
-# Edit this list to match whatever scaffolding you want to look for.
-SUMMARY_MARKERS = [
-    "summary:",
-    "here is a summary",
-    "here's a summary",
-    "in summary",
-    "to summarize",
-    "two-sentence summary",
-]
+# A summary "has a marker" if this pattern matches — the same 'Summary:' marker the
+# evaluator strips (tolerant of markdown bold and a lead-in on the line).
+SUMMARY_MARKERS = re.compile(r"(?:^|\n)[^\n]*?\bsummary\s*\*{0,2}\s*:\s*\*{0,2}\s*", re.IGNORECASE)
 
 
 def _read_summaries(file_path):
@@ -126,10 +122,7 @@ def analyze_summary_marker(jsonl_files, out_path):
     rows, tot_n, tot_no = [], 0, 0
     for file_path in sorted(jsonl_files):
         summaries = _read_summaries(file_path)
-        no_marker = sum(
-            1 for s in summaries
-            if not any(m in s.lower() for m in SUMMARY_MARKERS)
-        )
+        no_marker = sum(1 for s in summaries if not SUMMARY_MARKERS.search(s))
         n = len(summaries)
         pct = f"{100 * no_marker / n:.1f}%" if n else "—"
         rows.append((os.path.basename(file_path), n, n - no_marker, no_marker, pct))
@@ -140,12 +133,43 @@ def analyze_summary_marker(jsonl_files, out_path):
     _write_md(
         out_path,
         "Summary-marker analysis",
-        "Generated summaries that do NOT contain a summary marker "
-        f"(any of: {', '.join(repr(m) for m in SUMMARY_MARKERS)}).",
+        "Generated summaries that do NOT contain a `Summary:` marker "
+        f"(regex `{SUMMARY_MARKERS.pattern}`).",
         ["file", "n", "with_marker", "no_marker", "no_marker %"],
         rows,
         total_row=("**TOTAL**", tot_n, tot_n - tot_no, tot_no, tot_pct),
     )
+
+
+def analyze_sanity_check(jsonl_files, out_path, n=5, seed=42):
+    """Markdown spot-check of generated summaries.
+
+    For each .jsonl, writes the filename as a `##` heading and each sampled
+    generated summary under a `###` heading. The SAME `n` record indices (chosen
+    once with `seed`) are used for every file, so the same articles can be compared
+    across all systems side by side.
+    """
+    files = sorted(jsonl_files)
+    indices = None
+    lines = ["# Sanity check — generated summaries", ""]
+    for file_path in files:
+        summaries = _read_summaries(file_path)
+        if indices is None and summaries:  # pick shared indices once, from first non-empty file
+            k = min(n, len(summaries))
+            indices = sorted(random.Random(seed).sample(range(len(summaries)), k))
+        lines.append(f"## {os.path.basename(file_path)}")
+        lines.append("")
+        for i in (indices or []):
+            if i < len(summaries):
+                lines.append(f"### Summary {i}")
+                lines.append("")
+                lines.append(summaries[i].strip())
+                lines.append("")
+
+    os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+    print(f"Wrote {out_path}", flush=True)
 
 
 def main():
@@ -156,6 +180,10 @@ def main():
                         help="Where to write the Markdown reports.")
     parser.add_argument("--tolerance", type=int, default=0,
                         help="Count as 'at cap' if token count >= cap - tolerance.")
+    parser.add_argument("--sanity_n", type=int, default=5,
+                        help="How many summaries per file in the sanity-check report.")
+    parser.add_argument("--seed", type=int, default=42,
+                        help="Seed for the (shared) sanity-check sample indices.")
     args = parser.parse_args()
 
     files = sorted(glob.glob(os.path.join(args.output_dir, "*.jsonl")))
@@ -166,6 +194,8 @@ def main():
     analyze_token_limit(files, os.path.join(args.results_dir, "token_limit_analysis.md"),
                         tolerance=args.tolerance)
     analyze_summary_marker(files, os.path.join(args.results_dir, "summary_marker_analysis.md"))
+    analyze_sanity_check(files, os.path.join(args.results_dir, "sanity_check.md"),
+                        n=args.sanity_n, seed=args.seed)
 
 
 if __name__ == "__main__":

@@ -16,7 +16,7 @@ A news summarization benchmark comparing instruction-tuned LLMs (Llama, Phi, …
 | `src/evaluator.py` | Metrics (BLEU, ROUGE-L, METEOR, BERTScore, optional QAFactEval) → log + CSV; `Summary:` extraction |
 | `src/baselines/` | `lead.py`, `textrank.py`, `tfidf.py` extractive baselines |
 | `src/job_time.py` | Estimates each job's SLURM `--time` from historical log durations (used by the orchestrator) |
-| `src/analysis.py` | Post-hoc analyses of generated summaries (token-limit / marker) → Markdown reports |
+| `src/analysis.py` | Post-hoc analyses of generated summaries (token-limit / marker / sanity-check) → Markdown reports |
 | `run_experiment.sh` | **Main entry point** — orchestrator that runs the full grid in parallel and evaluates (see below) |
 | `scripts/run_summarization.sh` | SLURM worker for ONE (model, quant, prompt) combination |
 | `scripts/run_baselines.sh` | SLURM worker for the extractive baselines |

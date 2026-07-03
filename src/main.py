@@ -226,9 +226,6 @@ def evaluate_all(output_dir: str, log_path: str, append: bool = False) -> None:
     print(f"\n{'=' * 80}", flush=True)
     print(f"Evaluating {len(jsonl_files)} output file(s) -> {log_path} (+ {csv_path})", flush=True)
 
-    sanity_path = os.path.join(log_dir or ".", "sanity_check.md")
-    evaluator.write_sanity_check(jsonl_files, sanity_path)
-
     failed = []
     for file_path in jsonl_files:
         print(f"\n  [{os.path.basename(file_path)}]", flush=True)
