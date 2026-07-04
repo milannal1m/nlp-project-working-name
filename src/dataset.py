@@ -1,3 +1,5 @@
+from __future__ import annotations  # allow `list | None` etc. on Python < 3.10
+
 import json
 import os
 import re
