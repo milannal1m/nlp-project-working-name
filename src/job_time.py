@@ -111,13 +111,17 @@ def _weighted_rate(records, pred):
     return (sum(r["minutes"] for r in matched) / tot_n) if tot_n else None
 
 
-def estimate_minutes(records, model, quant, prompt, dataset, sample):
-    """Predicted minutes for a config = per-article rate x article count, or None.
+OVERHEAD_MIN = 5.0
+
+
+def estimate_minutes(records, model, quant, prompt, dataset, sample, overhead=OVERHEAD_MIN):
+    """Predicted minutes for a config = overhead + per-article rate x article count.
 
     Rate is the article-weighted rate over the exact (model, quant, prompt, dataset)
     logs, falling back to the same (model, quant, prompt) across datasets (so xu_*
     reuses cnn/xsum, and a cell measured only on one dataset covers the other).
     Article count is the requested `sample`, or the dataset's full size for full runs.
+    Returns None if the config is unmeasured.
     """
     rate = _weighted_rate(records, lambda r: r["config"] == (model, quant, prompt, dataset))
     if rate is None:
@@ -128,7 +132,7 @@ def estimate_minutes(records, model, quant, prompt, dataset, sample):
     n = sample if sample is not None else _full_size(records, dataset)
     if n is None:
         return None
-    return rate * n
+    return overhead + rate * n
 
 
 def _hms_to_minutes(hms):
@@ -136,7 +140,7 @@ def _hms_to_minutes(hms):
     return h * 60 + m + math.ceil(s / 60)
 
 
-def to_hms(minutes, margin=1.25, floor_min=30, max_hms="48:00:00"):
+def to_hms(minutes, margin=1.30, floor_min=30, max_hms="48:00:00"):
     """Apply margin, round up to whole minutes, clamp, format as HH:MM:SS."""
     total = math.ceil(minutes * margin)
     total = max(floor_min, min(total, _hms_to_minutes(max_hms)))
@@ -160,7 +164,7 @@ def write_report(records, out_path):
         rs = agg[cfg]
         rate = _weighted_rate(records, lambda r, c=cfg: r["config"] == c)
         full = _full_size(records, cfg[3])
-        est_h = f"{rate * full / 60:.1f}" if full else "—"
+        est_h = f"{(OVERHEAD_MIN + rate * full) / 60:.1f}" if full else "—"
         status = "ok" if all(r["complete"] for r in rs) else "timeout"
         lines.append(f"| {cfg[0]} | {cfg[1]} | {cfg[2]} | {cfg[3]} | {len(rs)} | "
                      f"{status} | {rate:.4f} | {est_h} |")
@@ -178,7 +182,9 @@ def main():
     p.add_argument("-p", "--prompt")
     p.add_argument("-d", "--dataset")
     p.add_argument("-s", "--sample", type=int, default=None)
-    p.add_argument("--margin", type=float, default=1.25)
+    p.add_argument("--margin", type=float, default=1.30)
+    p.add_argument("--overhead", type=float, default=OVERHEAD_MIN,
+                   help="Fixed per-job overhead in minutes (model load + warmup).")
     p.add_argument("--floor_min", type=int, default=30)
     p.add_argument("--max", dest="max_hms", default="48:00:00")
     p.add_argument("--fallback", default="36:00:00")
@@ -194,7 +200,7 @@ def main():
         p.error("--model, --quant, --prompt, --dataset are required (or use --report)")
 
     minutes = estimate_minutes(records, args.model, args.quant, args.prompt,
-                               args.dataset, args.sample)
+                               args.dataset, args.sample, overhead=args.overhead)
     if minutes is None:
         print(args.fallback)  # unmeasured config -> generous default
     else:
