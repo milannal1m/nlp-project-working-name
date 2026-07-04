@@ -21,6 +21,14 @@ import random
 import re
 
 from prompts import PROMPT_CONFIGS
+from dataset import DATASET_CONFIGS
+from job_time import _parse_name  # sum_{model}_{quant}_{prompt}_{dataset}_{jobid}.out -> config
+
+# Expected grid for the job-status report. Prompts/datasets (incl. the xu_* ones)
+# come from the registries; models/quants are small fixed lists so the report
+# needs no torch. Keep _STATUS_MODELS in sync with MODEL_CONFIGS in model.py.
+_STATUS_MODELS = ["Llama", "Phi"]
+_STATUS_QUANTS = ["16bit", "8bit", "4bit"]
 
 # A summary "has a marker" if this pattern matches — the same 'Summary:' marker the
 # evaluator strips (tolerant of markdown bold and a lead-in on the line).
@@ -172,6 +180,98 @@ def analyze_sanity_check(jsonl_files, out_path, n=5, seed=42):
     print(f"Wrote {out_path}", flush=True)
 
 
+def _job_id(basename):
+    """Trailing job id from `sum_..._{jobid}.out`, or -1 if not numeric."""
+    stem = basename[:-4] if basename.endswith(".out") else basename
+    last = stem.split("_")[-1]
+    return int(last) if last.isdigit() else -1
+
+
+def _read_text(path):
+    try:
+        with open(path, "r", encoding="utf-8", errors="replace") as f:
+            return f.read()
+    except OSError:
+        return ""
+
+
+def _classify_status(out_text, err_text):
+    """(status, detail) for one job from its .out/.err contents."""
+    if "Done in" in out_text:
+        return "finished", ""
+    both = out_text + "\n" + err_text
+    if re.search(r"due to time limit", both, re.I):
+        return "stopped_early", "time limit"
+    if re.search(r"traceback \(most recent call last\)|cuda out of memory|out of memory", both, re.I):
+        return "stopped_early", "error"
+    # SLURM epilogue / cancellation appears only once a job has ENDED (a running
+    # job hasn't written it yet), so its presence without "Done in" = stopped early.
+    if re.search(r"cancelled|slurmstepd: error|job wall-clock time|state:\s*(failed|timeout|cancelled|out_of_memory)",
+                 both, re.I):
+        return "stopped_early", "ended without finishing"
+    return "running", ""
+
+
+def _latest_baselines_jobid(logs_dir):
+    """Job id of the most recent baselines job (`baselines_{jobid}.out`), or -1.
+
+    Baselines is submitted first in a run, so it's the lower bound for that run's
+    summarization job ids — anything with a higher id belongs to the current run.
+    """
+    ids = [_job_id(os.path.basename(p))
+           for p in glob.glob(os.path.join(logs_dir, "**", "baselines_*.out"), recursive=True)]
+    return max(ids) if ids else -1
+
+
+def analyze_job_status(logs_dir, expected_configs, out_path):
+    """Report each config's status, scoped to the CURRENT run.
+
+    The current run = jobs submitted after the latest baselines job (baselines is
+    submitted first, so its id is the lower bound). A config counts only if its
+    newest log has a job id > that cutoff; a config whose only logs are older (from
+    a previous run) is reported as 'not_started' — as is one with no log at all.
+    """
+    cutoff = _latest_baselines_jobid(logs_dir)
+
+    latest = {}  # config -> (jobid, out_path): overall newest log per config
+    for path in glob.glob(os.path.join(logs_dir, "**", "sum_*.out"), recursive=True):
+        base = os.path.basename(path)
+        cfg = _parse_name(base)
+        if cfg is None:
+            continue
+        jid = _job_id(base)
+        if cfg not in latest or jid > latest[cfg][0]:
+            latest[cfg] = (jid, path)
+
+    rows, counts = [], {}
+    for cfg in set(expected_configs) | set(latest):
+        entry = latest.get(cfg)
+        if entry and entry[0] > cutoff:  # a log from the current run exists
+            jid, path = entry
+            status, detail = _classify_status(_read_text(path), _read_text(path[:-4] + ".err"))
+        elif entry:  # only older logs -> treat as not started this run
+            status, detail, jid = "not_started", f"older run ({entry[0]})", "—"
+        else:  # no log at all
+            status, detail, jid = "not_started", "", "—"
+        rows.append((*cfg, status, detail, jid))
+        counts[status] = counts.get(status, 0) + 1
+
+    order = {"running": 0, "stopped_early": 1, "not_started": 2, "finished": 3}
+    rows.sort(key=lambda r: (order.get(r[4], 9), r[:4]))
+
+    cutoff_note = f"jobs after baselines job {cutoff}" if cutoff >= 0 else "all logs (no baselines log found)"
+    summary = ", ".join(f"{counts[k]} {k}" for k in
+                        ("running", "stopped_early", "not_started", "finished") if counts.get(k))
+    _write_md(
+        out_path,
+        "Job status",
+        f"Status of each config for the current run ({cutoff_note}) from `{logs_dir}/`. "
+        f"**{summary or 'no jobs'}.**",
+        ["model", "quant", "prompt", "dataset", "status", "detail", "job id"],
+        rows,
+    )
+
+
 def main():
     parser = argparse.ArgumentParser(description="Analyse generated summaries.")
     parser.add_argument("--output_dir", default="summaries",
@@ -184,11 +284,23 @@ def main():
                         help="How many summaries per file in the sanity-check report.")
     parser.add_argument("--seed", type=int, default=42,
                         help="Seed for the (shared) sanity-check sample indices.")
+    parser.add_argument("--status-only", action="store_true",
+                        help="Only write the job-status report (logs only).")
     args = parser.parse_args()
+
+    # Job status depends only on logs — run it first so it works even before any
+    # summaries exist (e.g. while jobs are still running). The expected grid is every
+    # model x quant x prompt x dataset (all datasets, including the xu_* ones).
+    expected = [(m, q, p, d) for m in _STATUS_MODELS for q in _STATUS_QUANTS
+                for p in PROMPT_CONFIGS for d in DATASET_CONFIGS]
+    analyze_job_status("logs", expected,
+                       os.path.join(args.results_dir, "job_status.md"))
+    if args.status_only:
+        return
 
     files = sorted(glob.glob(os.path.join(args.output_dir, "*.jsonl")))
     if not files:
-        print(f"No .jsonl files found in {args.output_dir}.", flush=True)
+        print(f"No .jsonl files found in {args.output_dir} — skipping summary analyses.", flush=True)
         return
 
     analyze_token_limit(files, os.path.join(args.results_dir, "token_limit_analysis.md"),
