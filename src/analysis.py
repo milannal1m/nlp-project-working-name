@@ -223,15 +223,17 @@ def _latest_baselines_jobid(logs_dir):
     return max(ids) if ids else -1
 
 
-def analyze_job_status(logs_dir, expected_configs, out_path):
+def analyze_job_status(logs_dir, expected_configs, out_path, cutoff=None):
     """Report each config's status, scoped to the CURRENT run.
 
-    The current run = jobs submitted after the latest baselines job (baselines is
-    submitted first, so its id is the lower bound). A config counts only if its
-    newest log has a job id > that cutoff; a config whose only logs are older (from
-    a previous run) is reported as 'not_started' — as is one with no log at all.
+    The current run = jobs with a job id greater than `cutoff`. Pass `cutoff`
+    explicitly (e.g. the baselines job id of the run you care about); if omitted it
+    defaults to the latest baselines job found in the logs. A config counts only if
+    its newest log id > cutoff; a config whose only logs are older (a previous run)
+    is reported as 'not_started' — as is one with no log at all.
     """
-    cutoff = _latest_baselines_jobid(logs_dir)
+    if cutoff is None:
+        cutoff = _latest_baselines_jobid(logs_dir)
 
     latest = {}  # config -> (jobid, out_path): overall newest log per config
     for path in glob.glob(os.path.join(logs_dir, "**", "sum_*.out"), recursive=True):
@@ -259,7 +261,7 @@ def analyze_job_status(logs_dir, expected_configs, out_path):
     order = {"running": 0, "stopped_early": 1, "not_started": 2, "finished": 3}
     rows.sort(key=lambda r: (order.get(r[4], 9), r[:4]))
 
-    cutoff_note = f"jobs after baselines job {cutoff}" if cutoff >= 0 else "all logs (no baselines log found)"
+    cutoff_note = f"jobs with id > {cutoff}" if cutoff >= 0 else "all logs (no cutoff)"
     summary = ", ".join(f"{counts[k]} {k}" for k in
                         ("running", "stopped_early", "not_started", "finished") if counts.get(k))
     _write_md(
@@ -286,6 +288,9 @@ def main():
                         help="Seed for the (shared) sanity-check sample indices.")
     parser.add_argument("--status-only", action="store_true",
                         help="Only write the job-status report (logs only).")
+    parser.add_argument("--cutoff", type=int, default=None,
+                        help="Only jobs with id > CUTOFF count as the current run "
+                             "(default: latest baselines job id); older logs are 'not_started'.")
     args = parser.parse_args()
 
     # Job status depends only on logs — run it first so it works even before any
@@ -294,7 +299,7 @@ def main():
     expected = [(m, q, p, d) for m in _STATUS_MODELS for q in _STATUS_QUANTS
                 for p in PROMPT_CONFIGS for d in DATASET_CONFIGS]
     analyze_job_status("logs", expected,
-                       os.path.join(args.results_dir, "job_status.md"))
+                       os.path.join(args.results_dir, "job_status.md"), cutoff=args.cutoff)
     if args.status_only:
         return
 
