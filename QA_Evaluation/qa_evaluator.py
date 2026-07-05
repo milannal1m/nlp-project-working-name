@@ -1,89 +1,175 @@
 import json
 import os
+import sys
+import builtins
+import torch  # Added to auto-detect hardware
+
+# ==========================================
+# 1. DYNAMIC PATH RESOLUTION
+# ==========================================
+# This automatically anchors to wherever the script is currently running
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PATH_TO_QAEVAL = os.path.join(CURRENT_DIR, "qaeval")
+PATH_TO_QAFACTEVAL = os.path.join(CURRENT_DIR, "QAFactEval")
+
+# Add them to Python's search memory
+sys.path.insert(0, PATH_TO_QAEVAL)
+sys.path.insert(0, PATH_TO_QAFACTEVAL)
+
+# Sanity check tripwires
+if not os.path.exists(PATH_TO_QAFACTEVAL):
+    raise FileNotFoundError(f"CRITICAL: Cannot find QAFactEval folder at {PATH_TO_QAFACTEVAL}")
+if not os.path.exists(PATH_TO_QAEVAL):
+    raise FileNotFoundError(f"CRITICAL: Cannot find qaeval folder at {PATH_TO_QAEVAL}")
+
+# ==========================================
+# 2. LEGACY COMPILER BYPASS
+# ==========================================
+_orig_issubclass = builtins.issubclass
+def safe_issubclass(cls, classinfo):
+    try:
+        return _orig_issubclass(cls, classinfo)
+    except TypeError:
+        return False
+builtins.issubclass = safe_issubclass
 
 from qafacteval import QAFactEval
 
+# ==========================================
+# 3. EVALUATOR CLASS
+# ==========================================
 class QAFactEvaluator:
     def __init__(self, master_file):
         self.master_file = master_file
-
-        print("Initializing QAFactEval Pipelin using the locked cluster environment...")
+        model_folder = f"{PATH_TO_QAFACTEVAL}/models"
+        
+        # ----------------------------------------------------
+        # HARDWARE AUTO-DETECTION: Automatically scales to the machine
+        # ----------------------------------------------------
+        has_gpu = torch.cuda.is_available()
+        
+        if has_gpu:
+            print(">>> GPU Detected: Scaling pipeline for cluster/local GPU execution.")
+            c_device = 0
+            b_size = 32
+            l_size = 8
+            is_verbose = False
+        else:
+            print(">>> No GPU Detected: Downscaling to local CPU testing mode.")
+            c_device = -1
+            b_size = 2
+            l_size = 2
+            is_verbose = True
 
         kwargs = {
-            "cuda_device": -1, # set -1 for cpu mode and 0 for gpu
+            "cuda_device": c_device,
             "use_lerc_quip": True,
-            "verbose": True, # set True for local testing, False for cluster
-            "generation_batch_size": 32, # set to 2 for local testing, 32 for cluster
-            "answering_batch_size": 32, # set to 2 for local testing, 32 for cluster
-            "lerc_batch_size": 8 # set to 2 for local testing, 8 for cluster
+            "verbose": is_verbose,
+            "generation_batch_size": b_size,
+            "answering_batch_size": b_size,
+            "lerc_batch_size": l_size
         }
 
-        self.metric = QAFactEval(**kwargs)
+        self.metric = QAFactEval(
+            lerc_quip_path=f"{model_folder}/quip-512-mocha",
+            generation_model_path=f"{model_folder}/generation/model.tar.gz",
+            answering_model_dir=f"{model_folder}/answering",
+            lerc_model_path=f"{model_folder}/lerc/model.tar.gz",
+            lerc_pretrained_model_path=f"{model_folder}/lerc/pretraining.tar.gz",
+            **kwargs
+        )
 
-    def run_qa_evaluation(self, output_file="final_evaluation_results.jsonl"):
-        print(f"Reading merged dataset; {self.master_file}")
+
+    # max_articles controls the testing limit. Set to None to run the whole dataset.
+    def run_qa_evaluation(self, output_file="final_evaluation_results.jsonl", max_articles=None):
+        import traceback 
+        print(f"Reading merged dataset: {self.master_file}")
         
         foundation_keys = {"article_id", "source_article", "human_questions", "human_answers"}
         
         with open(self.master_file, 'r', encoding='utf-8') as infile, \
-            open(output_file, 'w', encoding='utf-8') as outfile:
+             open(output_file, 'w', encoding='utf-8') as outfile:
                 
                 for idx, line in enumerate(infile):
-
-                    # UNCOMMENT THIS BLOCK FOR LOCAL TESTING: Stop after the 1st article
-                    if idx >= 1: 
-                        print("Local test complete. Reached 1 article limit.")
+                    # Safely break if testing limit is reached
+                    if max_articles is not None and idx >= max_articles: 
+                        print(f"Reached execution limit of {max_articles} article(s). Stopping.")
                         break
-                    ###
 
                     if not line.strip(): continue
 
                     article_data = json.loads(line.strip())
-                    source_text = article_data.get("source_article", "")
-                    article_id = article_data.get("article_id", f"unknown_{idx}")
+                    
+                    # Defensively clean the source text
+                    raw_source = article_data.get("source_article", "")
+                    source_text = str(raw_source[0]) if isinstance(raw_source, list) else str(raw_source)
+                    article_id = str(article_data.get("article_id", f"unknown_{idx}"))
 
-                    # Extracting gold human questiosn and answers
+                    # Defensively clean the QA pairs
                     human_questions = article_data.get("human_questions", [])
                     human_answers = article_data.get("human_answers", [])
 
-                    # skip the row if the rows is missing required data.
                     if not source_text or not human_questions or not human_answers: continue
 
-                    # Formatting human questions.
-                    qa_pairs_list = [{"question": q, "answer": a} for q, a in zip(human_questions, human_answers)]
+                    qa_pairs_list = []
+                    for q, a in zip(human_questions, human_answers):
+                        clean_q = str(q[0]) if isinstance(q, list) else str(q)
+                        clean_a = str(a[0]) if isinstance(a, list) else str(a)
+                        
+                        qa_pairs_list.append({
+                             "question": clean_q, 
+                             "answer": clean_a,
+                             "answers": [clean_a] 
+                        })
                      
-                    # Isolating the 18 generated summary variations
+                    # Defensively clean the generated summaries
                     summary_keys = [k for k in article_data.keys() if k not in foundation_keys]
+                    summaries_batch = []
+                    for k in summary_keys:
+                        raw_summ = article_data[k]
+                        clean_summ = str(raw_summ[0]) if isinstance(raw_summ, list) else str(raw_summ)
+                        summaries_batch.append([clean_summ])
 
-                    # Formatting the batches, it needs a list of source texts and a list of lists of summaries.
                     sources_batch = [source_text] * len(summary_keys)
-                    summaries_batch = [[article_data[k]] for k in summary_keys]
 
                     print(f"Scoring Article {idx + 1} | ID: {article_id} | Processing {len(summary_keys)} variations")
                     article_scores = {"article_id": article_id}
 
                     try:
-                         # Added qa_pairs_precomputed parameter to inject your human_questions batch.
-                         # This forces the pipeline to use dataset questions.
                          score_outputs = self.metric.score_batch_qafacteval(
                               sources_batch,
                               summaries_batch,
-                              qa_pairs_precomputed=[qa_pairs_list] * len(summary_keys),
-                              return_qa_pairs=False
+                              qa_pairs_precomputed=[[qa_pairs_list]] * len(summary_keys),
+                              return_qa_pairs=True 
                          )
 
-                         # Mapping lerc scores back to the specific SLM model/quant/prompt column.
+                         # THE SANITY CHECK PRINT (Only prints on first iteration)
+                         if idx == 0:
+                             print("\n=== PIPELINE PAYLOAD VERIFICATION ===")
+                             print(f"SOURCE [0] (First 150 chars): {sources_batch[0][:150]}...")
+                             print(f"SUMMARY [0] (First 150 chars): {summaries_batch[0][0][:150]}...")
+                             print(f"QA PAIR [0]: {([[qa_pairs_list]] * len(summary_keys))[0][0][0]}")
+                             print("=====================================\n")
+
                          for i, key in enumerate(summary_keys):
-                              article_scores[f"{key}_lerc_score"] = score_outputs[i][0]['qa-eval']['lerc_quip']
+                              metrics_dict = score_outputs[i][0]
+                              
+                              if 'qa-eval' in metrics_dict:
+                                  lerc = metrics_dict['qa-eval'].get('lerc_quip')
+                              else:
+                                  lerc = metrics_dict.get('lerc_quip')
+                                  
+                              article_scores[f"{key}_lerc_score"] = lerc
 
                     except Exception as e:
-                         print(f"Error scoring {article_id}: {e}")
+                         print(f"\n[!] CRITICAL TRACEBACK FOR {article_id}:")
+                         traceback.print_exc()
+                         print("\n")
                          for key in summary_keys:
                               article_scores[f"{key}_lerc_score"] = None
 
                     outfile.write(json.dumps(article_scores) + "\n")
                     outfile.flush()
 
-        print(f"\n--- SUCCESS --- Evaluation complete. Results has been saved to{output_file}")
+        print(f"\n--- SUCCESS --- Evaluation complete. Results have been saved to {output_file}")
         return output_file
-    

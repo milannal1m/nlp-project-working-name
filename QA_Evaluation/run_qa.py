@@ -3,7 +3,7 @@ from qa_evaluator import QAFactEvaluator
 
 def main():
     # This must match the exact output name from your summaries_merger.py script
-    master_dataset = "master_evaluation_dataset.jsonl"
+    master_dataset = "mock_master_evaluation_dataset.jsonl"
     
     # The lean "gradesheet" file
     output_file = "final_evaluation_results.jsonl"
