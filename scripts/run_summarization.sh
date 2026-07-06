@@ -16,7 +16,7 @@
 # Usage (run from the repo root so 'src/main.py' resolves):
 #   sbatch scripts/run_summarization.sh [-m MODEL] [-q QUANT] [-p PROMPT] [-d "DS1 DS2"] [-s N] [--skip-existing]
 #
-#   -m, --model         Model label from the registry (Llama, Phi, ...)  (default: Llama)
+#   -m, --model         Model label from the registry (Llama, Phi, Qwen2, ...) (default: Llama)
 #   -q, --quant         Quantization: 16bit | 8bit | 4bit                (default: 4bit)
 #   -p, --prompt        Prompt name: P1 | P2 | P3                        (default: P1)
 #   -d, --datasets      Space-separated dataset list                     (default: all)

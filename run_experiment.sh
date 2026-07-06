@@ -21,7 +21,7 @@
 
 set -euo pipefail
 
-MODELS="Llama Phi"
+MODELS="Llama Phi Qwen2"
 DATASETS="cnn_dailymail xsum"
 QUANTS="16bit 8bit 4bit"
 PROMPTS="P1 P2 P3"
