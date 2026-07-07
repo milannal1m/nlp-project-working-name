@@ -1,11 +1,9 @@
 # Job status
 
-Status of each config for the current run (jobs with id > 5742021) from `logs/`. **2 running, 70 finished.**
+Status of each config for the current run (jobs with id > 5742021) from `logs/`. **72 finished.**
 
 | model | quant | prompt | dataset | status | detail | job id |
 | --- | --- | --- | --- | --- | --- | --- |
-| Phi | 4bit | P3 | cnn_dailymail | running |  | 5795305 |
-| Phi | 4bit | P3 | xsum | running |  | 5795306 |
 | Llama | 16bit | P1 | cnn_dailymail | finished |  | 5742022 |
 | Llama | 16bit | P1 | xsum | finished |  | 5742023 |
 | Llama | 16bit | P1 | xu_cnndm | finished |  | 5742291 |
@@ -62,6 +60,8 @@ Status of each config for the current run (jobs with id > 5742021) from `logs/`.
 | Phi | 4bit | P2 | xsum | finished |  | 5742067 |
 | Phi | 4bit | P2 | xu_cnndm | finished |  | 5742323 |
 | Phi | 4bit | P2 | xu_xsum | finished |  | 5742324 |
+| Phi | 4bit | P3 | cnn_dailymail | finished |  | 5795305 |
+| Phi | 4bit | P3 | xsum | finished |  | 5795306 |
 | Phi | 4bit | P3 | xu_cnndm | finished |  | 5795300 |
 | Phi | 4bit | P3 | xu_xsum | finished |  | 5795301 |
 | Phi | 8bit | P1 | cnn_dailymail | finished |  | 5742046 |
