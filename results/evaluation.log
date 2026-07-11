@@ -1,352 +1,792 @@
-2026-06-28 21:19:24,663  === Evaluation: Lead-1_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:39,509    bleu: 0.0552
-2026-06-28 21:19:39,509    rougeL: 0.1510
-2026-06-28 21:19:39,509    meteor: 0.1596
-2026-06-28 21:19:39,509    bertscore_f1: 0.1926 ± 0.0836
-2026-06-28 21:19:39,509    qa_eval: None
-2026-06-28 21:19:39,509    error: qafacteval not installed
-2026-06-28 21:19:39,509  
-2026-06-28 21:19:39,512  === Evaluation: Lead-1_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:39,712    bleu: 0.0000
-2026-06-28 21:19:39,712    rougeL: 0.0770
-2026-06-28 21:19:39,712    meteor: 0.0767
-2026-06-28 21:19:39,712    bertscore_f1: -0.0043 ± 0.0768
-2026-06-28 21:19:39,712    qa_eval: None
-2026-06-28 21:19:39,712    error: qafacteval not installed
-2026-06-28 21:19:39,712  
-2026-06-28 21:19:39,713  === Evaluation: Lead-3_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:39,996    bleu: 0.0680
-2026-06-28 21:19:39,996    rougeL: 0.1434
-2026-06-28 21:19:39,996    meteor: 0.3410
-2026-06-28 21:19:39,996    bertscore_f1: 0.1372 ± 0.1026
-2026-06-28 21:19:39,996    qa_eval: None
-2026-06-28 21:19:39,997    error: qafacteval not installed
-2026-06-28 21:19:39,997  
-2026-06-28 21:19:39,998  === Evaluation: Lead-3_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:40,227    bleu: 0.0000
-2026-06-28 21:19:40,227    rougeL: 0.1105
-2026-06-28 21:19:40,227    meteor: 0.1850
-2026-06-28 21:19:40,227    bertscore_f1: 0.0412 ± 0.0808
-2026-06-28 21:19:40,227    qa_eval: None
-2026-06-28 21:19:40,227    error: qafacteval not installed
-2026-06-28 21:19:40,227  
-2026-06-28 21:19:40,228  === Evaluation: Llama_P1_16bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:40,492    bleu: 0.0263
-2026-06-28 21:19:40,493    rougeL: 0.1492
-2026-06-28 21:19:40,493    meteor: 0.2796
-2026-06-28 21:19:40,493    bertscore_f1: 0.1561 ± 0.0559
-2026-06-28 21:19:40,493    qa_eval: None
-2026-06-28 21:19:40,493    error: qafacteval not installed
-2026-06-28 21:19:40,493  
-2026-06-28 21:19:40,494  === Evaluation: Llama_P1_16bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:40,726    bleu: 0.0000
-2026-06-28 21:19:40,726    rougeL: 0.1205
-2026-06-28 21:19:40,726    meteor: 0.1858
-2026-06-28 21:19:40,726    bertscore_f1: 0.1192 ± 0.0466
-2026-06-28 21:19:40,726    qa_eval: None
-2026-06-28 21:19:40,726    error: qafacteval not installed
-2026-06-28 21:19:40,726  
-2026-06-28 21:19:40,727  === Evaluation: Llama_P1_4bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:40,975    bleu: 0.0194
-2026-06-28 21:19:40,975    rougeL: 0.1718
-2026-06-28 21:19:40,975    meteor: 0.2834
-2026-06-28 21:19:40,975    bertscore_f1: 0.1563 ± 0.0465
-2026-06-28 21:19:40,975    qa_eval: None
-2026-06-28 21:19:40,975    error: qafacteval not installed
-2026-06-28 21:19:40,976  
-2026-06-28 21:19:40,977  === Evaluation: Llama_P1_4bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:41,198    bleu: 0.0000
-2026-06-28 21:19:41,198    rougeL: 0.1340
-2026-06-28 21:19:41,198    meteor: 0.2347
-2026-06-28 21:19:41,198    bertscore_f1: 0.1430 ± 0.0441
-2026-06-28 21:19:41,198    qa_eval: None
-2026-06-28 21:19:41,199    error: qafacteval not installed
-2026-06-28 21:19:41,199  
-2026-06-28 21:19:41,200  === Evaluation: Llama_P1_8bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:41,438    bleu: 0.0185
-2026-06-28 21:19:41,438    rougeL: 0.1468
-2026-06-28 21:19:41,438    meteor: 0.2778
-2026-06-28 21:19:41,438    bertscore_f1: 0.1497 ± 0.0528
-2026-06-28 21:19:41,438    qa_eval: None
-2026-06-28 21:19:41,438    error: qafacteval not installed
-2026-06-28 21:19:41,438  
-2026-06-28 21:19:41,439  === Evaluation: Llama_P1_8bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:41,660    bleu: 0.0000
-2026-06-28 21:19:41,660    rougeL: 0.1320
-2026-06-28 21:19:41,660    meteor: 0.1957
-2026-06-28 21:19:41,660    bertscore_f1: 0.1467 ± 0.0360
-2026-06-28 21:19:41,660    qa_eval: None
-2026-06-28 21:19:41,660    error: qafacteval not installed
-2026-06-28 21:19:41,660  
-2026-06-28 21:19:41,661  === Evaluation: Llama_P2_16bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:41,916    bleu: 0.0178
-2026-06-28 21:19:41,916    rougeL: 0.1462
-2026-06-28 21:19:41,916    meteor: 0.2736
-2026-06-28 21:19:41,916    bertscore_f1: 0.1318 ± 0.0534
-2026-06-28 21:19:41,916    qa_eval: None
-2026-06-28 21:19:41,917    error: qafacteval not installed
-2026-06-28 21:19:41,917  
-2026-06-28 21:19:41,918  === Evaluation: Llama_P2_16bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:42,161    bleu: 0.0000
-2026-06-28 21:19:42,161    rougeL: 0.1153
-2026-06-28 21:19:42,161    meteor: 0.1967
-2026-06-28 21:19:42,162    bertscore_f1: 0.0739 ± 0.0739
-2026-06-28 21:19:42,162    qa_eval: None
-2026-06-28 21:19:42,162    error: qafacteval not installed
-2026-06-28 21:19:42,162  
-2026-06-28 21:19:42,163  === Evaluation: Llama_P2_4bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:42,417    bleu: 0.0157
-2026-06-28 21:19:42,417    rougeL: 0.1548
-2026-06-28 21:19:42,417    meteor: 0.2822
-2026-06-28 21:19:42,417    bertscore_f1: 0.1201 ± 0.0413
-2026-06-28 21:19:42,417    qa_eval: None
-2026-06-28 21:19:42,417    error: qafacteval not installed
-2026-06-28 21:19:42,417  
-2026-06-28 21:19:42,418  === Evaluation: Llama_P2_4bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:42,651    bleu: 0.0000
-2026-06-28 21:19:42,651    rougeL: 0.1033
-2026-06-28 21:19:42,651    meteor: 0.1925
-2026-06-28 21:19:42,651    bertscore_f1: 0.0924 ± 0.0458
-2026-06-28 21:19:42,651    qa_eval: None
-2026-06-28 21:19:42,651    error: qafacteval not installed
-2026-06-28 21:19:42,651  
-2026-06-28 21:19:42,652  === Evaluation: Llama_P2_8bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:42,905    bleu: 0.0182
-2026-06-28 21:19:42,905    rougeL: 0.1465
-2026-06-28 21:19:42,905    meteor: 0.2952
-2026-06-28 21:19:42,905    bertscore_f1: 0.1328 ± 0.0517
-2026-06-28 21:19:42,905    qa_eval: None
-2026-06-28 21:19:42,905    error: qafacteval not installed
-2026-06-28 21:19:42,905  
-2026-06-28 21:19:42,907  === Evaluation: Llama_P2_8bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:43,145    bleu: 0.0000
-2026-06-28 21:19:43,145    rougeL: 0.1166
-2026-06-28 21:19:43,145    meteor: 0.1942
-2026-06-28 21:19:43,145    bertscore_f1: 0.0775 ± 0.0742
-2026-06-28 21:19:43,145    qa_eval: None
-2026-06-28 21:19:43,145    error: qafacteval not installed
-2026-06-28 21:19:43,145  
-2026-06-28 21:19:43,146  === Evaluation: Llama_P3_16bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:43,501    bleu: 0.0185
-2026-06-28 21:19:43,501    rougeL: 0.1039
-2026-06-28 21:19:43,501    meteor: 0.2242
-2026-06-28 21:19:43,501    bertscore_f1: -0.0024 ± 0.0831
-2026-06-28 21:19:43,502    qa_eval: None
-2026-06-28 21:19:43,502    error: qafacteval not installed
-2026-06-28 21:19:43,502  
-2026-06-28 21:19:43,503  === Evaluation: Llama_P3_16bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:43,821    bleu: 0.0000
-2026-06-28 21:19:43,821    rougeL: 0.0847
-2026-06-28 21:19:43,822    meteor: 0.1856
-2026-06-28 21:19:43,822    bertscore_f1: -0.0007 ± 0.0597
-2026-06-28 21:19:43,822    qa_eval: None
-2026-06-28 21:19:43,822    error: qafacteval not installed
-2026-06-28 21:19:43,822  
-2026-06-28 21:19:43,823  === Evaluation: Llama_P3_4bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:44,116    bleu: 0.0231
-2026-06-28 21:19:44,116    rougeL: 0.1088
-2026-06-28 21:19:44,116    meteor: 0.2676
-2026-06-28 21:19:44,116    bertscore_f1: 0.0199 ± 0.0692
-2026-06-28 21:19:44,116    qa_eval: None
-2026-06-28 21:19:44,117    error: qafacteval not installed
-2026-06-28 21:19:44,117  
-2026-06-28 21:19:44,118  === Evaluation: Llama_P3_4bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:44,369    bleu: 0.0000
-2026-06-28 21:19:44,369    rougeL: 0.0873
-2026-06-28 21:19:44,369    meteor: 0.1991
-2026-06-28 21:19:44,369    bertscore_f1: -0.0030 ± 0.0621
-2026-06-28 21:19:44,369    qa_eval: None
-2026-06-28 21:19:44,369    error: qafacteval not installed
-2026-06-28 21:19:44,369  
-2026-06-28 21:19:44,370  === Evaluation: Llama_P3_8bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:44,668    bleu: 0.0209
-2026-06-28 21:19:44,668    rougeL: 0.1016
-2026-06-28 21:19:44,668    meteor: 0.2631
-2026-06-28 21:19:44,668    bertscore_f1: -0.0008 ± 0.0890
-2026-06-28 21:19:44,668    qa_eval: None
-2026-06-28 21:19:44,668    error: qafacteval not installed
-2026-06-28 21:19:44,668  
-2026-06-28 21:19:44,669  === Evaluation: Llama_P3_8bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:44,934    bleu: 0.0000
-2026-06-28 21:19:44,934    rougeL: 0.0888
-2026-06-28 21:19:44,934    meteor: 0.2056
-2026-06-28 21:19:44,934    bertscore_f1: -0.0102 ± 0.0588
-2026-06-28 21:19:44,934    qa_eval: None
-2026-06-28 21:19:44,934    error: qafacteval not installed
-2026-06-28 21:19:44,934  
-2026-06-28 21:19:44,935  === Evaluation: Phi_P1_16bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:45,147    bleu: 0.0561
-2026-06-28 21:19:45,147    rougeL: 0.2034
-2026-06-28 21:19:45,148    meteor: 0.3304
-2026-06-28 21:19:45,148    bertscore_f1: 0.2085 ± 0.0497
-2026-06-28 21:19:45,148    qa_eval: None
-2026-06-28 21:19:45,148    error: qafacteval not installed
-2026-06-28 21:19:45,148  
-2026-06-28 21:19:45,149  === Evaluation: Phi_P1_16bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:45,325    bleu: 0.0000
-2026-06-28 21:19:45,325    rougeL: 0.1477
-2026-06-28 21:19:45,325    meteor: 0.2375
-2026-06-28 21:19:45,325    bertscore_f1: 0.1583 ± 0.0746
-2026-06-28 21:19:45,325    qa_eval: None
-2026-06-28 21:19:45,325    error: qafacteval not installed
-2026-06-28 21:19:45,325  
-2026-06-28 21:19:45,326  === Evaluation: Phi_P1_4bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:45,527    bleu: 0.0486
-2026-06-28 21:19:45,527    rougeL: 0.1925
-2026-06-28 21:19:45,527    meteor: 0.3047
-2026-06-28 21:19:45,527    bertscore_f1: 0.1986 ± 0.0362
-2026-06-28 21:19:45,527    qa_eval: None
-2026-06-28 21:19:45,527    error: qafacteval not installed
-2026-06-28 21:19:45,527  
-2026-06-28 21:19:45,528  === Evaluation: Phi_P1_4bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:45,717    bleu: 0.0000
-2026-06-28 21:19:45,717    rougeL: 0.1376
-2026-06-28 21:19:45,717    meteor: 0.2098
-2026-06-28 21:19:45,717    bertscore_f1: 0.1073 ± 0.0880
-2026-06-28 21:19:45,717    qa_eval: None
-2026-06-28 21:19:45,717    error: qafacteval not installed
-2026-06-28 21:19:45,717  
-2026-06-28 21:19:45,718  === Evaluation: Phi_P1_8bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:45,914    bleu: 0.0470
-2026-06-28 21:19:45,914    rougeL: 0.1968
-2026-06-28 21:19:45,914    meteor: 0.3201
-2026-06-28 21:19:45,914    bertscore_f1: 0.2161 ± 0.0514
-2026-06-28 21:19:45,914    qa_eval: None
-2026-06-28 21:19:45,914    error: qafacteval not installed
-2026-06-28 21:19:45,914  
-2026-06-28 21:19:45,915  === Evaluation: Phi_P1_8bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:46,096    bleu: 0.0000
-2026-06-28 21:19:46,096    rougeL: 0.1298
-2026-06-28 21:19:46,096    meteor: 0.2035
-2026-06-28 21:19:46,096    bertscore_f1: 0.1252 ± 0.0578
-2026-06-28 21:19:46,096    qa_eval: None
-2026-06-28 21:19:46,096    error: qafacteval not installed
-2026-06-28 21:19:46,096  
-2026-06-28 21:19:46,097  === Evaluation: Phi_P2_16bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:46,305    bleu: 0.0657
-2026-06-28 21:19:46,305    rougeL: 0.2027
-2026-06-28 21:19:46,305    meteor: 0.3352
-2026-06-28 21:19:46,305    bertscore_f1: 0.2115 ± 0.0532
-2026-06-28 21:19:46,305    qa_eval: None
-2026-06-28 21:19:46,305    error: qafacteval not installed
-2026-06-28 21:19:46,305  
-2026-06-28 21:19:46,306  === Evaluation: Phi_P2_16bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:46,501    bleu: 0.0000
-2026-06-28 21:19:46,502    rougeL: 0.1488
-2026-06-28 21:19:46,502    meteor: 0.2198
-2026-06-28 21:19:46,502    bertscore_f1: 0.1188 ± 0.1335
-2026-06-28 21:19:46,502    qa_eval: None
-2026-06-28 21:19:46,502    error: qafacteval not installed
-2026-06-28 21:19:46,502  
-2026-06-28 21:19:46,503  === Evaluation: Phi_P2_4bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:46,705    bleu: 0.0422
-2026-06-28 21:19:46,705    rougeL: 0.1828
-2026-06-28 21:19:46,705    meteor: 0.2718
-2026-06-28 21:19:46,705    bertscore_f1: 0.1536 ± 0.0355
-2026-06-28 21:19:46,705    qa_eval: None
-2026-06-28 21:19:46,705    error: qafacteval not installed
-2026-06-28 21:19:46,705  
-2026-06-28 21:19:46,706  === Evaluation: Phi_P2_4bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:46,895    bleu: 0.0000
-2026-06-28 21:19:46,895    rougeL: 0.1381
-2026-06-28 21:19:46,895    meteor: 0.1778
-2026-06-28 21:19:46,895    bertscore_f1: 0.1306 ± 0.0613
-2026-06-28 21:19:46,895    qa_eval: None
-2026-06-28 21:19:46,896    error: qafacteval not installed
-2026-06-28 21:19:46,896  
-2026-06-28 21:19:46,897  === Evaluation: Phi_P2_8bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:47,121    bleu: 0.0424
-2026-06-28 21:19:47,121    rougeL: 0.1872
-2026-06-28 21:19:47,121    meteor: 0.2957
-2026-06-28 21:19:47,121    bertscore_f1: 0.1881 ± 0.0338
-2026-06-28 21:19:47,121    qa_eval: None
-2026-06-28 21:19:47,121    error: qafacteval not installed
-2026-06-28 21:19:47,121  
-2026-06-28 21:19:47,122  === Evaluation: Phi_P2_8bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:47,317    bleu: 0.0000
-2026-06-28 21:19:47,318    rougeL: 0.1457
-2026-06-28 21:19:47,318    meteor: 0.2391
-2026-06-28 21:19:47,318    bertscore_f1: 0.1334 ± 0.0900
-2026-06-28 21:19:47,318    qa_eval: None
-2026-06-28 21:19:47,318    error: qafacteval not installed
-2026-06-28 21:19:47,318  
-2026-06-28 21:19:47,319  === Evaluation: Phi_P3_16bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:47,600    bleu: 0.0352
-2026-06-28 21:19:47,600    rougeL: 0.1535
-2026-06-28 21:19:47,600    meteor: 0.3091
-2026-06-28 21:19:47,600    bertscore_f1: 0.1267 ± 0.0546
-2026-06-28 21:19:47,600    qa_eval: None
-2026-06-28 21:19:47,601    error: qafacteval not installed
-2026-06-28 21:19:47,601  
-2026-06-28 21:19:47,602  === Evaluation: Phi_P3_16bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:47,850    bleu: 0.0000
-2026-06-28 21:19:47,850    rougeL: 0.0992
-2026-06-28 21:19:47,850    meteor: 0.1629
-2026-06-28 21:19:47,850    bertscore_f1: 0.0269 ± 0.0555
-2026-06-28 21:19:47,850    qa_eval: None
-2026-06-28 21:19:47,850    error: qafacteval not installed
-2026-06-28 21:19:47,850  
-2026-06-28 21:19:47,851  === Evaluation: Phi_P3_4bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:48,108    bleu: 0.0365
-2026-06-28 21:19:48,108    rougeL: 0.1498
-2026-06-28 21:19:48,108    meteor: 0.3049
-2026-06-28 21:19:48,108    bertscore_f1: 0.1341 ± 0.0751
-2026-06-28 21:19:48,108    qa_eval: None
-2026-06-28 21:19:48,108    error: qafacteval not installed
-2026-06-28 21:19:48,108  
-2026-06-28 21:19:48,109  === Evaluation: Phi_P3_4bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:48,341    bleu: 0.0000
-2026-06-28 21:19:48,341    rougeL: 0.1121
-2026-06-28 21:19:48,341    meteor: 0.1914
-2026-06-28 21:19:48,342    bertscore_f1: 0.0758 ± 0.0825
-2026-06-28 21:19:48,342    qa_eval: None
-2026-06-28 21:19:48,342    error: qafacteval not installed
-2026-06-28 21:19:48,342  
-2026-06-28 21:19:48,343  === Evaluation: Phi_P3_8bit_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:48,613    bleu: 0.0452
-2026-06-28 21:19:48,613    rougeL: 0.1616
-2026-06-28 21:19:48,614    meteor: 0.3138
-2026-06-28 21:19:48,614    bertscore_f1: 0.1276 ± 0.1073
-2026-06-28 21:19:48,614    qa_eval: None
-2026-06-28 21:19:48,614    error: qafacteval not installed
-2026-06-28 21:19:48,614  
-2026-06-28 21:19:48,615  === Evaluation: Phi_P3_8bit_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:48,853    bleu: 0.0000
-2026-06-28 21:19:48,853    rougeL: 0.0949
-2026-06-28 21:19:48,853    meteor: 0.1707
-2026-06-28 21:19:48,853    bertscore_f1: 0.0301 ± 0.0606
-2026-06-28 21:19:48,853    qa_eval: None
-2026-06-28 21:19:48,853    error: qafacteval not installed
-2026-06-28 21:19:48,853  
-2026-06-28 21:19:48,854  === Evaluation: TFIDF_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:49,049    bleu: 0.0000
-2026-06-28 21:19:49,049    rougeL: 0.1259
-2026-06-28 21:19:49,049    meteor: 0.1631
-2026-06-28 21:19:49,049    bertscore_f1: 0.0856 ± 0.1349
-2026-06-28 21:19:49,049    qa_eval: None
-2026-06-28 21:19:49,049    error: qafacteval not installed
-2026-06-28 21:19:49,049  
-2026-06-28 21:19:49,050  === Evaluation: TFIDF_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:49,231    bleu: 0.0000
-2026-06-28 21:19:49,231    rougeL: 0.1300
-2026-06-28 21:19:49,231    meteor: 0.1697
-2026-06-28 21:19:49,231    bertscore_f1: 0.0538 ± 0.1020
-2026-06-28 21:19:49,231    qa_eval: None
-2026-06-28 21:19:49,231    error: qafacteval not installed
-2026-06-28 21:19:49,231  
-2026-06-28 21:19:49,232  === Evaluation: TextRank_cnn_dailymail_5_summaries.jsonl ===
-2026-06-28 21:19:49,448    bleu: 0.0673
-2026-06-28 21:19:49,448    rougeL: 0.1781
-2026-06-28 21:19:49,448    meteor: 0.2969
-2026-06-28 21:19:49,448    bertscore_f1: 0.1412 ± 0.1248
-2026-06-28 21:19:49,448    qa_eval: None
-2026-06-28 21:19:49,448    error: qafacteval not installed
-2026-06-28 21:19:49,448  
-2026-06-28 21:19:49,449  === Evaluation: TextRank_xsum_5_summaries.jsonl ===
-2026-06-28 21:19:49,649    bleu: 0.0000
-2026-06-28 21:19:49,649    rougeL: 0.0919
-2026-06-28 21:19:49,649    meteor: 0.1569
-2026-06-28 21:19:49,649    bertscore_f1: 0.0745 ± 0.1495
-2026-06-28 21:19:49,649    qa_eval: None
-2026-06-28 21:19:49,649    error: qafacteval not installed
-2026-06-28 21:19:49,649  
+2026-07-06 22:30:28,273  === Evaluation: Lead-1_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 22:32:13,975    bleu: 0.0365
+2026-07-06 22:32:13,975    rougeL: 0.1831
+2026-07-06 22:32:13,975    meteor: 0.1682
+2026-07-06 22:32:13,976    bertscore_f1_raw: 0.8593 ± 0.0237
+2026-07-06 22:32:13,976    bertscore_f1_scaled: 0.1663 ± 0.1403
+2026-07-06 22:32:13,976    qa_eval: None
+2026-07-06 22:32:13,976    error: qafacteval not installed
+2026-07-06 22:32:13,976  
+2026-07-06 22:32:13,980  === Evaluation: Lead-1_xsum_full_summaries.jsonl ===
+2026-07-06 22:33:11,817    bleu: 0.0070
+2026-07-06 22:33:11,817    rougeL: 0.1178
+2026-07-06 22:33:11,817    meteor: 0.1312
+2026-07-06 22:33:11,817    bertscore_f1_raw: 0.8554 ± 0.0199
+2026-07-06 22:33:11,817    bertscore_f1_scaled: 0.1431 ± 0.1182
+2026-07-06 22:33:11,817    qa_eval: None
+2026-07-06 22:33:11,817    error: qafacteval not installed
+2026-07-06 22:33:11,817  
+2026-07-06 22:33:11,819  === Evaluation: Lead-1_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 22:33:15,544    bleu: 0.0738
+2026-07-06 22:33:15,544    rougeL: 0.2791
+2026-07-06 22:33:15,544    meteor: 0.2447
+2026-07-06 22:33:15,544    bertscore_f1_raw: 0.8898 ± 0.0313
+2026-07-06 22:33:15,544    bertscore_f1_scaled: 0.3469 ± 0.1857
+2026-07-06 22:33:15,544    qa_eval: None
+2026-07-06 22:33:15,544    error: qafacteval not installed
+2026-07-06 22:33:15,544  
+2026-07-06 22:33:15,547  === Evaluation: Lead-1_xu_xsum_500_summaries.jsonl ===
+2026-07-06 22:33:18,785    bleu: 0.0843
+2026-07-06 22:33:18,785    rougeL: 0.3140
+2026-07-06 22:33:18,785    meteor: 0.2792
+2026-07-06 22:33:18,785    bertscore_f1_raw: 0.9019 ± 0.0268
+2026-07-06 22:33:18,785    bertscore_f1_scaled: 0.4190 ± 0.1590
+2026-07-06 22:33:18,785    qa_eval: None
+2026-07-06 22:33:18,785    error: qafacteval not installed
+2026-07-06 22:33:18,785  
+2026-07-06 22:33:18,787  === Evaluation: Lead-3_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 22:35:40,587    bleu: 0.1150
+2026-07-06 22:35:40,587    rougeL: 0.2428
+2026-07-06 22:35:40,587    meteor: 0.3854
+2026-07-06 22:35:40,587    bertscore_f1_raw: 0.8691 ± 0.0223
+2026-07-06 22:35:40,588    bertscore_f1_scaled: 0.2243 ± 0.1323
+2026-07-06 22:35:40,588    qa_eval: None
+2026-07-06 22:35:40,588    error: qafacteval not installed
+2026-07-06 22:35:40,588  
+2026-07-06 22:35:40,590  === Evaluation: Lead-3_xsum_full_summaries.jsonl ===
+2026-07-06 22:37:23,325    bleu: 0.0077
+2026-07-06 22:37:23,326    rougeL: 0.1155
+2026-07-06 22:37:23,326    meteor: 0.2089
+2026-07-06 22:37:23,326    bertscore_f1_raw: 0.8546 ± 0.0184
+2026-07-06 22:37:23,326    bertscore_f1_scaled: 0.1386 ± 0.1088
+2026-07-06 22:37:23,326    qa_eval: None
+2026-07-06 22:37:23,326    error: qafacteval not installed
+2026-07-06 22:37:23,326  
+2026-07-06 22:37:23,328  === Evaluation: Lead-3_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 22:37:29,744    bleu: 0.1168
+2026-07-06 22:37:29,744    rougeL: 0.2878
+2026-07-06 22:37:29,744    meteor: 0.4326
+2026-07-06 22:37:29,745    bertscore_f1_raw: 0.8932 ± 0.0225
+2026-07-06 22:37:29,745    bertscore_f1_scaled: 0.3669 ± 0.1333
+2026-07-06 22:37:29,745    qa_eval: None
+2026-07-06 22:37:29,745    error: qafacteval not installed
+2026-07-06 22:37:29,745  
+2026-07-06 22:37:29,746  === Evaluation: Lead-3_xu_xsum_500_summaries.jsonl ===
+2026-07-06 22:37:35,744    bleu: 0.1389
+2026-07-06 22:37:35,744    rougeL: 0.3264
+2026-07-06 22:37:35,745    meteor: 0.4512
+2026-07-06 22:37:35,745    bertscore_f1_raw: 0.9002 ± 0.0267
+2026-07-06 22:37:35,745    bertscore_f1_scaled: 0.4089 ± 0.1585
+2026-07-06 22:37:35,745    qa_eval: None
+2026-07-06 22:37:35,745    error: qafacteval not installed
+2026-07-06 22:37:35,745  
+2026-07-06 22:37:35,747  === Evaluation: Llama_P1_16bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 22:39:54,466    bleu: 0.0735
+2026-07-06 22:39:54,469    rougeL: 0.2264
+2026-07-06 22:39:54,469    meteor: 0.3343
+2026-07-06 22:39:54,469    bertscore_f1_raw: 0.8712 ± 0.0171
+2026-07-06 22:39:54,469    bertscore_f1_scaled: 0.2369 ± 0.1014
+2026-07-06 22:39:54,469    qa_eval: None
+2026-07-06 22:39:54,469    error: qafacteval not installed
+2026-07-06 22:39:54,469  
+2026-07-06 22:39:54,474  === Evaluation: Llama_P1_16bit_xsum_full_summaries.jsonl ===
+2026-07-06 22:41:34,590    bleu: 0.0199
+2026-07-06 22:41:34,599    rougeL: 0.1463
+2026-07-06 22:41:34,599    meteor: 0.2622
+2026-07-06 22:41:34,599    bertscore_f1_raw: 0.8687 ± 0.0173
+2026-07-06 22:41:34,599    bertscore_f1_scaled: 0.2223 ± 0.1024
+2026-07-06 22:41:34,599    qa_eval: None
+2026-07-06 22:41:34,599    error: qafacteval not installed
+2026-07-06 22:41:34,599  
+2026-07-06 22:41:34,618  === Evaluation: Llama_P1_16bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 22:41:41,062    bleu: 0.1734
+2026-07-06 22:41:41,062    rougeL: 0.3468
+2026-07-06 22:41:41,063    meteor: 0.4917
+2026-07-06 22:41:41,063    bertscore_f1_raw: 0.9098 ± 0.0195
+2026-07-06 22:41:41,063    bertscore_f1_scaled: 0.4657 ± 0.1158
+2026-07-06 22:41:41,063    qa_eval: None
+2026-07-06 22:41:41,063    error: qafacteval not installed
+2026-07-06 22:41:41,063  
+2026-07-06 22:41:41,065  === Evaluation: Llama_P1_16bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 22:41:46,880    bleu: 0.1631
+2026-07-06 22:41:46,881    rougeL: 0.3381
+2026-07-06 22:41:46,881    meteor: 0.4856
+2026-07-06 22:41:46,881    bertscore_f1_raw: 0.9081 ± 0.0191
+2026-07-06 22:41:46,881    bertscore_f1_scaled: 0.4554 ± 0.1133
+2026-07-06 22:41:46,881    qa_eval: None
+2026-07-06 22:41:46,881    error: qafacteval not installed
+2026-07-06 22:41:46,881  
+2026-07-06 22:41:46,883  === Evaluation: Llama_P1_4bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 22:44:04,609    bleu: 0.0723
+2026-07-06 22:44:04,610    rougeL: 0.2257
+2026-07-06 22:44:04,610    meteor: 0.3273
+2026-07-06 22:44:04,610    bertscore_f1_raw: 0.8709 ± 0.0170
+2026-07-06 22:44:04,610    bertscore_f1_scaled: 0.2352 ± 0.1005
+2026-07-06 22:44:04,610    qa_eval: None
+2026-07-06 22:44:04,610    error: qafacteval not installed
+2026-07-06 22:44:04,610  
+2026-07-06 22:44:04,613  === Evaluation: Llama_P1_4bit_xsum_full_summaries.jsonl ===
+2026-07-06 22:45:39,234    bleu: 0.0204
+2026-07-06 22:45:39,235    rougeL: 0.1481
+2026-07-06 22:45:39,235    meteor: 0.2633
+2026-07-06 22:45:39,235    bertscore_f1_raw: 0.8691 ± 0.0179
+2026-07-06 22:45:39,235    bertscore_f1_scaled: 0.2241 ± 0.1062
+2026-07-06 22:45:39,235    qa_eval: None
+2026-07-06 22:45:39,235    error: qafacteval not installed
+2026-07-06 22:45:39,235  
+2026-07-06 22:45:39,238  === Evaluation: Llama_P1_4bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 22:45:45,050    bleu: 0.1718
+2026-07-06 22:45:45,050    rougeL: 0.3466
+2026-07-06 22:45:45,050    meteor: 0.4839
+2026-07-06 22:45:45,050    bertscore_f1_raw: 0.9097 ± 0.0191
+2026-07-06 22:45:45,050    bertscore_f1_scaled: 0.4647 ± 0.1134
+2026-07-06 22:45:45,050    qa_eval: None
+2026-07-06 22:45:45,050    error: qafacteval not installed
+2026-07-06 22:45:45,050  
+2026-07-06 22:45:45,053  === Evaluation: Llama_P1_4bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 22:45:50,585    bleu: 0.1671
+2026-07-06 22:45:50,585    rougeL: 0.3446
+2026-07-06 22:45:50,585    meteor: 0.4864
+2026-07-06 22:45:50,585    bertscore_f1_raw: 0.9090 ± 0.0168
+2026-07-06 22:45:50,585    bertscore_f1_scaled: 0.4611 ± 0.0995
+2026-07-06 22:45:50,585    qa_eval: None
+2026-07-06 22:45:50,585    error: qafacteval not installed
+2026-07-06 22:45:50,585  
+2026-07-06 22:45:50,587  === Evaluation: Llama_P1_8bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 22:48:09,475    bleu: 0.0729
+2026-07-06 22:48:09,475    rougeL: 0.2265
+2026-07-06 22:48:09,475    meteor: 0.3332
+2026-07-06 22:48:09,475    bertscore_f1_raw: 0.8712 ± 0.0172
+2026-07-06 22:48:09,475    bertscore_f1_scaled: 0.2366 ± 0.1018
+2026-07-06 22:48:09,475    qa_eval: None
+2026-07-06 22:48:09,475    error: qafacteval not installed
+2026-07-06 22:48:09,475  
+2026-07-06 22:48:09,481  === Evaluation: Llama_P1_8bit_xsum_full_summaries.jsonl ===
+2026-07-06 22:49:48,121    bleu: 0.0199
+2026-07-06 22:49:48,122    rougeL: 0.1461
+2026-07-06 22:49:48,122    meteor: 0.2623
+2026-07-06 22:49:48,122    bertscore_f1_raw: 0.8688 ± 0.0175
+2026-07-06 22:49:48,122    bertscore_f1_scaled: 0.2225 ± 0.1038
+2026-07-06 22:49:48,122    qa_eval: None
+2026-07-06 22:49:48,122    error: qafacteval not installed
+2026-07-06 22:49:48,122  
+2026-07-06 22:49:48,125  === Evaluation: Llama_P1_8bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 22:49:54,015    bleu: 0.1689
+2026-07-06 22:49:54,015    rougeL: 0.3442
+2026-07-06 22:49:54,015    meteor: 0.4878
+2026-07-06 22:49:54,015    bertscore_f1_raw: 0.9098 ± 0.0186
+2026-07-06 22:49:54,015    bertscore_f1_scaled: 0.4654 ± 0.1102
+2026-07-06 22:49:54,016    qa_eval: None
+2026-07-06 22:49:54,016    error: qafacteval not installed
+2026-07-06 22:49:54,016  
+2026-07-06 22:49:54,017  === Evaluation: Llama_P1_8bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 22:50:00,225    bleu: 0.1625
+2026-07-06 22:50:00,225    rougeL: 0.3379
+2026-07-06 22:50:00,225    meteor: 0.4876
+2026-07-06 22:50:00,225    bertscore_f1_raw: 0.9086 ± 0.0191
+2026-07-06 22:50:00,225    bertscore_f1_scaled: 0.4587 ± 0.1133
+2026-07-06 22:50:00,225    qa_eval: None
+2026-07-06 22:50:00,225    error: qafacteval not installed
+2026-07-06 22:50:00,225  
+2026-07-06 22:50:00,228  === Evaluation: Llama_P2_16bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 22:52:21,525    bleu: 0.0730
+2026-07-06 22:52:21,532    rougeL: 0.2263
+2026-07-06 22:52:21,532    meteor: 0.3372
+2026-07-06 22:52:21,532    bertscore_f1_raw: 0.8715 ± 0.0169
+2026-07-06 22:52:21,533    bertscore_f1_scaled: 0.2384 ± 0.1000
+2026-07-06 22:52:21,533    qa_eval: None
+2026-07-06 22:52:21,533    error: qafacteval not installed
+2026-07-06 22:52:21,533  
+2026-07-06 22:52:21,550  === Evaluation: Llama_P2_16bit_xsum_full_summaries.jsonl ===
+2026-07-06 22:54:02,566    bleu: 0.0191
+2026-07-06 22:54:02,567    rougeL: 0.1443
+2026-07-06 22:54:02,567    meteor: 0.2621
+2026-07-06 22:54:02,567    bertscore_f1_raw: 0.8681 ± 0.0177
+2026-07-06 22:54:02,567    bertscore_f1_scaled: 0.2187 ± 0.1046
+2026-07-06 22:54:02,568    qa_eval: None
+2026-07-06 22:54:02,568    error: qafacteval not installed
+2026-07-06 22:54:02,568  
+2026-07-06 22:54:02,571  === Evaluation: Llama_P2_16bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 22:54:08,452    bleu: 0.1699
+2026-07-06 22:54:08,452    rougeL: 0.3456
+2026-07-06 22:54:08,452    meteor: 0.4918
+2026-07-06 22:54:08,452    bertscore_f1_raw: 0.9099 ± 0.0183
+2026-07-06 22:54:08,452    bertscore_f1_scaled: 0.4661 ± 0.1083
+2026-07-06 22:54:08,452    qa_eval: None
+2026-07-06 22:54:08,452    error: qafacteval not installed
+2026-07-06 22:54:08,452  
+2026-07-06 22:54:08,455  === Evaluation: Llama_P2_16bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 22:54:14,309    bleu: 0.1645
+2026-07-06 22:54:14,310    rougeL: 0.3381
+2026-07-06 22:54:14,310    meteor: 0.4913
+2026-07-06 22:54:14,310    bertscore_f1_raw: 0.9086 ± 0.0179
+2026-07-06 22:54:14,310    bertscore_f1_scaled: 0.4587 ± 0.1062
+2026-07-06 22:54:14,310    qa_eval: None
+2026-07-06 22:54:14,310    error: qafacteval not installed
+2026-07-06 22:54:14,310  
+2026-07-06 22:54:14,312  === Evaluation: Llama_P2_4bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 22:56:33,126    bleu: 0.0719
+2026-07-06 22:56:33,126    rougeL: 0.2251
+2026-07-06 22:56:33,126    meteor: 0.3314
+2026-07-06 22:56:33,126    bertscore_f1_raw: 0.8712 ± 0.0169
+2026-07-06 22:56:33,126    bertscore_f1_scaled: 0.2366 ± 0.1002
+2026-07-06 22:56:33,126    qa_eval: None
+2026-07-06 22:56:33,126    error: qafacteval not installed
+2026-07-06 22:56:33,126  
+2026-07-06 22:56:33,129  === Evaluation: Llama_P2_4bit_xsum_full_summaries.jsonl ===
+2026-07-06 22:58:07,613    bleu: 0.0194
+2026-07-06 22:58:07,614    rougeL: 0.1452
+2026-07-06 22:58:07,614    meteor: 0.2609
+2026-07-06 22:58:07,614    bertscore_f1_raw: 0.8684 ± 0.0176
+2026-07-06 22:58:07,614    bertscore_f1_scaled: 0.2201 ± 0.1045
+2026-07-06 22:58:07,614    qa_eval: None
+2026-07-06 22:58:07,614    error: qafacteval not installed
+2026-07-06 22:58:07,614  
+2026-07-06 22:58:07,618  === Evaluation: Llama_P2_4bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 22:58:13,773    bleu: 0.1697
+2026-07-06 22:58:13,773    rougeL: 0.3462
+2026-07-06 22:58:13,773    meteor: 0.4903
+2026-07-06 22:58:13,773    bertscore_f1_raw: 0.9096 ± 0.0183
+2026-07-06 22:58:13,773    bertscore_f1_scaled: 0.4645 ± 0.1084
+2026-07-06 22:58:13,773    qa_eval: None
+2026-07-06 22:58:13,773    error: qafacteval not installed
+2026-07-06 22:58:13,773  
+2026-07-06 22:58:13,779  === Evaluation: Llama_P2_4bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 22:58:19,410    bleu: 0.1643
+2026-07-06 22:58:19,410    rougeL: 0.3389
+2026-07-06 22:58:19,411    meteor: 0.4859
+2026-07-06 22:58:19,411    bertscore_f1_raw: 0.9085 ± 0.0161
+2026-07-06 22:58:19,411    bertscore_f1_scaled: 0.4579 ± 0.0952
+2026-07-06 22:58:19,411    qa_eval: None
+2026-07-06 22:58:19,411    error: qafacteval not installed
+2026-07-06 22:58:19,411  
+2026-07-06 22:58:19,413  === Evaluation: Llama_P2_8bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 23:00:41,924    bleu: 0.0726
+2026-07-06 23:00:41,936    rougeL: 0.2256
+2026-07-06 23:00:41,937    meteor: 0.3372
+2026-07-06 23:00:41,937    bertscore_f1_raw: 0.8714 ± 0.0168
+2026-07-06 23:00:41,937    bertscore_f1_scaled: 0.2378 ± 0.0998
+2026-07-06 23:00:41,937    qa_eval: None
+2026-07-06 23:00:41,937    error: qafacteval not installed
+2026-07-06 23:00:41,937  
+2026-07-06 23:00:41,968  === Evaluation: Llama_P2_8bit_xsum_full_summaries.jsonl ===
+2026-07-06 23:02:22,172    bleu: 0.0189
+2026-07-06 23:02:22,173    rougeL: 0.1436
+2026-07-06 23:02:22,174    meteor: 0.2619
+2026-07-06 23:02:22,174    bertscore_f1_raw: 0.8681 ± 0.0177
+2026-07-06 23:02:22,174    bertscore_f1_scaled: 0.2187 ± 0.1047
+2026-07-06 23:02:22,174    qa_eval: None
+2026-07-06 23:02:22,174    error: qafacteval not installed
+2026-07-06 23:02:22,174  
+2026-07-06 23:02:22,176  === Evaluation: Llama_P2_8bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 23:02:28,100    bleu: 0.1663
+2026-07-06 23:02:28,100    rougeL: 0.3432
+2026-07-06 23:02:28,100    meteor: 0.4941
+2026-07-06 23:02:28,100    bertscore_f1_raw: 0.9092 ± 0.0178
+2026-07-06 23:02:28,100    bertscore_f1_scaled: 0.4622 ± 0.1056
+2026-07-06 23:02:28,100    qa_eval: None
+2026-07-06 23:02:28,100    error: qafacteval not installed
+2026-07-06 23:02:28,100  
+2026-07-06 23:02:28,102  === Evaluation: Llama_P2_8bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 23:02:33,881    bleu: 0.1609
+2026-07-06 23:02:33,881    rougeL: 0.3344
+2026-07-06 23:02:33,881    meteor: 0.4895
+2026-07-06 23:02:33,881    bertscore_f1_raw: 0.9084 ± 0.0180
+2026-07-06 23:02:33,881    bertscore_f1_scaled: 0.4573 ± 0.1069
+2026-07-06 23:02:33,882    qa_eval: None
+2026-07-06 23:02:33,882    error: qafacteval not installed
+2026-07-06 23:02:33,882  
+2026-07-06 23:02:33,884  === Evaluation: Llama_P3_16bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 23:04:41,129    bleu: 0.0650
+2026-07-06 23:04:41,129    rougeL: 0.2165
+2026-07-06 23:04:41,130    meteor: 0.2931
+2026-07-06 23:04:41,130    bertscore_f1_raw: 0.8690 ± 0.0171
+2026-07-06 23:04:41,130    bertscore_f1_scaled: 0.2238 ± 0.1014
+2026-07-06 23:04:41,130    qa_eval: None
+2026-07-06 23:04:41,130    error: qafacteval not installed
+2026-07-06 23:04:41,130  
+2026-07-06 23:04:41,132  === Evaluation: Llama_P3_16bit_xsum_full_summaries.jsonl ===
+2026-07-06 23:06:10,908    bleu: 0.0188
+2026-07-06 23:06:10,908    rougeL: 0.1506
+2026-07-06 23:06:10,908    meteor: 0.2516
+2026-07-06 23:06:10,908    bertscore_f1_raw: 0.8697 ± 0.0191
+2026-07-06 23:06:10,908    bertscore_f1_scaled: 0.2280 ± 0.1132
+2026-07-06 23:06:10,908    qa_eval: None
+2026-07-06 23:06:10,908    error: qafacteval not installed
+2026-07-06 23:06:10,908  
+2026-07-06 23:06:10,910  === Evaluation: Llama_P3_16bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 23:06:16,406    bleu: 0.1622
+2026-07-06 23:06:16,406    rougeL: 0.3318
+2026-07-06 23:06:16,406    meteor: 0.4470
+2026-07-06 23:06:16,406    bertscore_f1_raw: 0.9062 ± 0.0198
+2026-07-06 23:06:16,406    bertscore_f1_scaled: 0.4444 ± 0.1175
+2026-07-06 23:06:16,406    qa_eval: None
+2026-07-06 23:06:16,406    error: qafacteval not installed
+2026-07-06 23:06:16,406  
+2026-07-06 23:06:16,409  === Evaluation: Llama_P3_16bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 23:06:21,669    bleu: 0.1428
+2026-07-06 23:06:21,669    rougeL: 0.3108
+2026-07-06 23:06:21,669    meteor: 0.4255
+2026-07-06 23:06:21,669    bertscore_f1_raw: 0.9029 ± 0.0183
+2026-07-06 23:06:21,669    bertscore_f1_scaled: 0.4244 ± 0.1087
+2026-07-06 23:06:21,669    qa_eval: None
+2026-07-06 23:06:21,669    error: qafacteval not installed
+2026-07-06 23:06:21,669  
+2026-07-06 23:06:21,671  === Evaluation: Llama_P3_4bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 23:08:24,392    bleu: 0.0650
+2026-07-06 23:08:24,393    rougeL: 0.2165
+2026-07-06 23:08:24,393    meteor: 0.2842
+2026-07-06 23:08:24,393    bertscore_f1_raw: 0.8689 ± 0.0171
+2026-07-06 23:08:24,393    bertscore_f1_scaled: 0.2233 ± 0.1016
+2026-07-06 23:08:24,393    qa_eval: None
+2026-07-06 23:08:24,393    error: qafacteval not installed
+2026-07-06 23:08:24,393  
+2026-07-06 23:08:24,399  === Evaluation: Llama_P3_4bit_xsum_full_summaries.jsonl ===
+2026-07-06 23:09:51,819    bleu: 0.0192
+2026-07-06 23:09:51,820    rougeL: 0.1532
+2026-07-06 23:09:51,820    meteor: 0.2502
+2026-07-06 23:09:51,820    bertscore_f1_raw: 0.8701 ± 0.0194
+2026-07-06 23:09:51,820    bertscore_f1_scaled: 0.2305 ± 0.1147
+2026-07-06 23:09:51,820    qa_eval: None
+2026-07-06 23:09:51,820    error: qafacteval not installed
+2026-07-06 23:09:51,820  
+2026-07-06 23:09:51,822  === Evaluation: Llama_P3_4bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 23:09:57,154    bleu: 0.1568
+2026-07-06 23:09:57,154    rougeL: 0.3197
+2026-07-06 23:09:57,154    meteor: 0.4244
+2026-07-06 23:09:57,154    bertscore_f1_raw: 0.9037 ± 0.0197
+2026-07-06 23:09:57,154    bertscore_f1_scaled: 0.4294 ± 0.1167
+2026-07-06 23:09:57,154    qa_eval: None
+2026-07-06 23:09:57,155    error: qafacteval not installed
+2026-07-06 23:09:57,155  
+2026-07-06 23:09:57,157  === Evaluation: Llama_P3_4bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 23:10:02,258    bleu: 0.1410
+2026-07-06 23:10:02,259    rougeL: 0.3079
+2026-07-06 23:10:02,259    meteor: 0.4149
+2026-07-06 23:10:02,259    bertscore_f1_raw: 0.9014 ± 0.0177
+2026-07-06 23:10:02,259    bertscore_f1_scaled: 0.4158 ± 0.1047
+2026-07-06 23:10:02,259    qa_eval: None
+2026-07-06 23:10:02,259    error: qafacteval not installed
+2026-07-06 23:10:02,259  
+2026-07-06 23:10:02,261  === Evaluation: Llama_P3_8bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 23:12:08,515    bleu: 0.0648
+2026-07-06 23:12:08,519    rougeL: 0.2164
+2026-07-06 23:12:08,519    meteor: 0.2927
+2026-07-06 23:12:08,519    bertscore_f1_raw: 0.8690 ± 0.0172
+2026-07-06 23:12:08,519    bertscore_f1_scaled: 0.2239 ± 0.1017
+2026-07-06 23:12:08,519    qa_eval: None
+2026-07-06 23:12:08,519    error: qafacteval not installed
+2026-07-06 23:12:08,519  
+2026-07-06 23:12:08,534  === Evaluation: Llama_P3_8bit_xsum_full_summaries.jsonl ===
+2026-07-06 23:13:41,813    bleu: 0.0188
+2026-07-06 23:13:41,815    rougeL: 0.1504
+2026-07-06 23:13:41,815    meteor: 0.2519
+2026-07-06 23:13:41,816    bertscore_f1_raw: 0.8694 ± 0.0191
+2026-07-06 23:13:41,816    bertscore_f1_scaled: 0.2259 ± 0.1133
+2026-07-06 23:13:41,816    qa_eval: None
+2026-07-06 23:13:41,816    error: qafacteval not installed
+2026-07-06 23:13:41,816  
+2026-07-06 23:13:41,820  === Evaluation: Llama_P3_8bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 23:13:47,383    bleu: 0.1591
+2026-07-06 23:13:47,383    rougeL: 0.3283
+2026-07-06 23:13:47,383    meteor: 0.4429
+2026-07-06 23:13:47,384    bertscore_f1_raw: 0.9058 ± 0.0203
+2026-07-06 23:13:47,384    bertscore_f1_scaled: 0.4418 ± 0.1204
+2026-07-06 23:13:47,384    qa_eval: None
+2026-07-06 23:13:47,384    error: qafacteval not installed
+2026-07-06 23:13:47,384  
+2026-07-06 23:13:47,386  === Evaluation: Llama_P3_8bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 23:13:52,711    bleu: 0.1419
+2026-07-06 23:13:52,711    rougeL: 0.3085
+2026-07-06 23:13:52,711    meteor: 0.4234
+2026-07-06 23:13:52,711    bertscore_f1_raw: 0.9021 ± 0.0190
+2026-07-06 23:13:52,711    bertscore_f1_scaled: 0.4201 ± 0.1123
+2026-07-06 23:13:52,711    qa_eval: None
+2026-07-06 23:13:52,711    error: qafacteval not installed
+2026-07-06 23:13:52,711  
+2026-07-06 23:13:52,713  === Evaluation: Phi_P1_16bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 23:15:47,845    bleu: 0.0865
+2026-07-06 23:15:47,848    rougeL: 0.2372
+2026-07-06 23:15:47,848    meteor: 0.3033
+2026-07-06 23:15:47,848    bertscore_f1_raw: 0.8739 ± 0.0175
+2026-07-06 23:15:47,848    bertscore_f1_scaled: 0.2528 ± 0.1034
+2026-07-06 23:15:47,849    qa_eval: None
+2026-07-06 23:15:47,849    error: qafacteval not installed
+2026-07-06 23:15:47,849  
+2026-07-06 23:15:47,856  === Evaluation: Phi_P1_16bit_xsum_full_summaries.jsonl ===
+2026-07-06 23:17:09,191    bleu: 0.0184
+2026-07-06 23:17:09,192    rougeL: 0.1506
+2026-07-06 23:17:09,192    meteor: 0.2417
+2026-07-06 23:17:09,192    bertscore_f1_raw: 0.8683 ± 0.0179
+2026-07-06 23:17:09,192    bertscore_f1_scaled: 0.2194 ± 0.1063
+2026-07-06 23:17:09,192    qa_eval: None
+2026-07-06 23:17:09,192    error: qafacteval not installed
+2026-07-06 23:17:09,192  
+2026-07-06 23:17:09,196  === Evaluation: Phi_P1_16bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 23:17:14,055    bleu: 0.2245
+2026-07-06 23:17:14,055    rougeL: 0.3903
+2026-07-06 23:17:14,055    meteor: 0.4808
+2026-07-06 23:17:14,055    bertscore_f1_raw: 0.9161 ± 0.0197
+2026-07-06 23:17:14,055    bertscore_f1_scaled: 0.5031 ± 0.1169
+2026-07-06 23:17:14,055    qa_eval: None
+2026-07-06 23:17:14,055    error: qafacteval not installed
+2026-07-06 23:17:14,055  
+2026-07-06 23:17:14,058  === Evaluation: Phi_P1_16bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 23:17:18,709    bleu: 0.2059
+2026-07-06 23:17:18,709    rougeL: 0.3774
+2026-07-06 23:17:18,709    meteor: 0.4742
+2026-07-06 23:17:18,709    bertscore_f1_raw: 0.9138 ± 0.0191
+2026-07-06 23:17:18,709    bertscore_f1_scaled: 0.4894 ± 0.1132
+2026-07-06 23:17:18,709    qa_eval: None
+2026-07-06 23:17:18,709    error: qafacteval not installed
+2026-07-06 23:17:18,709  
+2026-07-06 23:17:18,713  === Evaluation: Phi_P1_4bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 23:19:16,507    bleu: 0.0770
+2026-07-06 23:19:16,507    rougeL: 0.2275
+2026-07-06 23:19:16,508    meteor: 0.2867
+2026-07-06 23:19:16,508    bertscore_f1_raw: 0.8719 ± 0.0182
+2026-07-06 23:19:16,508    bertscore_f1_scaled: 0.2408 ± 0.1079
+2026-07-06 23:19:16,508    qa_eval: None
+2026-07-06 23:19:16,508    error: qafacteval not installed
+2026-07-06 23:19:16,508  
+2026-07-06 23:19:16,516  === Evaluation: Phi_P1_4bit_xsum_full_summaries.jsonl ===
+2026-07-06 23:20:38,381    bleu: 0.0185
+2026-07-06 23:20:38,382    rougeL: 0.1525
+2026-07-06 23:20:38,382    meteor: 0.2392
+2026-07-06 23:20:38,382    bertscore_f1_raw: 0.8686 ± 0.0187
+2026-07-06 23:20:38,382    bertscore_f1_scaled: 0.2217 ± 0.1110
+2026-07-06 23:20:38,382    qa_eval: None
+2026-07-06 23:20:38,382    error: qafacteval not installed
+2026-07-06 23:20:38,382  
+2026-07-06 23:20:38,384  === Evaluation: Phi_P1_4bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 23:20:43,110    bleu: 0.2039
+2026-07-06 23:20:43,110    rougeL: 0.3666
+2026-07-06 23:20:43,110    meteor: 0.4509
+2026-07-06 23:20:43,110    bertscore_f1_raw: 0.9114 ± 0.0211
+2026-07-06 23:20:43,110    bertscore_f1_scaled: 0.4748 ± 0.1250
+2026-07-06 23:20:43,110    qa_eval: None
+2026-07-06 23:20:43,110    error: qafacteval not installed
+2026-07-06 23:20:43,110  
+2026-07-06 23:20:43,112  === Evaluation: Phi_P1_4bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 23:20:47,556    bleu: 0.1844
+2026-07-06 23:20:47,556    rougeL: 0.3550
+2026-07-06 23:20:47,556    meteor: 0.4411
+2026-07-06 23:20:47,556    bertscore_f1_raw: 0.9095 ± 0.0183
+2026-07-06 23:20:47,556    bertscore_f1_scaled: 0.4638 ± 0.1084
+2026-07-06 23:20:47,556    qa_eval: None
+2026-07-06 23:20:47,556    error: qafacteval not installed
+2026-07-06 23:20:47,556  
+2026-07-06 23:20:47,558  === Evaluation: Phi_P1_8bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 23:22:44,177    bleu: 0.0845
+2026-07-06 23:22:44,181    rougeL: 0.2358
+2026-07-06 23:22:44,181    meteor: 0.3032
+2026-07-06 23:22:44,181    bertscore_f1_raw: 0.8737 ± 0.0174
+2026-07-06 23:22:44,181    bertscore_f1_scaled: 0.2517 ± 0.1034
+2026-07-06 23:22:44,181    qa_eval: None
+2026-07-06 23:22:44,181    error: qafacteval not installed
+2026-07-06 23:22:44,181  
+2026-07-06 23:22:44,193  === Evaluation: Phi_P1_8bit_xsum_full_summaries.jsonl ===
+2026-07-06 23:24:07,420    bleu: 0.0180
+2026-07-06 23:24:07,426    rougeL: 0.1498
+2026-07-06 23:24:07,426    meteor: 0.2417
+2026-07-06 23:24:07,426    bertscore_f1_raw: 0.8681 ± 0.0180
+2026-07-06 23:24:07,426    bertscore_f1_scaled: 0.2187 ± 0.1065
+2026-07-06 23:24:07,426    qa_eval: None
+2026-07-06 23:24:07,426    error: qafacteval not installed
+2026-07-06 23:24:07,426  
+2026-07-06 23:24:07,432  === Evaluation: Phi_P1_8bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 23:24:12,224    bleu: 0.2177
+2026-07-06 23:24:12,225    rougeL: 0.3822
+2026-07-06 23:24:12,225    meteor: 0.4779
+2026-07-06 23:24:12,225    bertscore_f1_raw: 0.9150 ± 0.0195
+2026-07-06 23:24:12,225    bertscore_f1_scaled: 0.4964 ± 0.1158
+2026-07-06 23:24:12,225    qa_eval: None
+2026-07-06 23:24:12,225    error: qafacteval not installed
+2026-07-06 23:24:12,225  
+2026-07-06 23:24:12,227  === Evaluation: Phi_P1_8bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 23:24:16,925    bleu: 0.1998
+2026-07-06 23:24:16,925    rougeL: 0.3730
+2026-07-06 23:24:16,925    meteor: 0.4750
+2026-07-06 23:24:16,925    bertscore_f1_raw: 0.9131 ± 0.0190
+2026-07-06 23:24:16,925    bertscore_f1_scaled: 0.4853 ± 0.1125
+2026-07-06 23:24:16,925    qa_eval: None
+2026-07-06 23:24:16,925    error: qafacteval not installed
+2026-07-06 23:24:16,925  
+2026-07-06 23:24:16,927  === Evaluation: Phi_P2_16bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 23:26:11,912    bleu: 0.0898
+2026-07-06 23:26:11,912    rougeL: 0.2401
+2026-07-06 23:26:11,912    meteor: 0.3069
+2026-07-06 23:26:11,912    bertscore_f1_raw: 0.8747 ± 0.0175
+2026-07-06 23:26:11,913    bertscore_f1_scaled: 0.2575 ± 0.1034
+2026-07-06 23:26:11,913    qa_eval: None
+2026-07-06 23:26:11,913    error: qafacteval not installed
+2026-07-06 23:26:11,913  
+2026-07-06 23:26:11,915  === Evaluation: Phi_P2_16bit_xsum_full_summaries.jsonl ===
+2026-07-06 23:27:32,551    bleu: 0.0188
+2026-07-06 23:27:32,552    rougeL: 0.1521
+2026-07-06 23:27:32,552    meteor: 0.2426
+2026-07-06 23:27:32,552    bertscore_f1_raw: 0.8685 ± 0.0179
+2026-07-06 23:27:32,552    bertscore_f1_scaled: 0.2209 ± 0.1063
+2026-07-06 23:27:32,552    qa_eval: None
+2026-07-06 23:27:32,552    error: qafacteval not installed
+2026-07-06 23:27:32,552  
+2026-07-06 23:27:32,554  === Evaluation: Phi_P2_16bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 23:27:37,376    bleu: 0.2282
+2026-07-06 23:27:37,376    rougeL: 0.3918
+2026-07-06 23:27:37,376    meteor: 0.4833
+2026-07-06 23:27:37,376    bertscore_f1_raw: 0.9159 ± 0.0197
+2026-07-06 23:27:37,376    bertscore_f1_scaled: 0.5016 ± 0.1170
+2026-07-06 23:27:37,377    qa_eval: None
+2026-07-06 23:27:37,377    error: qafacteval not installed
+2026-07-06 23:27:37,377  
+2026-07-06 23:27:37,379  === Evaluation: Phi_P2_16bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 23:27:41,968    bleu: 0.2072
+2026-07-06 23:27:41,968    rougeL: 0.3777
+2026-07-06 23:27:41,968    meteor: 0.4765
+2026-07-06 23:27:41,968    bertscore_f1_raw: 0.9138 ± 0.0179
+2026-07-06 23:27:41,968    bertscore_f1_scaled: 0.4893 ± 0.1060
+2026-07-06 23:27:41,968    qa_eval: None
+2026-07-06 23:27:41,968    error: qafacteval not installed
+2026-07-06 23:27:41,968  
+2026-07-06 23:27:41,970  === Evaluation: Phi_P2_4bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 23:29:37,768    bleu: 0.0791
+2026-07-06 23:29:37,768    rougeL: 0.2303
+2026-07-06 23:29:37,768    meteor: 0.2930
+2026-07-06 23:29:37,769    bertscore_f1_raw: 0.8729 ± 0.0171
+2026-07-06 23:29:37,769    bertscore_f1_scaled: 0.2469 ± 0.1013
+2026-07-06 23:29:37,769    qa_eval: None
+2026-07-06 23:29:37,769    error: qafacteval not installed
+2026-07-06 23:29:37,769  
+2026-07-06 23:29:37,771  === Evaluation: Phi_P2_4bit_xsum_full_summaries.jsonl ===
+2026-07-06 23:30:57,776    bleu: 0.0181
+2026-07-06 23:30:57,776    rougeL: 0.1518
+2026-07-06 23:30:57,776    meteor: 0.2390
+2026-07-06 23:30:57,776    bertscore_f1_raw: 0.8685 ± 0.0180
+2026-07-06 23:30:57,776    bertscore_f1_scaled: 0.2211 ± 0.1067
+2026-07-06 23:30:57,776    qa_eval: None
+2026-07-06 23:30:57,776    error: qafacteval not installed
+2026-07-06 23:30:57,776  
+2026-07-06 23:30:57,778  === Evaluation: Phi_P2_4bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 23:31:02,643    bleu: 0.2030
+2026-07-06 23:31:02,643    rougeL: 0.3686
+2026-07-06 23:31:02,643    meteor: 0.4574
+2026-07-06 23:31:02,643    bertscore_f1_raw: 0.9118 ± 0.0198
+2026-07-06 23:31:02,643    bertscore_f1_scaled: 0.4772 ± 0.1174
+2026-07-06 23:31:02,643    qa_eval: None
+2026-07-06 23:31:02,643    error: qafacteval not installed
+2026-07-06 23:31:02,643  
+2026-07-06 23:31:02,646  === Evaluation: Phi_P2_4bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 23:31:07,454    bleu: 0.1840
+2026-07-06 23:31:07,454    rougeL: 0.3512
+2026-07-06 23:31:07,454    meteor: 0.4445
+2026-07-06 23:31:07,454    bertscore_f1_raw: 0.9090 ± 0.0192
+2026-07-06 23:31:07,454    bertscore_f1_scaled: 0.4607 ± 0.1135
+2026-07-06 23:31:07,454    qa_eval: None
+2026-07-06 23:31:07,454    error: qafacteval not installed
+2026-07-06 23:31:07,454  
+2026-07-06 23:31:07,457  === Evaluation: Phi_P2_8bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 23:33:03,700    bleu: 0.0864
+2026-07-06 23:33:03,702    rougeL: 0.2375
+2026-07-06 23:33:03,703    meteor: 0.3057
+2026-07-06 23:33:03,703    bertscore_f1_raw: 0.8743 ± 0.0172
+2026-07-06 23:33:03,703    bertscore_f1_scaled: 0.2552 ± 0.1019
+2026-07-06 23:33:03,703    qa_eval: None
+2026-07-06 23:33:03,703    error: qafacteval not installed
+2026-07-06 23:33:03,703  
+2026-07-06 23:33:03,714  === Evaluation: Phi_P2_8bit_xsum_full_summaries.jsonl ===
+2026-07-06 23:34:24,649    bleu: 0.0185
+2026-07-06 23:34:24,654    rougeL: 0.1508
+2026-07-06 23:34:24,654    meteor: 0.2427
+2026-07-06 23:34:24,654    bertscore_f1_raw: 0.8683 ± 0.0179
+2026-07-06 23:34:24,654    bertscore_f1_scaled: 0.2195 ± 0.1061
+2026-07-06 23:34:24,654    qa_eval: None
+2026-07-06 23:34:24,654    error: qafacteval not installed
+2026-07-06 23:34:24,654  
+2026-07-06 23:34:24,659  === Evaluation: Phi_P2_8bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 23:34:29,429    bleu: 0.2176
+2026-07-06 23:34:29,430    rougeL: 0.3818
+2026-07-06 23:34:29,430    meteor: 0.4800
+2026-07-06 23:34:29,430    bertscore_f1_raw: 0.9148 ± 0.0197
+2026-07-06 23:34:29,430    bertscore_f1_scaled: 0.4953 ± 0.1169
+2026-07-06 23:34:29,430    qa_eval: None
+2026-07-06 23:34:29,430    error: qafacteval not installed
+2026-07-06 23:34:29,430  
+2026-07-06 23:34:29,432  === Evaluation: Phi_P2_8bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 23:34:34,043    bleu: 0.1972
+2026-07-06 23:34:34,043    rougeL: 0.3723
+2026-07-06 23:34:34,043    meteor: 0.4695
+2026-07-06 23:34:34,043    bertscore_f1_raw: 0.9128 ± 0.0183
+2026-07-06 23:34:34,043    bertscore_f1_scaled: 0.4834 ± 0.1085
+2026-07-06 23:34:34,043    qa_eval: None
+2026-07-06 23:34:34,044    error: qafacteval not installed
+2026-07-06 23:34:34,044  
+2026-07-06 23:34:34,046  === Evaluation: Phi_P3_16bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 23:36:16,016    bleu: 0.0610
+2026-07-06 23:36:16,016    rougeL: 0.2200
+2026-07-06 23:36:16,016    meteor: 0.2501
+2026-07-06 23:36:16,016    bertscore_f1_raw: 0.8708 ± 0.0178
+2026-07-06 23:36:16,016    bertscore_f1_scaled: 0.2348 ± 0.1057
+2026-07-06 23:36:16,017    qa_eval: None
+2026-07-06 23:36:16,017    error: qafacteval not installed
+2026-07-06 23:36:16,017  
+2026-07-06 23:36:16,019  === Evaluation: Phi_P3_16bit_xsum_full_summaries.jsonl ===
+2026-07-06 23:37:27,499    bleu: 0.0185
+2026-07-06 23:37:27,500    rougeL: 0.1591
+2026-07-06 23:37:27,500    meteor: 0.2269
+2026-07-06 23:37:27,500    bertscore_f1_raw: 0.8707 ± 0.0197
+2026-07-06 23:37:27,500    bertscore_f1_scaled: 0.2339 ± 0.1167
+2026-07-06 23:37:27,500    qa_eval: None
+2026-07-06 23:37:27,500    error: qafacteval not installed
+2026-07-06 23:37:27,500  
+2026-07-06 23:37:27,502  === Evaluation: Phi_P3_16bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 23:37:31,953    bleu: 0.1535
+2026-07-06 23:37:31,953    rougeL: 0.3342
+2026-07-06 23:37:31,953    meteor: 0.3752
+2026-07-06 23:37:31,953    bertscore_f1_raw: 0.9056 ± 0.0198
+2026-07-06 23:37:31,953    bertscore_f1_scaled: 0.4406 ± 0.1171
+2026-07-06 23:37:31,953    qa_eval: None
+2026-07-06 23:37:31,953    error: qafacteval not installed
+2026-07-06 23:37:31,953  
+2026-07-06 23:37:31,955  === Evaluation: Phi_P3_16bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 23:37:36,741    bleu: 0.1479
+2026-07-06 23:37:36,741    rougeL: 0.3284
+2026-07-06 23:37:36,741    meteor: 0.3688
+2026-07-06 23:37:36,741    bertscore_f1_raw: 0.9039 ± 0.0224
+2026-07-06 23:37:36,741    bertscore_f1_scaled: 0.4305 ± 0.1326
+2026-07-06 23:37:36,741    qa_eval: None
+2026-07-06 23:37:36,741    error: qafacteval not installed
+2026-07-06 23:37:36,741  
+2026-07-06 23:37:36,743  === Evaluation: Phi_P3_4bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 23:39:23,070    bleu: 0.0586
+2026-07-06 23:39:23,071    rougeL: 0.2144
+2026-07-06 23:39:23,071    meteor: 0.2454
+2026-07-06 23:39:23,071    bertscore_f1_raw: 0.8690 ± 0.0188
+2026-07-06 23:39:23,071    bertscore_f1_scaled: 0.2241 ± 0.1115
+2026-07-06 23:39:23,071    qa_eval: None
+2026-07-06 23:39:23,071    error: qafacteval not installed
+2026-07-06 23:39:23,071  
+2026-07-06 23:39:23,074  === Evaluation: Phi_P3_4bit_xsum_full_summaries.jsonl ===
+2026-07-06 23:40:40,677    bleu: 0.0179
+2026-07-06 23:40:40,677    rougeL: 0.1564
+2026-07-06 23:40:40,677    meteor: 0.2256
+2026-07-06 23:40:40,677    bertscore_f1_raw: 0.8690 ± 0.0205
+2026-07-06 23:40:40,677    bertscore_f1_scaled: 0.2239 ± 0.1215
+2026-07-06 23:40:40,677    qa_eval: None
+2026-07-06 23:40:40,677    error: qafacteval not installed
+2026-07-06 23:40:40,677  
+2026-07-06 23:40:40,680  === Evaluation: Phi_P3_4bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 23:40:45,265    bleu: 0.1476
+2026-07-06 23:40:45,265    rougeL: 0.3188
+2026-07-06 23:40:45,265    meteor: 0.3715
+2026-07-06 23:40:45,265    bertscore_f1_raw: 0.9030 ± 0.0208
+2026-07-06 23:40:45,265    bertscore_f1_scaled: 0.4253 ± 0.1235
+2026-07-06 23:40:45,265    qa_eval: None
+2026-07-06 23:40:45,265    error: qafacteval not installed
+2026-07-06 23:40:45,265  
+2026-07-06 23:40:45,267  === Evaluation: Phi_P3_4bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 23:40:49,662    bleu: 0.1399
+2026-07-06 23:40:49,663    rougeL: 0.3046
+2026-07-06 23:40:49,663    meteor: 0.3653
+2026-07-06 23:40:49,663    bertscore_f1_raw: 0.8996 ± 0.0208
+2026-07-06 23:40:49,663    bertscore_f1_scaled: 0.4050 ± 0.1230
+2026-07-06 23:40:49,663    qa_eval: None
+2026-07-06 23:40:49,663    error: qafacteval not installed
+2026-07-06 23:40:49,663  
+2026-07-06 23:40:49,665  === Evaluation: Phi_P3_8bit_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 23:42:30,843    bleu: 0.0627
+2026-07-06 23:42:30,844    rougeL: 0.2196
+2026-07-06 23:42:30,844    meteor: 0.2530
+2026-07-06 23:42:30,844    bertscore_f1_raw: 0.8708 ± 0.0176
+2026-07-06 23:42:30,844    bertscore_f1_scaled: 0.2346 ± 0.1045
+2026-07-06 23:42:30,844    qa_eval: None
+2026-07-06 23:42:30,844    error: qafacteval not installed
+2026-07-06 23:42:30,844  
+2026-07-06 23:42:30,847  === Evaluation: Phi_P3_8bit_xsum_full_summaries.jsonl ===
+2026-07-06 23:43:42,433    bleu: 0.0184
+2026-07-06 23:43:42,442    rougeL: 0.1580
+2026-07-06 23:43:42,442    meteor: 0.2283
+2026-07-06 23:43:42,442    bertscore_f1_raw: 0.8703 ± 0.0195
+2026-07-06 23:43:42,442    bertscore_f1_scaled: 0.2317 ± 0.1158
+2026-07-06 23:43:42,442    qa_eval: None
+2026-07-06 23:43:42,442    error: qafacteval not installed
+2026-07-06 23:43:42,442  
+2026-07-06 23:43:42,454  === Evaluation: Phi_P3_8bit_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 23:43:46,854    bleu: 0.1547
+2026-07-06 23:43:46,854    rougeL: 0.3323
+2026-07-06 23:43:46,854    meteor: 0.3792
+2026-07-06 23:43:46,854    bertscore_f1_raw: 0.9053 ± 0.0197
+2026-07-06 23:43:46,854    bertscore_f1_scaled: 0.4391 ± 0.1166
+2026-07-06 23:43:46,854    qa_eval: None
+2026-07-06 23:43:46,854    error: qafacteval not installed
+2026-07-06 23:43:46,854  
+2026-07-06 23:43:46,856  === Evaluation: Phi_P3_8bit_xu_xsum_500_summaries.jsonl ===
+2026-07-06 23:43:50,860    bleu: 0.1522
+2026-07-06 23:43:50,860    rougeL: 0.3237
+2026-07-06 23:43:50,860    meteor: 0.3780
+2026-07-06 23:43:50,860    bertscore_f1_raw: 0.9042 ± 0.0176
+2026-07-06 23:43:50,860    bertscore_f1_scaled: 0.4323 ± 0.1046
+2026-07-06 23:43:50,860    qa_eval: None
+2026-07-06 23:43:50,860    error: qafacteval not installed
+2026-07-06 23:43:50,860  
+2026-07-06 23:43:50,862  === Evaluation: TFIDF_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 23:45:41,074    bleu: 0.0648
+2026-07-06 23:45:41,078    rougeL: 0.1733
+2026-07-06 23:45:41,078    meteor: 0.2163
+2026-07-06 23:45:41,078    bertscore_f1_raw: 0.8504 ± 0.0223
+2026-07-06 23:45:41,078    bertscore_f1_scaled: 0.1135 ± 0.1320
+2026-07-06 23:45:41,078    qa_eval: None
+2026-07-06 23:45:41,078    error: qafacteval not installed
+2026-07-06 23:45:41,078  
+2026-07-06 23:45:41,081  === Evaluation: TFIDF_xsum_full_summaries.jsonl ===
+2026-07-06 23:46:58,211    bleu: 0.0080
+2026-07-06 23:46:58,211    rougeL: 0.1152
+2026-07-06 23:46:58,211    meteor: 0.1811
+2026-07-06 23:46:58,211    bertscore_f1_raw: 0.8513 ± 0.0189
+2026-07-06 23:46:58,211    bertscore_f1_scaled: 0.1187 ± 0.1121
+2026-07-06 23:46:58,211    qa_eval: None
+2026-07-06 23:46:58,211    error: qafacteval not installed
+2026-07-06 23:46:58,211  
+2026-07-06 23:46:58,213  === Evaluation: TFIDF_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 23:47:03,457    bleu: 0.0524
+2026-07-06 23:47:03,457    rougeL: 0.1717
+2026-07-06 23:47:03,457    meteor: 0.2143
+2026-07-06 23:47:03,457    bertscore_f1_raw: 0.8584 ± 0.0238
+2026-07-06 23:47:03,458    bertscore_f1_scaled: 0.1609 ± 0.1409
+2026-07-06 23:47:03,458    qa_eval: None
+2026-07-06 23:47:03,458    error: qafacteval not installed
+2026-07-06 23:47:03,458  
+2026-07-06 23:47:03,460  === Evaluation: TFIDF_xu_xsum_500_summaries.jsonl ===
+2026-07-06 23:47:08,272    bleu: 0.0547
+2026-07-06 23:47:08,272    rougeL: 0.1706
+2026-07-06 23:47:08,272    meteor: 0.2164
+2026-07-06 23:47:08,272    bertscore_f1_raw: 0.8601 ± 0.0235
+2026-07-06 23:47:08,272    bertscore_f1_scaled: 0.1711 ± 0.1391
+2026-07-06 23:47:08,272    qa_eval: None
+2026-07-06 23:47:08,272    error: qafacteval not installed
+2026-07-06 23:47:08,272  
+2026-07-06 23:47:08,274  === Evaluation: TextRank_cnn_dailymail_full_summaries.jsonl ===
+2026-07-06 23:48:25,875    bleu: 0.0558
+2026-07-06 23:48:25,876    rougeL: 0.1773
+2026-07-06 23:48:25,876    meteor: 0.2512
+2026-07-06 23:48:25,876    bertscore_f1_raw: 0.8477 ± 0.0222
+2026-07-06 23:48:25,876    bertscore_f1_scaled: 0.0974 ± 0.1318
+2026-07-06 23:48:25,876    qa_eval: None
+2026-07-06 23:48:25,876    error: qafacteval not installed
+2026-07-06 23:48:25,876  
+2026-07-06 23:48:25,878  === Evaluation: TextRank_xsum_full_summaries.jsonl ===
+2026-07-06 23:50:01,086    bleu: 0.0092
+2026-07-06 23:50:01,087    rougeL: 0.1147
+2026-07-06 23:50:01,087    meteor: 0.1974
+2026-07-06 23:50:01,087    bertscore_f1_raw: 0.8497 ± 0.0188
+2026-07-06 23:50:01,087    bertscore_f1_scaled: 0.1095 ± 0.1116
+2026-07-06 23:50:01,087    qa_eval: None
+2026-07-06 23:50:01,087    error: qafacteval not installed
+2026-07-06 23:50:01,087  
+2026-07-06 23:50:01,090  === Evaluation: TextRank_xu_cnndm_500_summaries.jsonl ===
+2026-07-06 23:50:07,449    bleu: 0.0461
+2026-07-06 23:50:07,449    rougeL: 0.1781
+2026-07-06 23:50:07,449    meteor: 0.2597
+2026-07-06 23:50:07,449    bertscore_f1_raw: 0.8588 ± 0.0216
+2026-07-06 23:50:07,449    bertscore_f1_scaled: 0.1636 ± 0.1282
+2026-07-06 23:50:07,449    qa_eval: None
+2026-07-06 23:50:07,449    error: qafacteval not installed
+2026-07-06 23:50:07,449  
+2026-07-06 23:50:07,451  === Evaluation: TextRank_xu_xsum_500_summaries.jsonl ===
+2026-07-06 23:50:13,880    bleu: 0.0276
+2026-07-06 23:50:13,880    rougeL: 0.1522
+2026-07-06 23:50:13,880    meteor: 0.2236
+2026-07-06 23:50:13,880    bertscore_f1_raw: 0.8519 ± 0.0191
+2026-07-06 23:50:13,880    bertscore_f1_scaled: 0.1225 ± 0.1131
+2026-07-06 23:50:13,880    qa_eval: None
+2026-07-06 23:50:13,880    error: qafacteval not installed
+2026-07-06 23:50:13,880  
