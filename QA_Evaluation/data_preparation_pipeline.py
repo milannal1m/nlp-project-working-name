@@ -3,6 +3,8 @@ import json
 import hashlib
 import os
 import sys
+import traceback
+from tqdm import tqdm
 import torch
 from transformers import set_seed
 
@@ -16,6 +18,8 @@ if parent_dir not in sys.path:
 
 from src.model import SummarizationModel, RunConfig
 from src.prompts import PROMPT_CONFIGS
+from src.evaluator import Evaluator # importing the cleaner
+from src.dataset import strip_dateline  # Importing native cleaner
 
 def get_article_id(text):
     """Generates a unique ID based on source text to prevent mismatching"""
@@ -27,15 +31,30 @@ def main():
     parser.add_argument("--quant", type=str, choices=["None", "8bit", "4bit"], default="None", help="Quantization level")
     parser.add_argument("--prompt_id", type=str, choices=["P1", "P2", "P3"], required=True, help="Prompt variant ID")
     parser.add_argument("--input_file", type=str, default="newsqasum_gold.jsonl", help="Path to input dataset")
-    parser.add_argument("--output_dir", type=str, default="temp_outputs", help="Directory for temp files")
+    parser.add_argument("--output_dir", type=str, default="Outputs", help="Directory for temp files")
+    parser.add_argument("--sample", type=int, default=None, help="Process only N articles for local testing")
 
     args = parser.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
 
     # Cleaning the model name to use as a file name identifier
     model_clean_name = args.model_path.split("/")[-1].replace("-", "_").lower()
-    output_filename = f"temp_{model_clean_name}_{args.quant}_{args.prompt_id}.jsonl"
+    output_filename = f"{model_clean_name}_{args.quant}_{args.prompt_id}.jsonl"
     output_path = os.path.join(args.output_dir, output_filename)
+
+    # Fault Tolerance: Check for existing progress to allow resuming
+    processed_ids = set()
+    if os.path.exists(output_path):
+        print(f"Found existing output file. Scanning for already processed articles...")
+        with open(output_path, "r", encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    try:
+                        processed_ids.add(json.loads(line)["article_id"])
+
+                    except json.JSONDecodeError:
+                        continue
+        print(f"Resuming gernation. Skipping {len(processed_ids)} already processed articles.")
 
     # Initializing the config and model by utilizing methods from models.py
     config = RunConfig(
@@ -44,39 +63,63 @@ def main():
         prompt_template=PROMPT_CONFIGS[args.prompt_id]["template"]
     )
 
+    print(f"Loading Model: {args.model_path} | Quant: {args.quant} | Prompt: {args.prompt_id}")
     summarizer = SummarizationModel(config)
 
-    print(f"starting generation, Saving progress to: {output_path}")
+    # Pre-load all valid lines to use tqdm for accurate progress estimation
+    with open(args.input_file, "r", encoding="utf-8") as infile:
+        all_lines = [line for line in infile if line.strip()]
+    
+    if args.sample:
+        all_lines = all_lines[:args.sample]
+        print(f"TEST MODE: Limiting run to {args.sample} articles.")
 
-    # Processing the dataset
-    with open(args.input_file, "r", encoding="utf-8") as infile, \
-         open(output_path, "w", encoding="utf-8") as outfile:
-        
-        for line_idx, line in enumerate(infile):
-            if not line.strip():
-                continue
+    print(f"Starting generation. Saving progress to: {output_path}")
+
+    # Process the dataset (Append mode 'a' allows safe resuming)
+    with open(output_path, "a", encoding="utf-8") as outfile:
+        for line in tqdm(all_lines, desc="Generating Summaries"):
             data = json.loads(line)
-            story_text = data.get("story", "")
+            raw_story = data.get("story", "")
 
-            if not story_text:
+            if not raw_story:
                 continue
             
-            # Assigning ID
+            # Clean the artifacts using your team's exact logic for a 1:1 baseline comparison
+            story_text = strip_dateline(raw_story)
+            
+            # Generate the hash based on the CLEANED story
             article_id = get_article_id(story_text)
             
-            # Calling summarize method from models.py
-            generated_summary, _, _ = summarizer.summarize(story_text)
+            # Skip if already processed
+            if article_id in processed_ids:
+                continue
+            
+            try:
+                # Generate summary
+                raw_generated_summary, _, _ = summarizer.summarize(story_text)
 
-            # Saving the output mapped to this article ID
-            output_row = {"article_id": article_id, "summary_text":generated_summary}
+                # CLEAN THE OUTPUT: Strip P3 reasoning and duplicate markers
+                clean_summary = Evaluator.extract_summary(raw_generated_summary)
 
-            outfile.write(json.dumps(output_row) + "\n")
-
-            if (line_idx + 1) % 50 == 0:
-                print(f"Processed {line_idx + 1} articles...")
+                # Save output mapped to this article ID
+                output_row = {
+                    "article_id": article_id,
+                    "story": story_text,
+                    "human_questions": data.get("questions", []),
+                    "human_answers": data.get("answers", []),
+                    "summary_text": clean_summary
+                    }
+                outfile.write(json.dumps(output_row) + "\n")
+                outfile.flush()  # Ensure it writes to disk immediately
+                
+            except Exception as e:
+                print(f"\nError processing article {article_id}: {e}")
+                traceback.print_exc()
+                # Continue processing other articles despite a single failure
+                continue
 
     print(f"--- SUCCESS --- All summaries saved to {output_path}")
-
 
 if __name__ == "__main__":
     main()

@@ -39,5 +39,5 @@ python QA_Evaluation/data_preparation_pipeline.py \
     --model_path "$CURRENT_MODEL" \
     --quant "$CURRENT_QUANT" \
     --prompt_id "$CURRENT_PROMPT" \
-    --input_file "QA_Evaluation/newsqasum_gold.jsonl" \
-    --output_dir "QA_Evaluation/temp_outputs"
+    --input_file "QA_Evaluation/Datasets/newsqasum_gold.jsonl" \
+    --output_dir "QA_Evaluation/Outputs"

@@ -12,7 +12,7 @@ module load devel/miniforge/25.3.1-python-3.12
 source "$(conda info --base)/etc/profile.d/conda.sh"
 
 # 2. Activate the isolated evaluation environment
-conda activate qa-eval-env
+conda activate qa-eval
 
 # 3. Run the pipeline
 echo "Starting factual consistency evaluation..."

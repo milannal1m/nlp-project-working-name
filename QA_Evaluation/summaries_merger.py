@@ -1,79 +1,66 @@
 import os
 import json
-import hashlib
 import glob
 
-def get_article_id(text):
-    """Generates the same MD5 hash used in the generation script. """
-    return hashlib.md5(text.strip().encode('utf-8')).hexdigest()
-
 def verify_merge(output_file):
-    """Reads the final master file to ensure all columns were stitched properly"""
+    """Validates the structural integrity of the lean master matrix."""
     print("\n--- Running Verification Check ---")
     try:
         with open(output_file, 'r', encoding='utf-8') as f:
-            first_article = json.loads(f.readline())
-        keys = list(first_article())
+            first_line = f.readline()
+            if not first_line:
+                print("Warning: Master output file is empty.")
+                return
+            first_row = json.loads(first_line)
+        
+        keys = list(first_row.keys())
 
-        # We expect 3 foundation keys + (model * prompt * quant) variations.
-        print(f"Total Columns found: {len(keys)}")
+        print(f"Total columns compiled in master row: {len(keys)}")
         print("Columns mapping preview:")
         for key in keys:
-            val_preview = str(first_article[key])[:40].replace('\n', ' ') + "..."
-            print(f"   - {key: {val_preview}}")
+            val_preview = str(first_row[key])[:40].replace('\n', ' ') + "..."
+            print(f"   - {key}: {val_preview}")
         
-        if len(keys) == 21:
-            print("\n Verfication Passed!")
+        if len(keys) == 19:
+            print("\n[SUCCESS] Verification Passed! Lean matrix contains exactly 1 article_id and 18 variations.")
         else:
-            print(f"\nWarning: Expected 21 keys but found {len(keys)}. Some cluster jobs may have failed.")
+            print(f"\n[WARNING] Expected 19 columns, but found {len(keys)}. Some cluster jobs might be missing.")
     except Exception as e:
-        print(f"Verfication failed to read the file: {e}")
+        print(f"Verification failed to process file: {e}")
 
 
 def main():
-    gold_file = "newsqasum_gold.jsonl"
-    temp_dir = "temp_outputs"
-    output_file = "master_evaluation_dataset.jsonl"
+    # Dynamic Path Resolution: Absolute path relative to where this script is saved
+    SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+    
+    # Since merger sits in QA_Evaluation/, test_outputs is right next to it
+    variation_dir = os.path.join(SCRIPT_DIR, "Outputs")
+    output_file = os.path.join(SCRIPT_DIR, "master_evaluation_dataset.jsonl")
 
-    print(f"1. Loading baseline dataset: {gold_file}")
-    master_data = {}
+    print(f"Targeting variations directory: {variation_dir}")
+    print(f"Targeting output master matrix: {output_file}\n")
 
-    # Loading original articles, questions and answers
-    try:
-        with open(gold_file, 'r', encoding='utf-8') as f:
-            for line in f:
-                if not line.strip(): continue
-                data = json.loads(line)
-                story = data.get('story', '')
-                if not story: continue
+    # In-memory dictionary to hold rows: { article_id: { article_id: x, var1: y } }
+    master_matrix = {}
 
-                article_id = get_article_id(story)
+    # Gather ALL jsonl files in the target folder
+    all_jsonl_files = glob.glob(os.path.join(variation_dir, "*.jsonl"))
+    
+    # Filter out the master output file if it happens to be in the same folder
+    variation_files = [f for f in all_jsonl_files if os.path.basename(f) != "master_evaluation_dataset.jsonl"]
+    
+    print(f"Found {len(variation_files)} variation datasets to process.")
 
-                # Creating the foundation for this article
-                master_data[article_id] = {
-                    "article_id": article_id,
-                    "source_article": story,
-                    "human_questions": data.get('questions', []),
-                    "human_answers" : data.get('answers', [])
-                }
-    except FileNotFoundError:
-        print(f"Error: Cound not find {gold_file}, make sure you're in the right directory.")
+    if not variation_files:
+        print("Error: 0 datasets found. Please check that your files are physically inside the directory shown above.")
         return
     
-    print(f"    Loaded {len(master_data)} baseline articles.")
-
-    #Iterating through all temp summary files
-    temp_files = glob.glob(os.path.join(temp_dir, "temp_*.jsonl"))
-    print(f"\nFound {len(temp_files)} temporary summary files. Merging...")
-
-    if not temp_files:
-        print("Error: No temp files found.")
-        return
-    
-    for file_path in temp_files:
-        # Extracting clean filename for the columns for the master file.
+    for file_path in variation_files:
         filename = os.path.basename(file_path)
+        # Clean up column header names cleanly whether they use 'temp_' prefix or not
         col_key = filename.replace("temp_", "").replace(".jsonl", "")
+
+        print(f" -> Extracting columns from: {filename} (Column Key: {col_key})")
 
         with open(file_path, 'r', encoding='utf-8') as f:
             for line in f:
@@ -82,20 +69,28 @@ def main():
                 article_id = row.get("article_id")
                 summary = row.get("summary_text")
 
-                # Injecting summary into the master dictionary specific to its key.
-                if article_id in master_data:
-                    master_data[article_id][col_key] = summary
+                if not article_id: continue
+
+                # Initialize row structure if it's the first time seeing this article hash
+                if article_id not in master_matrix:
+                    master_matrix[article_id] = {
+                        "article_id": article_id
+                    }
+                
+                # Append this model summary column directly to the row reference
+                master_matrix[article_id][col_key] = summary
     
-    # Writing final master file
-    print(f"\n Writing master dataset to {output_file}")
+    # Write the compiled matrix payload out to disk
+    print(f"\nWriting lean master evaluation matrix to {output_file}")
+    os.makedirs(os.path.dirname(output_file), exist_ok=True)
+    
     with open(output_file, 'w', encoding='utf-8') as f:
-        for article in master_data.values():
-            f.write(json.dumps(article) + '\n')
+        for row_data in master_matrix.values():
+            f.write(json.dumps(row_data) + '\n')
     
-    print("--- SUCCESS --- Master dataset compiled successfully!")
-    
-    # Calling Verfication function
+    print("\n--- Compilation Complete ---")
     verify_merge(output_file)
+
 
 if __name__ == "__main__":
     main()

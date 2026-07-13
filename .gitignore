@@ -37,6 +37,7 @@ __pycache__/
 *.pyo
 *.pyd
 .ipynb_checkpoints/
+**/mac-test-env/
 
 .venv/
 venv/
