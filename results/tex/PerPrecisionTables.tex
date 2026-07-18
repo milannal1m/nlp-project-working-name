@@ -1,0 +1,134 @@
+\begin{table}[tbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption{Evaluation metrics for prompt P1. BERTScore$_{\mathrm{sc}}$ is the baseline-rescaled F1. Best value per model and dataset across precisions is in \textbf{bold}.}
+\label{tab:eval-P1}
+\begin{tabular}{lllccc}
+\toprule
+\multirow{2}{*}{\textbf{Model}} & \multirow{2}{*}{\textbf{Precision}} & \multirow{2}{*}{\textbf{Dataset}} & \textbf{Lexical} & \multicolumn{2}{c}{\textbf{Semantic \& Factual}} \\
+\cmidrule(lr){4-4}\cmidrule(lr){5-6}
+ & & & \textbf{ROUGE-L} & \textbf{BERTScore} & \textbf{BERTScore$_{\mathrm{sc}}$} \\
+\midrule
+\multirow{12}{*}{Llama-3.2-3B} & \multirow{4}{*}{16-bit} & CNN/DM & 0.226 & \textbf{0.871} & \textbf{0.237} \\
+ &  & XSum & 0.146 & \textbf{0.869} & 0.222 \\
+ &  & Xu-CNN/DM & \textbf{0.347} & \textbf{0.910} & \textbf{0.466} \\
+ &  & Xu-XSum & 0.338 & 0.908 & 0.455 \\
+\cmidrule(lr){2-6}
+ & \multirow{4}{*}{8-bit} & CNN/DM & \textbf{0.227} & \textbf{0.871} & \textbf{0.237} \\
+ &  & XSum & 0.146 & \textbf{0.869} & 0.223 \\
+ &  & Xu-CNN/DM & 0.344 & \textbf{0.910} & 0.465 \\
+ &  & Xu-XSum & 0.338 & \textbf{0.909} & 0.459 \\
+\cmidrule(lr){2-6}
+ & \multirow{4}{*}{4-bit} & CNN/DM & 0.226 & \textbf{0.871} & 0.235 \\
+ &  & XSum & \textbf{0.148} & \textbf{0.869} & \textbf{0.224} \\
+ &  & Xu-CNN/DM & \textbf{0.347} & \textbf{0.910} & 0.465 \\
+ &  & Xu-XSum & \textbf{0.345} & \textbf{0.909} & \textbf{0.461} \\
+\midrule
+\multirow{12}{*}{Phi-3-mini} & \multirow{4}{*}{16-bit} & CNN/DM & \textbf{0.237} & \textbf{0.874} & \textbf{0.253} \\
+ &  & XSum & 0.151 & 0.868 & 0.219 \\
+ &  & Xu-CNN/DM & \textbf{0.390} & \textbf{0.916} & \textbf{0.503} \\
+ &  & Xu-XSum & \textbf{0.377} & \textbf{0.914} & \textbf{0.489} \\
+\cmidrule(lr){2-6}
+ & \multirow{4}{*}{8-bit} & CNN/DM & 0.236 & \textbf{0.874} & 0.252 \\
+ &  & XSum & 0.150 & 0.868 & 0.219 \\
+ &  & Xu-CNN/DM & 0.382 & 0.915 & 0.496 \\
+ &  & Xu-XSum & 0.373 & 0.913 & 0.485 \\
+\cmidrule(lr){2-6}
+ & \multirow{4}{*}{4-bit} & CNN/DM & 0.228 & 0.872 & 0.241 \\
+ &  & XSum & \textbf{0.153} & \textbf{0.869} & \textbf{0.222} \\
+ &  & Xu-CNN/DM & 0.367 & 0.911 & 0.475 \\
+ &  & Xu-XSum & 0.355 & 0.910 & 0.464 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[tbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption{Evaluation metrics for prompt P2. BERTScore$_{\mathrm{sc}}$ is the baseline-rescaled F1. Best value per model and dataset across precisions is in \textbf{bold}.}
+\label{tab:eval-P2}
+\begin{tabular}{lllccc}
+\toprule
+\multirow{2}{*}{\textbf{Model}} & \multirow{2}{*}{\textbf{Precision}} & \multirow{2}{*}{\textbf{Dataset}} & \textbf{Lexical} & \multicolumn{2}{c}{\textbf{Semantic \& Factual}} \\
+\cmidrule(lr){4-4}\cmidrule(lr){5-6}
+ & & & \textbf{ROUGE-L} & \textbf{BERTScore} & \textbf{BERTScore$_{\mathrm{sc}}$} \\
+\midrule
+\multirow{12}{*}{Llama-3.2-3B} & \multirow{4}{*}{16-bit} & CNN/DM & \textbf{0.226} & \textbf{0.871} & \textbf{0.238} \\
+ &  & XSum & 0.144 & \textbf{0.868} & 0.219 \\
+ &  & Xu-CNN/DM & \textbf{0.346} & \textbf{0.910} & \textbf{0.466} \\
+ &  & Xu-XSum & 0.338 & \textbf{0.909} & \textbf{0.459} \\
+\cmidrule(lr){2-6}
+ & \multirow{4}{*}{8-bit} & CNN/DM & \textbf{0.226} & \textbf{0.871} & \textbf{0.238} \\
+ &  & XSum & 0.144 & \textbf{0.868} & 0.219 \\
+ &  & Xu-CNN/DM & 0.343 & 0.909 & 0.462 \\
+ &  & Xu-XSum & 0.334 & 0.908 & 0.457 \\
+\cmidrule(lr){2-6}
+ & \multirow{4}{*}{4-bit} & CNN/DM & 0.225 & \textbf{0.871} & 0.237 \\
+ &  & XSum & \textbf{0.145} & \textbf{0.868} & \textbf{0.220} \\
+ &  & Xu-CNN/DM & \textbf{0.346} & \textbf{0.910} & 0.464 \\
+ &  & Xu-XSum & \textbf{0.339} & \textbf{0.909} & 0.458 \\
+\midrule
+\multirow{12}{*}{Phi-3-mini} & \multirow{4}{*}{16-bit} & CNN/DM & \textbf{0.240} & \textbf{0.875} & \textbf{0.258} \\
+ &  & XSum & \textbf{0.152} & \textbf{0.869} & \textbf{0.221} \\
+ &  & Xu-CNN/DM & \textbf{0.392} & \textbf{0.916} & \textbf{0.502} \\
+ &  & Xu-XSum & \textbf{0.378} & \textbf{0.914} & \textbf{0.489} \\
+\cmidrule(lr){2-6}
+ & \multirow{4}{*}{8-bit} & CNN/DM & 0.237 & 0.874 & 0.255 \\
+ &  & XSum & 0.151 & 0.868 & 0.219 \\
+ &  & Xu-CNN/DM & 0.382 & 0.915 & 0.495 \\
+ &  & Xu-XSum & 0.372 & 0.913 & 0.483 \\
+\cmidrule(lr){2-6}
+ & \multirow{4}{*}{4-bit} & CNN/DM & 0.230 & 0.873 & 0.247 \\
+ &  & XSum & \textbf{0.152} & \textbf{0.869} & \textbf{0.221} \\
+ &  & Xu-CNN/DM & 0.369 & 0.912 & 0.477 \\
+ &  & Xu-XSum & 0.351 & 0.909 & 0.461 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[tbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption{Evaluation metrics for prompt P3. BERTScore$_{\mathrm{sc}}$ is the baseline-rescaled F1. Best value per model and dataset across precisions is in \textbf{bold}.}
+\label{tab:eval-P3}
+\begin{tabular}{lllccc}
+\toprule
+\multirow{2}{*}{\textbf{Model}} & \multirow{2}{*}{\textbf{Precision}} & \multirow{2}{*}{\textbf{Dataset}} & \textbf{Lexical} & \multicolumn{2}{c}{\textbf{Semantic \& Factual}} \\
+\cmidrule(lr){4-4}\cmidrule(lr){5-6}
+ & & & \textbf{ROUGE-L} & \textbf{BERTScore} & \textbf{BERTScore$_{\mathrm{sc}}$} \\
+\midrule
+\multirow{12}{*}{Llama-3.2-3B} & \multirow{4}{*}{16-bit} & CNN/DM & \textbf{0.216} & \textbf{0.869} & \textbf{0.224} \\
+ &  & XSum & 0.151 & \textbf{0.870} & 0.228 \\
+ &  & Xu-CNN/DM & \textbf{0.332} & \textbf{0.906} & \textbf{0.444} \\
+ &  & Xu-XSum & \textbf{0.311} & \textbf{0.903} & \textbf{0.424} \\
+\cmidrule(lr){2-6}
+ & \multirow{4}{*}{8-bit} & CNN/DM & \textbf{0.216} & \textbf{0.869} & \textbf{0.224} \\
+ &  & XSum & 0.150 & 0.869 & 0.226 \\
+ &  & Xu-CNN/DM & 0.328 & \textbf{0.906} & 0.442 \\
+ &  & Xu-XSum & 0.309 & 0.902 & 0.420 \\
+\cmidrule(lr){2-6}
+ & \multirow{4}{*}{4-bit} & CNN/DM & \textbf{0.216} & \textbf{0.869} & 0.223 \\
+ &  & XSum & \textbf{0.153} & \textbf{0.870} & \textbf{0.231} \\
+ &  & Xu-CNN/DM & 0.320 & 0.904 & 0.429 \\
+ &  & Xu-XSum & 0.308 & 0.901 & 0.416 \\
+\midrule
+\multirow{12}{*}{Phi-3-mini} & \multirow{4}{*}{16-bit} & CNN/DM & \textbf{0.220} & \textbf{0.871} & \textbf{0.235} \\
+ &  & XSum & \textbf{0.159} & \textbf{0.871} & \textbf{0.234} \\
+ &  & Xu-CNN/DM & \textbf{0.334} & \textbf{0.906} & \textbf{0.441} \\
+ &  & Xu-XSum & \textbf{0.328} & \textbf{0.904} & 0.430 \\
+\cmidrule(lr){2-6}
+ & \multirow{4}{*}{8-bit} & CNN/DM & \textbf{0.220} & \textbf{0.871} & \textbf{0.235} \\
+ &  & XSum & 0.158 & 0.870 & 0.232 \\
+ &  & Xu-CNN/DM & 0.332 & 0.905 & 0.439 \\
+ &  & Xu-XSum & 0.324 & \textbf{0.904} & \textbf{0.432} \\
+\cmidrule(lr){2-6}
+ & \multirow{4}{*}{4-bit} & CNN/DM & 0.214 & 0.869 & 0.224 \\
+ &  & XSum & 0.156 & 0.869 & 0.224 \\
+ &  & Xu-CNN/DM & 0.319 & 0.903 & 0.425 \\
+ &  & Xu-XSum & 0.305 & 0.900 & 0.405 \\
+\bottomrule
+\end{tabular}
+\end{table}

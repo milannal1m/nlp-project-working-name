@@ -1,0 +1,36 @@
+\begin{table}[tbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\caption{Prompt sensitivity per precision. Each cell is the spread (max$-$min in points, $\times 100$) across the three prompts at that precision. Larger values mean the score depends more on prompt wording; the most prompt-sensitive precision per row is in \textbf{bold}.}
+\label{tab:rq-spread}
+\begin{tabular}{lllccc}
+\toprule
+\textbf{Model} & \textbf{Dataset} & \textbf{Metric} & \textbf{16-bit} & \textbf{8-bit} & \textbf{4-bit} \\
+\midrule
+\multirow{8}{*}{Llama-3.2-3B} & \multirow{2}{*}{CNN/DM} & ROUGE-L & 1.00 & \textbf{1.02} & 0.93 \\
+ &  & BERTScore & \textbf{0.24} & 0.23 & 0.22 \\
+\cmidrule(lr){2-6}
+ & \multirow{2}{*}{XSum} & ROUGE-L & 0.63 & 0.68 & \textbf{0.80} \\
+ &  & BERTScore & 0.16 & 0.12 & \textbf{0.18} \\
+\cmidrule(lr){2-6}
+ & \multirow{2}{*}{Xu-CNN/DM} & ROUGE-L & 1.50 & 1.59 & \textbf{2.68} \\
+ &  & BERTScore & 0.37 & 0.40 & \textbf{0.60} \\
+\cmidrule(lr){2-6}
+ & \multirow{2}{*}{Xu-XSum} & ROUGE-L & 2.73 & 2.94 & \textbf{3.67} \\
+ &  & BERTScore & 0.58 & 0.65 & \textbf{0.76} \\
+\midrule
+\multirow{8}{*}{Phi-3-mini} & \multirow{2}{*}{CNN/DM} & ROUGE-L & \textbf{2.01} & 1.79 & 1.60 \\
+ &  & BERTScore & 0.38 & 0.35 & \textbf{0.39} \\
+\cmidrule(lr){2-6}
+ & \multirow{2}{*}{XSum} & ROUGE-L & \textbf{0.85} & 0.82 & 0.46 \\
+ &  & BERTScore & \textbf{0.24} & 0.22 & 0.05 \\
+\cmidrule(lr){2-6}
+ & \multirow{2}{*}{Xu-CNN/DM} & ROUGE-L & \textbf{5.76} & 4.99 & 4.98 \\
+ &  & BERTScore & \textbf{1.05} & 0.97 & 0.88 \\
+\cmidrule(lr){2-6}
+ & \multirow{2}{*}{Xu-XSum} & ROUGE-L & 4.93 & 4.92 & \textbf{5.05} \\
+ &  & BERTScore & \textbf{1.00} & 0.89 & 0.99 \\
+\bottomrule
+\end{tabular}
+\end{table}
