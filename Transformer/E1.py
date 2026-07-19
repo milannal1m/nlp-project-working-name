@@ -54,10 +54,12 @@ REPO_ROOT = os.path.dirname(TRANSFORMER_DIR)
 SRC_DIR = os.path.join(REPO_ROOT, "src")
 # All Transformer-baseline outputs stay under Transformer/ so they never mix
 # with the original benchmark's root-level summaries/ and results/ directories.
+# VARIANT prefixes every artifact/summary path so ablation runs never collide.
+VARIANT = "E1"
 CHECKPOINT_DIR = os.path.join(TRANSFORMER_DIR, "checkpoints")
 ARTIFACT_DIR = os.path.join(TRANSFORMER_DIR, "artifacts")
-DEFAULT_SUMMARY_DIR = os.path.join(TRANSFORMER_DIR, "summaries")
-DEFAULT_LOG_PATH = os.path.join(TRANSFORMER_DIR, "results", "evaluation.log")
+DEFAULT_SUMMARY_DIR = os.path.join(TRANSFORMER_DIR, "summaries", VARIANT)
+DEFAULT_LOG_PATH = os.path.join(TRANSFORMER_DIR, "results", VARIANT, "evaluation.log")
 
 if SRC_DIR not in sys.path:
     sys.path.insert(0, SRC_DIR)
@@ -154,11 +156,11 @@ class TransformerBlock(nn.Module):
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, value, key, query, mask):
-        attention = self.attention(value, key, query, mask)
+        # Pre-LN: normalize the sublayer inputs, then add the residual.
+        attention = self.attention(self.norm1(value), self.norm1(key), self.norm1(query), mask)
 
-        x = self.dropout(self.norm1(attention + query))
-        forward = self.feed_forward(x)
-        out = self.dropout(self.norm2(forward + x))
+        x = query + self.dropout(attention)
+        out = x + self.dropout(self.feed_forward(self.norm2(x)))
         return out
 
 
@@ -192,6 +194,8 @@ class Encoder(nn.Module):
             ]
         )
         self.dropout = nn.Dropout(dropout)
+        # Pre-LN transformers need a final normalization after the layer stack.
+        self.norm_out = nn.LayerNorm(embed_size)
 
     def forward(self, x, mask):
         N, seq_length = x.shape
@@ -203,7 +207,7 @@ class Encoder(nn.Module):
         for layer in self.layers:
             out = layer(out, out, out, mask)
 
-        return out
+        return self.norm_out(out)
 
 
 class DecoderBlock(nn.Module):
@@ -217,9 +221,10 @@ class DecoderBlock(nn.Module):
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, x, value, key, src_mask, trg_mask):
-        # Masked self-attention over the target (causal + target padding mask).
-        attention = self.attention(x, x, x, trg_mask)
-        query = self.dropout(self.norm(attention + x))
+        # Masked self-attention over the target (causal + target padding mask),
+        # Pre-LN: normalize the input, then add the residual.
+        attention = self.attention(self.norm(x), self.norm(x), self.norm(x), trg_mask)
+        query = x + self.dropout(attention)
         # Cross-attention over the encoder output (source padding mask).
         out = self.transformer_block(value, key, query, src_mask)
         return out
@@ -250,6 +255,8 @@ class Decoder(nn.Module):
         )
         self.fc_out = nn.Linear(embed_size, trg_vocab_size)
         self.dropout = nn.Dropout(dropout)
+        # Pre-LN transformers need a final normalization before the projection.
+        self.norm_out = nn.LayerNorm(embed_size)
 
     def forward(self, x, enc_out, src_mask, trg_mask):
         N, seq_length = x.shape
@@ -259,7 +266,7 @@ class Decoder(nn.Module):
         for layer in self.layers:
             x = layer(x, enc_out, enc_out, src_mask, trg_mask)
 
-        out = self.fc_out(x)
+        out = self.fc_out(self.norm_out(x))
         return out
 
 
@@ -530,19 +537,19 @@ def count_parameters(model: nn.Module) -> int:
 
 
 def checkpoint_path(dataset_name: str, train_sample: int) -> str:
-    return os.path.join(CHECKPOINT_DIR, f"Transformer_{dataset_name}_{train_sample}.pt")
+    return os.path.join(CHECKPOINT_DIR, f"Transformer_{VARIANT}_{dataset_name}_{train_sample}.pt")
 
 
 def src_vocab_path(dataset_name: str, train_sample: int) -> str:
-    return os.path.join(ARTIFACT_DIR, f"Transformer_{dataset_name}_{train_sample}_src_vocab.json")
+    return os.path.join(ARTIFACT_DIR, f"Transformer_{VARIANT}_{dataset_name}_{train_sample}_src_vocab.json")
 
 
 def trg_vocab_path(dataset_name: str, train_sample: int) -> str:
-    return os.path.join(ARTIFACT_DIR, f"Transformer_{dataset_name}_{train_sample}_trg_vocab.json")
+    return os.path.join(ARTIFACT_DIR, f"Transformer_{VARIANT}_{dataset_name}_{train_sample}_trg_vocab.json")
 
 
 def metadata_path(dataset_name: str, train_sample: int) -> str:
-    return os.path.join(ARTIFACT_DIR, f"Transformer_{dataset_name}_{train_sample}_metadata.json")
+    return os.path.join(ARTIFACT_DIR, f"Transformer_{VARIANT}_{dataset_name}_{train_sample}_metadata.json")
 
 
 # =========================================================================== #
@@ -586,6 +593,7 @@ def train_model(args: argparse.Namespace) -> Tuple[Transformer, Dict[str, int], 
     # (the decoder input is <sos> + up to max_target_length content tokens).
     pos_max_length = max(args.max_source_length, args.max_target_length + 2)
     config = {
+        "variant": VARIANT,
         "dataset": args.dataset,
         "train_sample": args.train_sample,
         "src_vocab_size": len(src_vocab),
@@ -680,6 +688,7 @@ def train_model(args: argparse.Namespace) -> Tuple[Transformer, Dict[str, int], 
     save_vocab(trg_vocab, trg_vocab_path(args.dataset, args.train_sample))
 
     metadata = {
+        "variant": VARIANT,
         "dataset": args.dataset,
         "train_sample": args.train_sample,
         "test_sample": args.sample,
@@ -769,7 +778,7 @@ def run_summarize(
 
     os.makedirs(args.output_dir, exist_ok=True)
     out_path = os.path.join(
-        args.output_dir, baseline_filename("Transformer", args.dataset, args.sample)
+        args.output_dir, baseline_filename(f"Transformer_{VARIANT}", args.dataset, args.sample)
     )
     if os.path.exists(out_path) and not args.overwrite:
         raise SystemExit(
@@ -826,7 +835,7 @@ def load_checkpoint_bundle(
         raise SystemExit(
             "Cannot summarize: required checkpoint/vocabulary files are missing:\n  "
             + "\n  ".join(missing)
-            + f"\nTrain first, e.g.: python Transformer/Main.py --task train "
+            + f"\nTrain first, e.g.: python Transformer/{VARIANT}.py --task train "
             f"--dataset {dataset_name} --sample {train_sample}"
         )
 
