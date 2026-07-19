@@ -3,6 +3,7 @@ import json
 import hashlib
 import os
 import sys
+import time
 import traceback
 from tqdm import tqdm
 import torch
@@ -60,7 +61,8 @@ def main():
     config = RunConfig(
         model_name_or_path=args.model_path,
         quantization_method=args.quant,
-        prompt_template=PROMPT_CONFIGS[args.prompt_id]["template"]
+        prompt_template=PROMPT_CONFIGS[args.prompt_id]["template"],
+        max_new_tokens=PROMPT_CONFIGS[args.prompt_id]["max_new_tokens"],
     )
 
     print(f"Loading Model: {args.model_path} | Quant: {args.quant} | Prompt: {args.prompt_id}")
@@ -75,6 +77,9 @@ def main():
         print(f"TEST MODE: Limiting run to {args.sample} articles.")
 
     print(f"Starting generation. Saving progress to: {output_path}")
+
+    run_start = time.time()
+    generated_count = 0
 
     # Process the dataset (Append mode 'a' allows safe resuming)
     with open(output_path, "a", encoding="utf-8") as outfile:
@@ -96,30 +101,41 @@ def main():
                 continue
             
             try:
-                # Generate summary
-                raw_generated_summary, _, _ = summarizer.summarize(story_text)
+                # Generate summary (token counts are used for throughput logging)
+                raw_generated_summary, input_len, generated_len = summarizer.summarize(story_text)
 
                 # CLEAN THE OUTPUT: Strip P3 reasoning and duplicate markers
                 clean_summary = Evaluator.extract_summary(raw_generated_summary)
 
-                # Save output mapped to this article ID
+                # Save output mapped to this article ID. raw_summary_text keeps the
+                # pre-extraction output so the 'Summary:' marker (esp. P3) is auditable.
                 output_row = {
                     "article_id": article_id,
                     "story": story_text,
                     "human_questions": data.get("questions", []),
                     "human_answers": data.get("answers", []),
-                    "summary_text": clean_summary
+                    "summary_text": clean_summary,
+                    "raw_summary_text": raw_generated_summary,
                     }
                 outfile.write(json.dumps(output_row) + "\n")
                 outfile.flush()  # Ensure it writes to disk immediately
-                
+
+                generated_count += 1
+                if generated_count == 1 or generated_count % 10 == 0:
+                    elapsed_min = (time.time() - run_start) / 60
+                    print(f"  generated {generated_count} | input_tokens={input_len} "
+                          f"| generated_tokens={generated_len} | elapsed={elapsed_min:.2f} min",
+                          flush=True)
+
             except Exception as e:
                 print(f"\nError processing article {article_id}: {e}")
                 traceback.print_exc()
                 # Continue processing other articles despite a single failure
                 continue
 
-    print(f"--- SUCCESS --- All summaries saved to {output_path}")
+    total_min = (time.time() - run_start) / 60
+    print(f"--- SUCCESS --- Generated {generated_count} summaries in {total_min:.2f} min. "
+          f"Saved to {output_path}")
 
 if __name__ == "__main__":
     main()
