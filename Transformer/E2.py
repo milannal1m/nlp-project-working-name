@@ -433,6 +433,31 @@ def load_vocab(path: str) -> Dict[str, int]:
 # =========================================================================== #
 # Dataset loading and batching
 # =========================================================================== #
+def _load_local_split(dataset_name, split, sample, seed):
+    """Load a dataset split from the locally-cloned HF parquet repo (offline).
+
+    Sampling matches the baseline: full shuffle(seed) then take the first
+    `sample` rows. Returns a datasets.Dataset.
+    """
+    import os, glob
+    from datasets import load_dataset
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    local_dirs = {
+        "xsum": os.path.join(root, "xsum", "data"),
+        "cnn_dailymail": os.path.join(root, "cnn_dailymail", "3.0.0"),
+    }
+    d = local_dirs.get(dataset_name)
+    if not (d and os.path.isdir(d)):
+        raise FileNotFoundError(f"Local dataset dir for '{dataset_name}' not found: {d}")
+    files = sorted(glob.glob(os.path.join(d, f"{split}-*.parquet")))
+    if not files:
+        raise FileNotFoundError(f"No {split}-*.parquet files under {d}")
+    ds = load_dataset("parquet", data_files=files, split="train")  # 'train' is the parquet loader's internal key, unrelated to our split
+    if sample is not None:
+        ds = ds.shuffle(seed=seed).select(range(min(sample, len(ds))))
+    return ds
+
+
 def load_train_examples(dataset_name: str, sample: int, seed: int) -> List[Tuple[str, str]]:
     """Load ``sample`` (article, reference) pairs from the official TRAIN split.
 
@@ -451,13 +476,7 @@ def load_train_examples(dataset_name: str, sample: int, seed: int) -> List[Tuple
             "and 'xsum'."
         )
 
-    from datasets import load_dataset  # lazy import: only needed for HuggingFace sources
-
-    kwargs = {"split": "train"}
-    if "name" in cfg:
-        kwargs["name"] = cfg["name"]
-    ds = load_dataset(cfg["path"], **kwargs)
-    ds = ds.shuffle(seed=seed).select(range(min(sample, len(ds))))
+    ds = _load_local_split(dataset_name, "train", sample, seed)
 
     examples: List[Tuple[str, str]] = []
     for item in ds:
@@ -789,8 +808,10 @@ def run_summarize(
 
     # Reuse the benchmark's own TEST-split loader so the Transformer summarizes the
     # exact same sampled test articles as every other model/baseline.
-    datasets = load_datasets_streaming(sample=args.sample, seed=args.seed, names=[args.dataset])
-    data = datasets[args.dataset]
+    if args.dataset in ("xsum", "cnn_dailymail"):
+        data = _load_local_split(args.dataset, "test", args.sample, args.seed)
+    else:
+        data = load_datasets_streaming(sample=args.sample, seed=args.seed, names=[args.dataset])[args.dataset]
 
     gen_start = time.time()
     written = 0
