@@ -442,9 +442,10 @@ def load_vocab(path: str) -> Dict[str, int]:
 def load_train_examples(dataset_name: str, sample: int, seed: int) -> List[Tuple[str, str]]:
     """Load ``sample`` (article, reference) pairs from the official TRAIN split.
 
-    This mirrors ``load_datasets_streaming`` in ``src/dataset.py`` exactly
-    (stream -> shuffle(seed) -> take(sample)) but reads the ``train`` split, which
-    that helper does not expose. Field extraction is delegated to the benchmark's
+    This mirrors the sampling of ``load_datasets_streaming`` in ``src/dataset.py``
+    (shuffle(seed) -> select(sample)) but loads in normal (cached) mode so
+    offline compute nodes can read from the local cache, and reads the
+    ``train`` split, which that helper does not expose. Field extraction is delegated to the benchmark's
     ``extract_fields`` so the article/summary mapping stays authoritative. The
     test split is never touched here.
     """
@@ -458,13 +459,14 @@ def load_train_examples(dataset_name: str, sample: int, seed: int) -> List[Tuple
 
     from datasets import load_dataset  # lazy import: only needed for HuggingFace sources
 
-    kwargs = {"split": "train", "streaming": True}
+    kwargs = {"split": "train"}
     if "name" in cfg:
         kwargs["name"] = cfg["name"]
-    stream = load_dataset(cfg["path"], **kwargs).shuffle(seed=seed).take(sample)
+    ds = load_dataset(cfg["path"], **kwargs)
+    ds = ds.shuffle(seed=seed).select(range(min(sample, len(ds))))
 
     examples: List[Tuple[str, str]] = []
-    for item in stream:
+    for item in ds:
         news_text, ref_summary, _qa = extract_fields(dataset_name, item)
         examples.append((news_text, ref_summary))
     print(f"  [ready] {dataset_name} (train split, {len(examples)} examples)", flush=True)

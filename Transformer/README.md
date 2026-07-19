@@ -32,6 +32,11 @@ python -m pip install -r requirements.txt
 - Runs on **GPU (CUDA) or CPU** automatically. On CPU, keep the sample size small.
 - HuggingFace datasets (`cnn_dailymail`, `xsum`) are downloaded automatically on
   first use and cached by the `datasets` library.
+- **Training data loads in normal (cached) mode, not streaming**, so it reads
+  from the local `datasets` cache without a network connection. This lets the
+  baseline train on **offline compute nodes** (e.g. cluster workers with no
+  internet), provided the dataset has been cached beforehand from a node that
+  does have access — see [`cluster/prefetch.sh`](cluster/prefetch.sh).
 
 Run all commands **from the repository root** so the script can import the
 benchmark's `src/dataset.py` and `src/naming.py`.
@@ -51,10 +56,12 @@ A **separate** model is trained per dataset. The two datasets are never combined
 
 ## Split protocol (important)
 
-- **Training** uses that dataset's official **`train`** split only.
+- **Training** uses that dataset's official **`train`** split only. It is loaded
+  in cached (non-streaming) mode and sampled with
+  `shuffle(seed).select(range(min(sample, len(ds))))` so it works offline.
 - **Summary generation** uses that dataset's official **`test`** split only.
 - The test split is used for the **same sampled articles** as every other
-  benchmark model (same streaming + `shuffle(seed).take(sample)` logic).
+  benchmark model, via `src/dataset.py`'s `shuffle(seed).take(sample)` logic.
 - No validation or test example is ever used during training, and the vocabulary
   is built from the training portion only.
 
