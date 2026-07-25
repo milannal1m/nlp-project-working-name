@@ -1,0 +1,19 @@
+file,bleu,rougeL,meteor,bertscore_f1_raw,bertscore_f1_raw_std,bertscore_f1_scaled,bertscore_f1_scaled_std,qa_eval,qa_eval_std,error
+Qwen2_P1_16bit_cnn_dailymail_full_summaries.jsonl,0.079380115,0.222352464,0.252219081,0.869795143,0.01966916,0.228526514,0.116541239,,,qafacteval not installed
+Qwen2_P1_16bit_xsum_full_summaries.jsonl,0.024074869,0.166948257,0.249078304,0.873506514,0.021486505,0.250516664,0.127309142,,,qafacteval not installed
+Qwen2_P1_4bit_cnn_dailymail_full_summaries.jsonl,0.088911514,0.225423929,0.265472203,0.870307883,0.019920971,0.231564538,0.118033237,,,qafacteval not installed
+Qwen2_P1_4bit_xsum_full_summaries.jsonl,0.023393785,0.16572507,0.245459137,0.872899242,0.021415988,0.246918528,0.126891324,,,qafacteval not installed
+Qwen2_P1_8bit_cnn_dailymail_full_summaries.jsonl,0.082643774,0.223648708,0.257784551,0.869885888,0.019704088,0.229064183,0.116748189,,,qafacteval not installed
+Qwen2_P1_8bit_xsum_full_summaries.jsonl,0.023162875,0.164544726,0.249304273,0.872866013,0.021204519,0.246721649,0.125638356,,,qafacteval not installed
+Qwen2_P2_16bit_cnn_dailymail_full_summaries.jsonl,0.078107604,0.223400435,0.257032263,0.871001188,0.018899075,0.235672422,0.111978432,,,qafacteval not installed
+Qwen2_P2_16bit_xsum_full_summaries.jsonl,0.022738372,0.164663892,0.2537038,0.873330884,0.020720191,0.249476043,0.12276868,,,qafacteval not installed
+Qwen2_P2_4bit_cnn_dailymail_full_summaries.jsonl,0.087920727,0.226924748,0.270918186,0.871352638,0.018888067,0.237754788,0.111913208,,,qafacteval not installed
+Qwen2_P2_4bit_xsum_full_summaries.jsonl,0.021117182,0.158683245,0.247615414,0.871100095,0.021914506,0.236258454,0.12984508,,,qafacteval not installed
+Qwen2_P2_8bit_cnn_dailymail_full_summaries.jsonl,0.080696995,0.224257801,0.261462596,0.870975316,0.018841266,0.235519127,0.111635907,,,qafacteval not installed
+Qwen2_P2_8bit_xsum_full_summaries.jsonl,0.022610552,0.16397841,0.25393156,0.873171854,0.020479148,0.248533778,0.12134048,,,qafacteval not installed
+Qwen2_P3_16bit_cnn_dailymail_full_summaries.jsonl,0.073354108,0.210485528,0.243213358,0.866831059,0.019913137,0.210964092,0.11798682,,,qafacteval not installed
+Qwen2_P3_16bit_xsum_full_summaries.jsonl,0.01781574,0.154434649,0.235127524,0.869011701,0.022431319,0.223884561,0.132907235,,,qafacteval not installed
+Qwen2_P3_4bit_cnn_dailymail_full_summaries.jsonl,0.067218923,0.210179797,0.231475231,0.868621721,0.020760418,0.221573898,0.123007024,,,qafacteval not installed
+Qwen2_P3_4bit_xsum_full_summaries.jsonl,0.016280368,0.152393455,0.228315123,0.868374476,0.023498154,0.220108956,0.139228314,,,qafacteval not installed
+Qwen2_P3_8bit_cnn_dailymail_full_summaries.jsonl,0.073917065,0.210482723,0.2466377,0.867218245,0.019653229,0.213258201,0.116446849,,,qafacteval not installed
+Qwen2_P3_8bit_xsum_full_summaries.jsonl,0.017361419,0.153103711,0.234907508,0.869075793,0.022076392,0.224264309,0.130804266,,,qafacteval not installed

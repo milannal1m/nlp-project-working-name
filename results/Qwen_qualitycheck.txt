@@ -1,0 +1,19 @@
+OVERALL
+  Qwen2_P1_16bit_cnn_dailymail_full_summaries.jsonl clean 11482/11490   refusal?:6, truncated?:3
+  Qwen2_P1_16bit_xsum_full_summaries.jsonl clean 11324/11334   truncated?:5, very_short:3, refusal?:2
+  Qwen2_P1_4bit_cnn_dailymail_full_summaries.jsonl clean 11476/11490   refusal?:7, truncated?:6, marker_left:1
+  Qwen2_P1_4bit_xsum_full_summaries.jsonl  clean 11325/11334   truncated?:6, marker_left:2, refusal?:2
+  Qwen2_P1_8bit_cnn_dailymail_full_summaries.jsonl clean 11481/11490   refusal?:6, truncated?:3
+  Qwen2_P1_8bit_xsum_full_summaries.jsonl  clean 11327/11334   truncated?:3, very_short:2, marker_left:1
+  Qwen2_P2_16bit_cnn_dailymail_full_summaries.jsonl clean 11485/11490   refusal?:4, truncated?:1
+  Qwen2_P2_16bit_xsum_full_summaries.jsonl clean 11329/11334   truncated?:3, very_short:1, refusal?:1
+  Qwen2_P2_4bit_cnn_dailymail_full_summaries.jsonl clean 11484/11490   refusal?:4, truncated?:2
+  Qwen2_P2_4bit_xsum_full_summaries.jsonl  clean 11329/11334   refusal?:2, truncated?:2, empty:1
+  Qwen2_P2_8bit_cnn_dailymail_full_summaries.jsonl clean 11484/11490   refusal?:4, truncated?:2
+  Qwen2_P2_8bit_xsum_full_summaries.jsonl  clean 11331/11334   truncated?:2, refusal?:1
+  Qwen2_P3_16bit_cnn_dailymail_full_summaries.jsonl clean 11438/11490   truncated?:45, marker_left:5, refusal?:2
+  Qwen2_P3_16bit_xsum_full_summaries.jsonl clean 11291/11334   truncated?:33, refusal?:4, marker_left:3
+  Qwen2_P3_4bit_cnn_dailymail_full_summaries.jsonl clean 11424/11490   truncated?:59, very_short:6, refusal?:2
+  Qwen2_P3_4bit_xsum_full_summaries.jsonl  clean 11221/11334   truncated?:96, refusal?:7, marker_left:6
+  Qwen2_P3_8bit_cnn_dailymail_full_summaries.jsonl clean 11442/11490   truncated?:44, marker_left:2, refusal?:2
+  Qwen2_P3_8bit_xsum_full_summaries.jsonl  clean 11286/11334   truncated?:39, refusal?:5, marker_left:3
