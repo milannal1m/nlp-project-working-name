@@ -11,6 +11,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 MODEL_CONFIGS = {
     "Llama": "unsloth/Llama-3.2-3B-Instruct",
     "Phi":   "microsoft/Phi-3-mini-4k-instruct",
+    "Qwen2": "./Qwen2-1.5B-Instruct",
 }
 
 

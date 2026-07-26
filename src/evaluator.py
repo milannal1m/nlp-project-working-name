@@ -3,21 +3,53 @@ import json
 import evaluate
 import os
 import logging
+import re
 import statistics
 
 class Evaluator:
+    # Matches a 'Summary:' marker at the start of a line (tolerant of markdown
+    # bold like **Summary:** and of spacing). Prompts instruct the model to put
+    # its summary after this marker; P3 also emits reasoning before it.
+    _SUMMARY_MARKER = re.compile(r"(?:^|\n)[^\n]*?\bsummary\s*\*{0,2}\s*:\s*\*{0,2}\s*", re.IGNORECASE)
+    # Same marker anchored at the very start, to peel off a repeated one
+    # (models sometimes emit "Summary:\nSummary: <text>").
+    _LEADING_MARKER = re.compile(r"^\**\s*summary\s*\*{0,2}\s*:\s*\*{0,2}\s*", re.IGNORECASE)
+
     def __init__(self):
         self.bleu = None
         self.rouge = None
         self.meteor = None
-        self.bertscore = None
+        self.bertscorer = None
+
+    @classmethod
+    def extract_summary(cls, text):
+        """Return the text after the LAST 'Summary:' marker.
+
+        Strips any reasoning/preamble the model emits before the marker (P3), and
+        peels off a repeated marker ("Summary:\\nSummary: …"). If no marker is
+        present (baselines, or a non-compliant output), returns the text unchanged.
+        """
+        if not text:
+            return text
+        matches = list(cls._SUMMARY_MARKER.finditer(text))
+        result = text[matches[-1].end():].strip() if matches else text.strip()
+        while True:
+            m = cls._LEADING_MARKER.match(result)
+            if not m:
+                break
+            result = result[m.end():].strip()
+        return result
 
     def _load_metrics(self):
         if self.bleu is None:
             self.bleu = evaluate.load("bleu")
             self.rouge = evaluate.load("rouge")
             self.meteor = evaluate.load("meteor")
-            self.bertscore = evaluate.load("bertscore")
+            # Use bert_score directly (what `evaluate` wraps) so a single scoring
+            # pass yields both raw and baseline-rescaled F1: the rescale is affine,
+            # so raw = scaled * (1 - baseline) + baseline.
+            from bert_score import BERTScorer
+            self.bertscorer = BERTScorer(lang="en", rescale_with_baseline=True)
 
     def evaluate_metrics(self, file_path):
         """Calculates BLEU, ROUGE, METEOR and BERTScore against the reference summary."""
@@ -28,25 +60,33 @@ class Evaluator:
         with open(file_path, 'r', encoding='utf-8') as f:
             for line in f:
                 data = json.loads(line)
-                generated_summaries.append(data['generated_summary'])
+                generated_summaries.append(self.extract_summary(data['generated_summary']))
                 reference_summaries.append(data['reference_summary'])
 
         bleu_score = self.bleu.compute(predictions=generated_summaries, references=reference_summaries)
         rouge_score = self.rouge.compute(predictions=generated_summaries, references=reference_summaries)
         meteor_score = self.meteor.compute(predictions=generated_summaries, references=reference_summaries)
-        bert_score = self.bertscore.compute(
-            predictions=generated_summaries,
-            references=reference_summaries,
-            lang="en",
-            rescale_with_baseline=True,  # spread raw ~0.85 scores into an interpretable range
-        )
+        # One scoring pass -> baseline-rescaled F1 (interpretable, can go negative).
+        # The rescale is affine, so recover the raw (~0.85, compressed) F1 from it:
+        # raw = scaled * (1 - baseline) + baseline.
+        _, _, f_scaled_t = self.bertscorer.score(generated_summaries, reference_summaries)
+        base_f = float(self.bertscorer.baseline_vals.view(-1)[2])
+        f_scaled = [float(x) for x in f_scaled_t]
+        f_raw = [x * (1 - base_f) + base_f for x in f_scaled]
 
+        def mean_std(values):
+            return statistics.mean(values), (statistics.stdev(values) if len(values) > 1 else 0.0)
+
+        raw_mean, raw_std = mean_std(f_raw)
+        scaled_mean, scaled_std = mean_std(f_scaled)
         return {
             "bleu": bleu_score['bleu'],
             "rougeL": rouge_score['rougeL'],
             "meteor": meteor_score['meteor'],
-            "bertscore_f1": statistics.mean(bert_score['f1']),
-            "bertscore_f1_std": statistics.stdev(bert_score['f1']) if len(bert_score['f1']) > 1 else 0.0,
+            "bertscore_f1_raw": raw_mean,
+            "bertscore_f1_raw_std": raw_std,
+            "bertscore_f1_scaled": scaled_mean,
+            "bertscore_f1_scaled_std": scaled_std,
         }
 
     def evaluate_qa(self, file_path):  # Highly recommended to call only in a cluster environment.
@@ -66,7 +106,7 @@ class Evaluator:
             for line in f:
                 data = json.loads(line)
                 original_texts.append(data.get('news', ''))
-                generated_summaries.append(data.get('generated_summary', ''))
+                generated_summaries.append(self.extract_summary(data.get('generated_summary', '')))
 
         results = qa_evaluator.score_batch_qg(
             inputs=original_texts,
@@ -89,8 +129,10 @@ class Evaluator:
         "bleu",
         "rougeL",
         "meteor",
-        "bertscore_f1",
-        "bertscore_f1_std",
+        "bertscore_f1_raw",
+        "bertscore_f1_raw_std",
+        "bertscore_f1_scaled",
+        "bertscore_f1_scaled_std",
         "qa_eval",
         "qa_eval_std",
         "error",

@@ -1,3 +1,5 @@
+from __future__ import annotations  # allow `list | None` etc. on Python < 3.10
+
 import json
 import os
 import re
@@ -53,13 +55,14 @@ def load_local_jsonl(path: str, sample: int = None) -> list:
     return data if sample is None else data[:sample]
 
 
-def load_datasets_streaming(sample: int = None, seed: int = 42, names=None) -> dict:
+def load_datasets_streaming(sample: int = None, seed: int = 42, names=None, split: str = None) -> dict:
     """Return {name: iterable-of-records} for the requested datasets.
 
     HuggingFace datasets are streamed (shuffled, then truncated to `sample`); local
     datasets (those with a `local_path`) are read verbatim. `names` restricts which
     datasets are loaded (default: all configured) so a local-only run never touches
-    the network and an HF run never reads the local files.
+    the network and an HF run never reads the local files. `split` overrides each HF
+    dataset's configured split (e.g. "train"); omit it to use the configured default.
     """
     selected = names if names is not None else list(DATASET_CONFIGS.keys())
     result = {}
@@ -71,7 +74,7 @@ def load_datasets_streaming(sample: int = None, seed: int = 42, names=None) -> d
             print(f"  [ready] {name} ({label} records, local file)", flush=True)
             continue
         from datasets import load_dataset  # lazy: only needed for HuggingFace sources
-        kwargs = {"split": cfg["split"], "streaming": True}
+        kwargs = {"split": split or cfg["split"], "streaming": True}
         if "name" in cfg:
             kwargs["name"] = cfg["name"]
         ds = load_dataset(cfg["path"], **kwargs).shuffle(seed=seed)
@@ -79,7 +82,7 @@ def load_datasets_streaming(sample: int = None, seed: int = 42, names=None) -> d
             ds = ds.take(sample)
         result[name] = ds
         label = f"up to {sample} samples" if sample is not None else "full split"
-        print(f"  [ready] {name} ({label}, streaming)", flush=True)
+        print(f"  [ready] {name}/{kwargs['split']} ({label}, streaming)", flush=True)
     return result
 
 

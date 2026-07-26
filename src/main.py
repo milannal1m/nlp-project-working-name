@@ -19,6 +19,8 @@ from baselines.textrank import run_textrank
 from baselines.tfidf import run_tfidf
 from evaluator import Evaluator
 
+DATASET_NAMES = list(DATASET_CONFIGS.keys())
+
 
 def load_one_shot_example(dataset_name: str, seed: int = 42) -> tuple[str, str]:
     """Load a single example from the training set for one-shot prompts."""
@@ -41,8 +43,6 @@ def load_one_shot_example(dataset_name: str, seed: int = 42) -> tuple[str, str]:
         return news_text, ref_summary
 
     raise SystemExit(f"Could not load a training example from {dataset_name}")
-
-DATASET_NAMES = list(DATASET_CONFIGS.keys())
 
 
 def parse_args():
