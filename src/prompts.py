@@ -29,8 +29,7 @@ PROMPT_CONFIGS = {
                     "Summary: {example_summary}\n\n"
                     "News: {news}\n"
                     "Summarize the news in two sentences. "
-                    "Output only the summary, beginning with 'Summary:'.\n"
-                    "Summary:",
+                    "Output only the summary, beginning with 'Summary:'.",
         "max_new_tokens": 1000,
     },
 }
