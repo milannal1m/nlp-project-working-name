@@ -19,6 +19,29 @@ from baselines.textrank import run_textrank
 from baselines.tfidf import run_tfidf
 from evaluator import Evaluator
 
+
+def load_one_shot_example(dataset_name: str, seed: int = 42) -> tuple[str, str]:
+    """Load a single example from the training set for one-shot prompts."""
+    cfg = DATASET_CONFIGS[dataset_name]
+    if "local_path" in cfg:
+        raise SystemExit(
+            f"Dataset '{dataset_name}' is a local fixed-sample dataset without a "
+            "train split; one-shot prompts require training examples."
+        )
+
+    from datasets import load_dataset
+
+    kwargs = {"split": "train", "streaming": True}
+    if "name" in cfg:
+        kwargs["name"] = cfg["name"]
+    stream = load_dataset(cfg["path"], **kwargs).shuffle(seed=seed).take(1)
+
+    for item in stream:
+        news_text, ref_summary, _ = extract_fields(dataset_name, item)
+        return news_text, ref_summary
+
+    raise SystemExit(f"Could not load a training example from {dataset_name}")
+
 DATASET_NAMES = list(DATASET_CONFIGS.keys())
 
 
@@ -134,13 +157,25 @@ def run_summarize(args) -> None:
 
     os.makedirs(args.output_dir, exist_ok=True)
     prompt_cfg = PROMPT_CONFIGS[args.prompt_name]
+    prompt_template = prompt_cfg["template"]
+
+    # For one-shot prompts (P4), load an example from training data
+    if args.prompt_name == "P4":
+        # Use the first dataset as the source for the one-shot example
+        example_dataset = pending[0] if pending else args.datasets[0]
+        example_news, example_summary = load_one_shot_example(example_dataset, seed=args.seed)
+        prompt_template = prompt_template.format(
+            example_news=example_news,
+            example_summary=example_summary,
+        )
+
     config = RunConfig(
         model_name_or_path=model_name_or_path,
         model_label=model_label,
         quantization_method=args.quantization_method,
         output_dir=args.output_dir,
         prompt_name=args.prompt_name,
-        prompt_template=prompt_cfg["template"],
+        prompt_template=prompt_template,
         max_new_tokens=prompt_cfg["max_new_tokens"],
     )
     model = SummarizationModel(config)

@@ -1,0 +1,40 @@
+{
+  "dataset": "xsum",
+  "train_sample": 1,
+  "test_sample": 1,
+  "epochs": 5,
+  "batch_size": 2,
+  "gradient_accumulation_steps": 1,
+  "effective_batch_size": 2,
+  "learning_rate": 0.0003,
+  "device": "cpu",
+  "num_train_examples": 1,
+  "src_vocab_size": 234,
+  "trg_vocab_size": 26,
+  "epoch_train_losses": [
+    3.4172141551971436,
+    3.3872478008270264,
+    3.224348545074463,
+    3.20322585105896,
+    3.0898935794830322
+  ],
+  "best_train_loss": 3.0898935794830322,
+  "total_train_time_seconds": 0.41232895851135254,
+  "hyperparameters": {
+    "dataset": "xsum",
+    "train_sample": 1,
+    "src_vocab_size": 234,
+    "trg_vocab_size": 26,
+    "embed_size": 128,
+    "num_layers": 2,
+    "heads": 4,
+    "forward_expansion": 2,
+    "dropout": 0.1,
+    "max_source_length": 256,
+    "max_target_length": 64,
+    "pos_max_length": 256,
+    "seed": 42
+  },
+  "checkpoint_path": "/Users/syedehnafisehossininami/nlp-project-working-name/Transformer/checkpoints/Transformer_xsum_1.pt",
+  "timestamp": "2026-07-14 10:44:30"
+}
