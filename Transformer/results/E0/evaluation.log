@@ -1,0 +1,16 @@
+2026-07-23 21:29:28,712  === Evaluation: Transformer_E0_cnn_dailymail_500_summaries.jsonl ===
+2026-07-23 21:29:40,866    bleu: 0.0000
+2026-07-23 21:29:40,866    rougeL: 0.0465
+2026-07-23 21:29:40,866    meteor: 0.0346
+2026-07-23 21:29:40,866    bertscore_f1: -0.2387 ¡À 0.0467
+2026-07-23 21:29:40,866    qa_eval: None
+2026-07-23 21:29:40,866    error: qafacteval not installed
+2026-07-23 21:29:40,866  
+2026-07-23 21:29:40,903  === Evaluation: Transformer_E0_xsum_500_summaries.jsonl ===
+2026-07-23 21:29:43,708    bleu: 0.0000
+2026-07-23 21:29:43,708    rougeL: 0.1406
+2026-07-23 21:29:43,708    meteor: 0.1148
+2026-07-23 21:29:43,730    bertscore_f1: 0.0188 ¡À 0.0800
+2026-07-23 21:29:43,730    qa_eval: None
+2026-07-23 21:29:43,730    error: qafacteval not installed
+2026-07-23 21:29:43,730  
