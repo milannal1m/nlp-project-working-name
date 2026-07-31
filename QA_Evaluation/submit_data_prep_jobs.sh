@@ -1,8 +1,9 @@
 #!/bin/bash
-# Submit all 18 (model x quant x prompt) combinations as SEPARATE Slurm jobs.
+# Submit every (model x quant x prompt) combination as SEPARATE Slurm jobs
+# (currently 3 models x 3 quants x 3 prompts = 27).
 #
 # Use this instead of run_data_prep.sh when job arrays sit forever in the queue:
-# the scheduler sees 18 independent jobs it can start one-by-one as GPUs free up,
+# the scheduler sees independent jobs it can start one-by-one as GPUs free up,
 # rather than one array it may treat as a single large allocation.
 #
 # Usage:  bash QA_Evaluation/submit_data_prep_jobs.sh
@@ -13,20 +14,22 @@ set -euo pipefail
 mkdir -p logs
 
 # Configuration lists (must match run_data_prep.sh)
-MODELS=("meta-llama/Llama-3.2-3B-Instruct" "microsoft/Phi-3-mini-4k-instruct")
+MODELS=("meta-llama/Llama-3.2-3B-Instruct" "microsoft/Phi-3-mini-4k-instruct" "Qwen/Qwen2-1.5B-Instruct")
 QUANTS=("None" "8bit" "4bit")
 PROMPTS=("P1" "P2" "P3")
 
-# --- Per-config --time from historical summarization logs --------------------
+# --- Per-config --time from historical data-prep logs -----------------------
 # Data prep is summarization inference over newsqasum_gold.jsonl, so we reuse the
-# per-article timings recorded in logs/**/sum_*.out by src/job_time.py. Only one
-# model was actually run, so --cross-model lets the other model(s) inherit the
-# same (quant, prompt) rate; any (quant, prompt) with no logs at all -> 36h.
+# per-article timings recorded in the previous run's qa_prep_*.out logs (parsed by
+# src/job_time.py). Only one model was actually run, so --cross-model lets the
+# other model(s) inherit the same (quant, prompt) rate; any (quant, prompt) with no
+# logs at all -> 36h. LOGS_DIR is searched recursively for those .out files.
 INPUT_FILE="QA_Evaluation/Datasets/newsqasum_gold.jsonl"
+LOGS_DIR="QA_Evaluation"                                       # where qa_prep_*.out live
 QA_SAMPLE="$(wc -l < "$INPUT_FILE" 2>/dev/null | tr -d ' ')"   # articles to scale by
 [[ -z "$QA_SAMPLE" || "$QA_SAMPLE" -eq 0 ]] && QA_SAMPLE=10388
 
-model_key() {  # HF path -> the model token used in sum_*.out log names
+model_key() {  # HF path -> the model token job_time records for these logs
     case "$(basename "$1" | tr '[:upper:]' '[:lower:]')" in
         *llama*) echo "Llama" ;;
         *phi*)   echo "Phi" ;;
@@ -34,7 +37,6 @@ model_key() {  # HF path -> the model token used in sum_*.out log names
         *)       basename "$1" ;;
     esac
 }
-quant_key() { [[ "$1" == "None" ]] && echo "16bit" || echo "$1"; }  # None == 16-bit in logs
 
 SUBMITTED=()   # collect "jobid  name  --time=..." lines for the end-of-run summary
 
@@ -47,8 +49,9 @@ for MODEL in "${MODELS[@]}"; do
       JOB_TAG="${MODEL_TAG}_${QUANT}_${PROMPT}"
 
       # Estimated wall-clock for this combo (36h if this quant+prompt is unmeasured).
-      JTIME="$(python3 src/job_time.py -m "$(model_key "$MODEL")" -q "$(quant_key "$QUANT")" \
-          -p "$PROMPT" -d cnn_dailymail --sample "$QA_SAMPLE" --cross-model 2>/dev/null || true)"
+      JTIME="$(python3 src/job_time.py -m "$(model_key "$MODEL")" -q "$QUANT" \
+          -p "$PROMPT" -d newsqasum --sample "$QA_SAMPLE" --cross-model \
+          --logs_dir "$LOGS_DIR" 2>/dev/null || true)"
       [[ -z "$JTIME" ]] && JTIME="36:00:00"
 
       echo "Submitting: $JOB_TAG  (--time=$JTIME)"
