@@ -114,18 +114,24 @@ def _weighted_rate(records, pred):
 OVERHEAD_MIN = 5.0
 
 
-def estimate_minutes(records, model, quant, prompt, dataset, sample, overhead=OVERHEAD_MIN):
+def estimate_minutes(records, model, quant, prompt, dataset, sample, overhead=OVERHEAD_MIN,
+                     cross_model=False):
     """Predicted minutes for a config = overhead + per-article rate x article count.
 
     Rate is the article-weighted rate over the exact (model, quant, prompt, dataset)
     logs, falling back to the same (model, quant, prompt) across datasets (so xu_*
     reuses cnn/xsum, and a cell measured only on one dataset covers the other).
-    Article count is the requested `sample`, or the dataset's full size for full runs.
-    Returns None if the config is unmeasured.
+    With ``cross_model=True`` there is a final fallback that reuses the same
+    (quant, prompt) rate measured on ANY model — so a model with no logs of its own
+    (e.g. Phi) inherits an estimate from the model that was actually run (e.g. Llama),
+    instead of dropping to the flat fallback. Article count is the requested
+    ``sample``, or the dataset's full size for full runs. Returns None if unmeasured.
     """
     rate = _weighted_rate(records, lambda r: r["config"] == (model, quant, prompt, dataset))
     if rate is None:
         rate = _weighted_rate(records, lambda r: r["config"][:3] == (model, quant, prompt))
+    if rate is None and cross_model:
+        rate = _weighted_rate(records, lambda r: (r["config"][1], r["config"][2]) == (quant, prompt))
     if rate is None:
         return None
 
@@ -188,6 +194,9 @@ def main():
     p.add_argument("--floor_min", type=int, default=30)
     p.add_argument("--max", dest="max_hms", default="48:00:00")
     p.add_argument("--fallback", default="36:00:00")
+    p.add_argument("--cross-model", dest="cross_model", action="store_true",
+                   help="If a model has no logs, reuse the same (quant, prompt) rate "
+                        "measured on any other model instead of the flat fallback.")
     args = p.parse_args()
 
     records = parse_logs(args.logs_dir)
@@ -200,7 +209,8 @@ def main():
         p.error("--model, --quant, --prompt, --dataset are required (or use --report)")
 
     minutes = estimate_minutes(records, args.model, args.quant, args.prompt,
-                               args.dataset, args.sample, overhead=args.overhead)
+                               args.dataset, args.sample, overhead=args.overhead,
+                               cross_model=args.cross_model)
     if minutes is None:
         print(args.fallback)  # unmeasured config -> generous default
     else:
