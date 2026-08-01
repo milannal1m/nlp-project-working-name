@@ -86,7 +86,9 @@ class QAFactEvaluator:
         print(f"Reading merged dataset: {self.master_file}")
         
         foundation_keys = {"article_id", "source_article", "human_questions", "human_answers"}
-        
+        skipped = 0
+        scored = 0
+
         with open(self.master_file, 'r', encoding='utf-8') as infile, \
              open(output_file, 'w', encoding='utf-8') as outfile:
                 
@@ -109,7 +111,18 @@ class QAFactEvaluator:
                     human_questions = article_data.get("human_questions", [])
                     human_answers = article_data.get("human_answers", [])
 
-                    if not source_text or not human_questions or not human_answers: continue
+                    # Skipping here is silent data loss, so say which field went missing.
+                    # An empty results file almost always means the merge dropped these.
+                    missing = [name for name, value in (
+                        ("source_article", source_text),
+                        ("human_questions", human_questions),
+                        ("human_answers", human_answers),
+                    ) if not value]
+                    if missing:
+                        skipped += 1
+                        print(f"[skip] row {idx + 1} | ID: {article_id} | "
+                              f"missing: {', '.join(missing)}", flush=True)
+                        continue
 
                     qa_pairs_list = []
                     for q, a in zip(human_questions, human_answers):
@@ -143,8 +156,9 @@ class QAFactEvaluator:
                               return_qa_pairs=True 
                          )
 
-                         # THE SANITY CHECK PRINT (Only prints on first iteration)
-                         if idx == 0:
+                         # THE SANITY CHECK PRINT (only on the first article actually scored,
+                         # which is not necessarily row 0 once rows can be skipped)
+                         if scored == 0:
                              print("\n=== PIPELINE PAYLOAD VERIFICATION ===")
                              print(f"SOURCE [0] (First 150 chars): {sources_batch[0][:150]}...")
                              print(f"SUMMARY [0] (First 150 chars): {summaries_batch[0][0][:150]}...")
@@ -170,6 +184,13 @@ class QAFactEvaluator:
 
                     outfile.write(json.dumps(article_scores) + "\n")
                     outfile.flush()
+                    scored += 1
 
-        print(f"\n--- SUCCESS --- Evaluation complete. Results have been saved to {output_file}")
+        print(f"\n--- Evaluation complete --- scored {scored} article(s), "
+              f"skipped {skipped}.")
+        if scored == 0:
+            print("[ERROR] Nothing was scored. Every row was missing at least one of "
+                  "source_article / human_questions / human_answers — re-run "
+                  "summaries_merger.py, which is what populates them.")
+        print(f"Results have been saved to {output_file}")
         return output_file

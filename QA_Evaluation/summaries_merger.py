@@ -1,95 +1,182 @@
-import os
-import json
-import glob
+"""Pivot the per-variation summary files in Outputs/ into one master matrix.
 
-def verify_merge(output_file):
-    """Validates the structural integrity of the lean master matrix."""
+Each Outputs/<model>_<quant>_<prompt>.jsonl holds one row per article, written by
+data_preparation_pipeline.py. This flattens them into master_evaluation_dataset.jsonl:
+one row per article, one column per variation, plus the four "foundation" fields the
+QA evaluator needs.
+
+The foundation fields are NOT optional and their names are load-bearing. qa_evaluator
+treats every key that is not in FOUNDATION_KEYS as a candidate summary to score, so a
+source article carried through under its original name ('story') would be silently
+LERC-scored as if a model had produced it. Hence the rename to 'source_article'.
+
+Usage:
+    python summaries_merger.py                  # intersection of articles (default)
+    python summaries_merger.py --union          # keep every article any variation covers
+    python summaries_merger.py --outputs-dir DIR --output FILE
+"""
+
+import argparse
+import glob
+import json
+import os
+
+# Keys qa_evaluator.py reserves as metadata; everything else in a row is a summary.
+FOUNDATION_KEYS = ("article_id", "source_article", "human_questions", "human_answers")
+
+
+def foundation_from(row):
+    """Map a data_preparation_pipeline row onto the names qa_evaluator expects."""
+    return {
+        "source_article": row.get("story", row.get("source_article", "")),
+        "human_questions": row.get("human_questions", row.get("questions", [])),
+        "human_answers": row.get("human_answers", row.get("answers", [])),
+    }
+
+
+def read_variation(file_path):
+    """Return ({article_id: summary}, {article_id: foundation_dict}) for one file.
+
+    Rows with a blank summary are treated as absent rather than as an empty summary,
+    so a truncated or failed generation cannot enter the matrix as a scoreable ''.
+    """
+    summaries, foundations = {}, {}
+    with open(file_path, "r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            article_id = row.get("article_id")
+            summary = row.get("summary_text")
+            if not article_id or not summary or not str(summary).strip():
+                continue
+            summaries[article_id] = summary
+            if article_id not in foundations:
+                foundations[article_id] = foundation_from(row)
+    return summaries, foundations
+
+
+def verify_merge(output_file, n_variations):
+    """Report the shape of the written matrix and flag anything unscoreable."""
     print("\n--- Running Verification Check ---")
     try:
-        with open(output_file, 'r', encoding='utf-8') as f:
+        with open(output_file, "r", encoding="utf-8") as f:
             first_line = f.readline()
             if not first_line:
-                print("Warning: Master output file is empty.")
+                print("[WARNING] Master output file is empty — nothing will be scored.")
                 return
             first_row = json.loads(first_line)
-        
+
         keys = list(first_row.keys())
+        expected = len(FOUNDATION_KEYS) + n_variations
 
         print(f"Total columns compiled in master row: {len(keys)}")
         print("Columns mapping preview:")
         for key in keys:
-            val_preview = str(first_row[key])[:40].replace('\n', ' ') + "..."
+            val_preview = str(first_row[key])[:40].replace("\n", " ") + "..."
             print(f"   - {key}: {val_preview}")
-        
-        if len(keys) == 19:
-            print("\n[SUCCESS] Verification Passed! Lean matrix contains exactly 1 article_id and 18 variations.")
+
+        missing = [k for k in FOUNDATION_KEYS if not first_row.get(k)]
+        if missing:
+            print(f"\n[ERROR] Foundation fields missing or empty: {', '.join(missing)}.")
+            print("        qa_evaluator will skip these articles and score nothing.")
+        elif len(keys) == expected:
+            print(f"\n[SUCCESS] Verification passed: {len(FOUNDATION_KEYS)} foundation "
+                  f"fields + {n_variations} variations.")
         else:
-            print(f"\n[WARNING] Expected 19 columns, but found {len(keys)}. Some cluster jobs might be missing.")
+            print(f"\n[WARNING] Expected {expected} columns "
+                  f"({len(FOUNDATION_KEYS)} foundation + {n_variations} variations), "
+                  f"found {len(keys)}. Coverage is ragged across variations.")
     except Exception as e:
         print(f"Verification failed to process file: {e}")
 
 
 def main():
-    # Dynamic Path Resolution: Absolute path relative to where this script is saved
-    SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-    
-    # Since merger sits in QA_Evaluation/, test_outputs is right next to it
-    variation_dir = os.path.join(SCRIPT_DIR, "Outputs")
-    output_file = os.path.join(SCRIPT_DIR, "master_evaluation_dataset.jsonl")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
 
-    print(f"Targeting variations directory: {variation_dir}")
-    print(f"Targeting output master matrix: {output_file}\n")
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--outputs-dir", default=os.path.join(script_dir, "Outputs"),
+                        help="Directory of per-variation .jsonl files")
+    parser.add_argument("--output", default=os.path.join(script_dir, "master_evaluation_dataset.jsonl"),
+                        help="Path to write the master matrix to")
+    parser.add_argument("--union", action="store_true",
+                        help="Keep every article any variation covers. Default is the "
+                             "intersection, so all variations are scored on the same "
+                             "articles and their mean LERC stays comparable.")
+    args = parser.parse_args()
 
-    # In-memory dictionary to hold rows: { article_id: { article_id: x, var1: y } }
-    master_matrix = {}
+    print(f"Targeting variations directory: {args.outputs_dir}")
+    print(f"Targeting output master matrix: {args.output}\n")
 
-    # Gather ALL jsonl files in the target folder
-    all_jsonl_files = glob.glob(os.path.join(variation_dir, "*.jsonl"))
-    
-    # Filter out the master output file if it happens to be in the same folder
-    variation_files = [f for f in all_jsonl_files if os.path.basename(f) != "master_evaluation_dataset.jsonl"]
-    
+    all_jsonl_files = sorted(glob.glob(os.path.join(args.outputs_dir, "*.jsonl")))
+    variation_files = [f for f in all_jsonl_files
+                       if os.path.basename(f) != os.path.basename(args.output)]
+
     print(f"Found {len(variation_files)} variation datasets to process.")
-
     if not variation_files:
-        print("Error: 0 datasets found. Please check that your files are physically inside the directory shown above.")
+        print("Error: 0 datasets found. Please check that your files are physically "
+              "inside the directory shown above.")
         return
-    
+
+    per_variation = {}   # col_key -> {article_id: summary}
+    foundations = {}     # article_id -> foundation dict (first file wins)
+
     for file_path in variation_files:
         filename = os.path.basename(file_path)
-        # Clean up column header names cleanly whether they use 'temp_' prefix or not
         col_key = filename.replace("temp_", "").replace(".jsonl", "")
 
-        print(f" -> Extracting columns from: {filename} (Column Key: {col_key})")
+        summaries, file_foundations = read_variation(file_path)
+        per_variation[col_key] = summaries
+        for article_id, found in file_foundations.items():
+            if article_id not in foundations:
+                foundations[article_id] = found
 
-        with open(file_path, 'r', encoding='utf-8') as f:
-            for line in f:
-                if not line.strip(): continue
-                row = json.loads(line)
-                article_id = row.get("article_id")
-                summary = row.get("summary_text")
+        print(f" -> {filename}: {len(summaries)} articles (column: {col_key})")
 
-                if not article_id: continue
+    # Which articles make it into the matrix.
+    id_sets = [set(s) for s in per_variation.values()]
+    if args.union:
+        article_ids = set().union(*id_sets)
+        mode = "union"
+    else:
+        article_ids = set.intersection(*id_sets)
+        mode = "intersection"
 
-                # Initialize row structure if it's the first time seeing this article hash
-                if article_id not in master_matrix:
-                    master_matrix[article_id] = {
-                        "article_id": article_id
-                    }
-                
-                # Append this model summary column directly to the row reference
-                master_matrix[article_id][col_key] = summary
-    
-    # Write the compiled matrix payload out to disk
-    print(f"\nWriting lean master evaluation matrix to {output_file}")
-    os.makedirs(os.path.dirname(output_file), exist_ok=True)
-    
-    with open(output_file, 'w', encoding='utf-8') as f:
-        for row_data in master_matrix.values():
-            f.write(json.dumps(row_data) + '\n')
-    
+    # An article is only scoreable if its source and QA pairs survived the merge.
+    scoreable = [a for a in article_ids
+                 if foundations.get(a, {}).get("source_article")
+                 and foundations.get(a, {}).get("human_questions")
+                 and foundations.get(a, {}).get("human_answers")]
+    dropped = len(article_ids) - len(scoreable)
+
+    widest = max(len(s) for s in id_sets)
+    print(f"\nArticle coverage ({mode}): {len(article_ids)} of {widest} "
+          f"in the widest variation.")
+    if not args.union and len(article_ids) < widest:
+        thinnest = min(per_variation, key=lambda k: len(per_variation[k]))
+        print(f"  Capped by '{thinnest}' ({len(per_variation[thinnest])} articles). "
+              f"Use --union to keep partial coverage instead.")
+    if dropped:
+        print(f"  [WARNING] Dropped {dropped} article(s) with no source text or QA pairs.")
+
+    print(f"\nWriting master evaluation matrix to {args.output}")
+    out_dir = os.path.dirname(args.output)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
+
+    with open(args.output, "w", encoding="utf-8") as f:
+        for article_id in sorted(scoreable):
+            row = {"article_id": article_id}
+            row.update(foundations[article_id])
+            for col_key, summaries in per_variation.items():
+                if article_id in summaries:
+                    row[col_key] = summaries[article_id]
+            f.write(json.dumps(row) + "\n")
+
+    print(f"Wrote {len(scoreable)} articles.")
     print("\n--- Compilation Complete ---")
-    verify_merge(output_file)
+    verify_merge(args.output, len(variation_files))
 
 
 if __name__ == "__main__":

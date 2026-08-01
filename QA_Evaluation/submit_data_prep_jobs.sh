@@ -25,7 +25,7 @@ PROMPTS=("P1" "P2" "P3")
 # other model(s) inherit the same (quant, prompt) rate; any (quant, prompt) with no
 # logs at all -> 36h. LOGS_DIR is searched recursively for those .out files.
 INPUT_FILE="QA_Evaluation/Datasets/newsqasum_gold.jsonl"
-LOGS_DIR="QA_Evaluation"                                       # where qa_prep_*.out live
+LOGS_DIR="logs"                                                # where qa_prep_*.out live (repo-root logs/)
 QA_SAMPLE="$(wc -l < "$INPUT_FILE" 2>/dev/null | tr -d ' ')"   # articles to scale by
 [[ -z "$QA_SAMPLE" || "$QA_SAMPLE" -eq 0 ]] && QA_SAMPLE=10388
 
