@@ -138,15 +138,12 @@ around £5million.
 Marseille are also keen on the £5m rated midfielder. Kante has been compared to
 Lassana Diarra and Claude Makelele. CLICK HERE for the latest Premier League news.
 
-**System.** Arsenal, Newcastle United and Southampton have checked on Caen
+**Generated.** Arsenal, Newcastle United and Southampton have checked on Caen
 midfielder N'golo Kante. Paris-born Kante is a defensive minded player who has
 impressed for Caen this season and they are willing to sell for around
 £5million. Marseille have been in constant contact with Caen over signing the
 24-year-old who has similarities with Lassana Diarra and Claude Makelele in
 terms of stature and style.
-
-All three salient facts are recovered. CNN/DailyMail references are largely
-near-extractive, which explains the comparatively strong ROUGE-L on this dataset.
 
 ### 2. XSum — abstraction failure
 
@@ -161,7 +158,7 @@ my family and club career at AFC Bournemouth."
 **Reference.** Bournemouth's Polish goalkeeper Artur Boruc has announced his
 retirement from international football.
 
-**System.** Boruc has been mainly used as a back-up keeper to Lukasz Fabianski
+**Generated.** Boruc has been mainly used as a back-up keeper to Lukasz Fabianski
 and Wojciech Szczesny in recent years. "It has not been an easy decision for me
 and has been one that I've taken incredibly seriously," he said.
 
@@ -190,47 +187,3 @@ The signing itself is never stated in the article. XSum references are
 single-sentence abstractive summaries that routinely introduce information not
 present verbatim, which bounds achievable extractive performance.
 
-### All outputs
-
-`results/summaries/*.jsonl.gz` contains every generated summary as
-`{"idx": N, "generated_summary": "..."}`. Source article text is not
-redistributed; indices refer to position in the shuffled test stream, so
-articles are recovered with the loader used during the run:
-
-```python
-import gzip, json, itertools
-from traditional_ml import data
-
-rows = [json.loads(l) for l in gzip.open("results/summaries/ML-XGB_xsum_summaries.jsonl.gz", "rt")]
-stream = data.load_test("xsum", seed=42)
-for r, item in zip(rows[:3], itertools.islice(stream, 3)):
-    news, ref = data.extract_fields("xsum", item)
-    print(news[:200], "\n", ref, "\n", r["generated_summary"], "\n")
-```
-
-`seed=42` is required; ordering follows the shuffled stream, not the raw dataset.
-
----
-
-## Known limitations
-
-Identified after the reported results were computed, and documented rather than
-corrected, since correcting them would invalidate the numbers above.
-
-1. `data.strip_dateline` triggers on any `" -- "` within the first 120
-   characters, so constructions such as *"The report -- released Tuesday --
-   says…"* lose their opening clause; positional features are then computed on
-   truncated text.
-2. `hparam_search` fits without `sample_weight` whereas `fit_full` applies
-   balanced weights, so hyperparameters are selected under a different objective
-   than the final fit.
-3. With `cv=3` over document-ordered rows, sentences from one article span folds
-   and share document-level features, so `cv_score` is optimistically biased and
-   is not a clean held-out estimate.
-4. `meta.json` records the segmenter used at training time, but `generate.py`
-   does not verify it at inference.
-
-Code is MIT licensed. The CNN/DailyMail and XSum corpora remain the property of
-their publishers and are not redistributed. Serialised model files are excluded
-deliberately: `joblib.load` executes arbitrary code during deserialisation, and
-the artifacts are reproducible from the recorded configurations.
