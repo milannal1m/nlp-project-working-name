@@ -24,6 +24,8 @@ Example
     python Transformer/Main.py --task all --dataset cnn_dailymail --sample 100
     python Transformer/Main.py --task train --dataset xsum --sample 50
     python Transformer/Main.py --task summarize --dataset xsum --sample 50
+    # Asymmetric depth (encoder-heavy for better article understanding):
+    python Transformer/Main.py --task all --dataset cnn_dailymail --sample 100 --num_encoder_layers 4 --num_decoder_layers 2
 """
 
 from __future__ import annotations
@@ -88,8 +90,22 @@ PAD_ID, SOS_ID, EOS_ID, UNK_ID = 0, 1, 2, 3
 
 
 # =========================================================================== #
-# Model architecture (kept intact; only correctness fixes applied)
+# Model architecture (pre-norm, asymmetric depth, SwiGLU feed-forward)
 # =========================================================================== #
+class SwiGLU(nn.Module):
+    def __init__(self, embed_size: int, forward_expansion: int) -> None:
+        super(SwiGLU, self).__init__()
+        hidden_size = forward_expansion * embed_size
+        self.gate_proj = nn.Linear(embed_size, hidden_size)
+        self.value_proj = nn.Linear(embed_size, hidden_size)
+        self.down_proj = nn.Linear(hidden_size, embed_size)
+
+    def forward(self, x):
+        gate = torch.nn.functional.silu(self.gate_proj(x))
+        value = self.value_proj(x)
+        return self.down_proj(gate * value)
+
+
 class SelfAttention(nn.Module):
     def __init__(self, embed_size: int, heads: int) -> None:
         super(SelfAttention, self).__init__()
@@ -145,11 +161,7 @@ class TransformerBlock(nn.Module):
         self.norm1 = nn.LayerNorm(embed_size)
         self.norm2 = nn.LayerNorm(embed_size)
 
-        self.feed_forward = nn.Sequential(
-            nn.Linear(embed_size, forward_expansion * embed_size),
-            nn.ReLU(),
-            nn.Linear(forward_expansion * embed_size, embed_size),
-        )
+        self.feed_forward = SwiGLU(embed_size, forward_expansion)
 
         self.dropout = nn.Dropout(dropout)
 
@@ -211,20 +223,32 @@ class Encoder(nn.Module):
 class DecoderBlock(nn.Module):
     def __init__(self, embed_size: int, heads: int, dropout: float, forward_expansion: int, device) -> None:
         super(DecoderBlock, self).__init__()
-        self.attention = SelfAttention(embed_size, heads)
-        self.norm = nn.LayerNorm(embed_size)
-        self.transformer_block = TransformerBlock(
-            embed_size, heads, dropout, forward_expansion
-        )
+        self.self_attention = SelfAttention(embed_size, heads)
+        self.cross_attention = SelfAttention(embed_size, heads)
+        self.norm1 = nn.LayerNorm(embed_size)
+        self.norm2 = nn.LayerNorm(embed_size)
+        self.norm3 = nn.LayerNorm(embed_size)
+
+        self.feed_forward = SwiGLU(embed_size, forward_expansion)
+
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, x, value, key, src_mask, trg_mask):
-        # Masked self-attention over the target (causal + target padding mask).
-        attention = self.attention(x, x, x, trg_mask)
-        query = self.dropout(self.norm(attention + x))
-        # Cross-attention over the encoder output (source padding mask).
-        out = self.transformer_block(value, key, query, src_mask)
-        return out
+        # Pre-norm masked self-attention over the target (causal + target padding mask).
+        normed = self.norm1(x)
+        attention = self.self_attention(normed, normed, normed, trg_mask)
+        x = x + self.dropout(attention)
+
+        # Pre-norm cross-attention over the encoder output (source padding mask).
+        normed = self.norm2(x)
+        cross_attn = self.cross_attention(value, key, normed, src_mask)
+        x = x + self.dropout(cross_attn)
+
+        # Pre-norm feed-forward.
+        forward = self.feed_forward(self.norm3(x))
+        x = x + self.dropout(forward)
+
+        return x
 
 
 class Decoder(nn.Module):
@@ -279,13 +303,18 @@ class Transformer(nn.Module):
         dropout: float = 0.0,
         device="cpu",
         max_length: int = 100,
+        encoder_layers: int | None = None,
+        decoder_layers: int | None = None,
     ) -> None:
         super(Transformer, self).__init__()
+
+        enc_layers = encoder_layers if encoder_layers is not None else num_layers
+        dec_layers = decoder_layers if decoder_layers is not None else num_layers
 
         self.encoder = Encoder(
             src_vocab_size,
             embed_size,
-            num_layers,
+            enc_layers,
             heads,
             device,
             forward_expansion,
@@ -296,7 +325,7 @@ class Transformer(nn.Module):
         self.decoder = Decoder(
             trg_vocab_size,
             embed_size,
-            num_layers,
+            dec_layers,
             heads,
             forward_expansion,
             dropout,
@@ -517,12 +546,14 @@ def build_model(config: Dict, device: torch.device) -> Transformer:
         src_pad_idx=PAD_ID,
         trg_pad_idx=PAD_ID,
         embed_size=config["embed_size"],
-        num_layers=config["num_layers"],
+        num_layers=config.get("num_layers", config.get("decoder_layers", 6)),
         forward_expansion=config["forward_expansion"],
         heads=config["heads"],
         dropout=config["dropout"],
         device=device,
         max_length=config["pos_max_length"],
+        encoder_layers=config.get("encoder_layers"),
+        decoder_layers=config.get("decoder_layers"),
     ).to(device)
     return model
 
@@ -561,7 +592,9 @@ def train_model(args: argparse.Namespace) -> Tuple[Transformer, Dict[str, int], 
     os.makedirs(ARTIFACT_DIR, exist_ok=True)
 
     print("=" * 80, flush=True)
-    print(f"[train] dataset={args.dataset} | train_sample={args.train_sample} | device={device}", flush=True)
+    encoder_layers = args.num_encoder_layers if args.num_encoder_layers is not None else args.num_layers
+    decoder_layers = args.num_decoder_layers if args.num_decoder_layers is not None else args.num_layers
+    print(f"[train] dataset={args.dataset} | train_sample={args.train_sample} | device={device} | encoder_layers={encoder_layers} | decoder_layers={decoder_layers}", flush=True)
 
     # --- Data: official TRAIN split only ---
     examples = load_train_examples(args.dataset, args.train_sample, args.seed)
@@ -587,6 +620,8 @@ def train_model(args: argparse.Namespace) -> Tuple[Transformer, Dict[str, int], 
     # Position-embedding table must cover the longest source/target sequence
     # (the decoder input is <sos> + up to max_target_length content tokens).
     pos_max_length = max(args.max_source_length, args.max_target_length + 2)
+    encoder_layers = args.num_encoder_layers if args.num_encoder_layers is not None else args.num_layers
+    decoder_layers = args.num_decoder_layers if args.num_decoder_layers is not None else args.num_layers
     config = {
         "dataset": args.dataset,
         "train_sample": args.train_sample,
@@ -594,6 +629,8 @@ def train_model(args: argparse.Namespace) -> Tuple[Transformer, Dict[str, int], 
         "trg_vocab_size": len(trg_vocab),
         "embed_size": args.embed_size,
         "num_layers": args.num_layers,
+        "encoder_layers": encoder_layers,
+        "decoder_layers": decoder_layers,
         "heads": args.heads,
         "forward_expansion": args.forward_expansion,
         "dropout": args.dropout,
@@ -780,7 +817,9 @@ def run_summarize(
         )
 
     print("=" * 80, flush=True)
-    print(f"[summarize] dataset={args.dataset} | sample={args.sample} | device={device}", flush=True)
+    encoder_layers = config.get("encoder_layers", config.get("num_layers"))
+    decoder_layers = config.get("decoder_layers", config.get("num_layers"))
+    print(f"[summarize] dataset={args.dataset} | sample={args.sample} | device={device} | encoder_layers={encoder_layers} | decoder_layers={decoder_layers}", flush=True)
     print(f"  writing -> {out_path}", flush=True)
 
     # Reuse the benchmark's own TEST-split loader so the Transformer summarizes the
@@ -923,7 +962,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max_target_length", type=int, default=64, help="Max summary tokens.")
     parser.add_argument("--embed_size", type=int, default=128, help="Embedding dimension.")
     parser.add_argument("--heads", type=int, default=4, help="Number of attention heads.")
-    parser.add_argument("--num_layers", type=int, default=2, help="Encoder/decoder layers.")
+    parser.add_argument("--num_layers", type=int, default=2, help="Default encoder/decoder layers (overridden by --num_encoder_layers/--num_decoder_layers).")
+    parser.add_argument("--num_encoder_layers", type=int, default=None, help="Number of encoder layers (defaults to --num_layers if not specified).")
+    parser.add_argument("--num_decoder_layers", type=int, default=None, help="Number of decoder layers (defaults to --num_layers if not specified).")
     parser.add_argument("--forward_expansion", type=int, default=2, help="Feed-forward expansion factor.")
     parser.add_argument("--dropout", type=float, default=0.1, help="Dropout probability.")
     parser.add_argument(
