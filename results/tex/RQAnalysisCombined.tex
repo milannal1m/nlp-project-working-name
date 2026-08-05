@@ -1,0 +1,65 @@
+\begin{table*}[b]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\caption{Prompt sensitivity and the quantization gap, which share the same rows. \emph{Prompt sensitivity}: the spread (max$-$min across the three prompts, in points $\times 100$) at each precision; larger values mean the score depends more on prompt wording, and the most sensitive precision per row is in \textbf{bold}. \emph{$\Delta$ 8-bit / 4-bit}: the gap $\Delta = \text{16-bit} - \text{quantized}$ (points $\times 100$), where positive means quality drops; within each precision the prompt with the smallest gap magnitude is in \textbf{bold}, isolating whether more structured prompting (P1$\to$P3) narrows the gap. LERC is defined only for the QA experiment and therefore appears in the NewsQASum rows only. Computed on the first 500 of 10388 NewsQASum articles.}
+\label{tab:rq-combined}
+\setlength{\aboverulesep}{0pt}\setlength{\belowrulesep}{0pt}
+\resizebox{\ifdim\width>\textwidth\textwidth\else\width\fi}{!}{%
+\begin{tabular}{lll|ccc|cccccc}
+\toprule
+\multirow{2}{*}{\textbf{Model}} & \multirow{2}{*}{\textbf{Dataset}} & \multirow{2}{*}{\textbf{Metric}} & \multicolumn{3}{c|}{\textbf{Prompt sensitivity}} & \multicolumn{3}{c}{$\Delta$ \textbf{8-bit} (pts)} & \multicolumn{3}{c}{$\Delta$ \textbf{4-bit} (pts)} \\
+\cmidrule(lr){4-6}\cmidrule(lr){7-9}\cmidrule(lr){10-12}
+ & & & \textbf{16-bit} & \textbf{8-bit} & \textbf{4-bit} & \textbf{P1} & \textbf{P2} & \textbf{P3} & \textbf{P1} & \textbf{P2} & \textbf{P3} \\
+\midrule
+\multirow{11}{*}{Llama-3.2-3B} & \multirow{2}{*}{CNN/DM} & ROUGE-L & 1.00 & \textbf{1.02} & 0.93 & \textbf{-0.01} & +0.07 & +0.01 & +0.07 & +0.12 & \textbf{+0.00} \\
+ &  & BERTScore & \textbf{0.24} & 0.23 & 0.22 & +0.01 & +0.01 & \textbf{-0.00} & +0.03 & +0.03 & \textbf{+0.01} \\
+\cmidrule(lr){2-12}
+ & \multirow{2}{*}{XSum} & ROUGE-L & 0.63 & 0.68 & \textbf{0.80} & +0.03 & +0.06 & \textbf{+0.02} & -0.18 & \textbf{-0.09} & -0.26 \\
+ &  & BERTScore & 0.16 & 0.12 & \textbf{0.18} & -0.00 & \textbf{-0.00} & +0.04 & -0.03 & \textbf{-0.02} & -0.04 \\
+\cmidrule(lr){2-12}
+ & \multirow{2}{*}{Xu-CNN/DM} & ROUGE-L & 1.50 & 1.59 & \textbf{2.68} & +0.25 & \textbf{+0.25} & +0.34 & \textbf{+0.02} & -0.06 & +1.20 \\
+ &  & BERTScore & 0.37 & 0.40 & \textbf{0.60} & \textbf{+0.01} & +0.07 & +0.04 & \textbf{+0.02} & +0.03 & +0.25 \\
+\cmidrule(lr){2-12}
+ & \multirow{2}{*}{Xu-XSum} & ROUGE-L & 2.73 & 2.94 & \textbf{3.67} & \textbf{+0.01} & +0.37 & +0.22 & -0.65 & \textbf{-0.08} & +0.29 \\
+ &  & BERTScore & 0.58 & 0.65 & \textbf{0.76} & -0.06 & \textbf{+0.02} & +0.07 & -0.10 & \textbf{+0.01} & +0.15 \\
+\cmidrule(lr){2-12}
+ & \multirow{3}{*}{NewsQASum} & ROUGE-L & 1.09 & 1.07 & \textbf{1.46} & \textbf{-0.03} & +0.08 & +0.07 & -0.29 & \textbf{+0.01} & +0.19 \\
+ &  & BERTScore & 0.20 & 0.21 & \textbf{0.23} & \textbf{+0.01} & -0.01 & +0.01 & \textbf{+0.00} & -0.02 & +0.02 \\
+ &  & LERC & 39.27 & \textbf{48.81} & 46.30 & \textbf{+1.59} & -5.19 & +6.22 & +12.53 & \textbf{+6.54} & +15.44 \\
+\midrule
+\multirow{11}{*}{Phi-3-mini} & \multirow{2}{*}{CNN/DM} & ROUGE-L & \textbf{2.01} & 1.79 & 1.60 & +0.13 & +0.26 & \textbf{+0.04} & +0.96 & +0.97 & \textbf{+0.56} \\
+ &  & BERTScore & 0.38 & 0.35 & \textbf{0.39} & +0.02 & +0.04 & \textbf{+0.00} & +0.20 & \textbf{+0.18} & +0.18 \\
+\cmidrule(lr){2-12}
+ & \multirow{2}{*}{XSum} & ROUGE-L & \textbf{0.85} & 0.82 & 0.46 & \textbf{+0.08} & +0.13 & +0.11 & -0.19 & \textbf{+0.03} & +0.26 \\
+ &  & BERTScore & \textbf{0.24} & 0.22 & 0.05 & \textbf{+0.01} & +0.02 & +0.04 & -0.04 & \textbf{-0.00} & +0.17 \\
+\cmidrule(lr){2-12}
+ & \multirow{2}{*}{Xu-CNN/DM} & ROUGE-L & \textbf{5.76} & 4.99 & 4.98 & +0.80 & +1.00 & \textbf{+0.19} & +2.37 & +2.32 & \textbf{+1.54} \\
+ &  & BERTScore & \textbf{1.05} & 0.97 & 0.88 & +0.11 & +0.11 & \textbf{+0.03} & +0.48 & +0.41 & \textbf{+0.26} \\
+\cmidrule(lr){2-12}
+ & \multirow{2}{*}{Xu-XSum} & ROUGE-L & 4.93 & 4.92 & \textbf{5.05} & \textbf{+0.45} & +0.54 & +0.47 & \textbf{+2.24} & +2.65 & +2.39 \\
+ &  & BERTScore & \textbf{1.00} & 0.89 & 0.99 & +0.07 & +0.10 & \textbf{-0.03} & +0.43 & +0.48 & \textbf{+0.43} \\
+\cmidrule(lr){2-12}
+ & \multirow{3}{*}{NewsQASum} & ROUGE-L & 1.28 & 1.36 & \textbf{1.62} & \textbf{+0.12} & +0.42 & +0.39 & \textbf{+0.58} & +0.99 & +1.10 \\
+ &  & BERTScore & 0.11 & 0.22 & \textbf{0.31} & \textbf{-0.03} & +0.06 & +0.11 & \textbf{+0.09} & +0.13 & +0.33 \\
+ &  & LERC & 32.67 & \textbf{33.95} & 22.56 & +1.51 & -2.51 & \textbf{-1.22} & +6.12 & +12.41 & \textbf{-0.96} \\
+\midrule
+\multirow{11}{*}{Qwen2-1.5B} & \multirow{2}{*}{CNN/DM} & ROUGE-L & 1.29 & 1.38 & \textbf{1.67} & -0.13 & -0.09 & \textbf{+0.00} & -0.31 & -0.35 & \textbf{+0.03} \\
+ &  & BERTScore & \textbf{0.42} & 0.38 & 0.27 & -0.01 & \textbf{+0.00} & -0.04 & -0.05 & \textbf{-0.04} & -0.18 \\
+\cmidrule(lr){2-12}
+ & \multirow{2}{*}{XSum} & ROUGE-L & 1.25 & 1.14 & \textbf{1.33} & +0.24 & \textbf{+0.07} & +0.13 & \textbf{+0.12} & +0.60 & +0.20 \\
+ &  & BERTScore & \textbf{0.45} & 0.41 & \textbf{0.45} & +0.06 & +0.02 & \textbf{-0.01} & \textbf{+0.06} & +0.22 & +0.06 \\
+\cmidrule(lr){2-12}
+ & \multirow{2}{*}{Xu-CNN/DM} & ROUGE-L & \textbf{3.15} & 3.11 & 2.38 & \textbf{-0.05} & -0.11 & -0.15 & +0.22 & +1.22 & \textbf{+0.19} \\
+ &  & BERTScore & \textbf{0.85} & 0.66 & 0.51 & \textbf{-0.04} & +0.05 & -0.14 & \textbf{+0.05} & +0.16 & -0.18 \\
+\cmidrule(lr){2-12}
+ & \multirow{2}{*}{Xu-XSum} & ROUGE-L & \textbf{4.74} & 4.72 & 4.02 & +0.36 & +0.24 & \textbf{+0.22} & \textbf{+0.13} & +0.72 & -0.33 \\
+ &  & BERTScore & \textbf{1.11} & 1.03 & 0.65 & +0.05 & +0.10 & \textbf{+0.02} & \textbf{+0.06} & +0.16 & -0.33 \\
+\cmidrule(lr){2-12}
+ & \multirow{3}{*}{NewsQASum} & ROUGE-L & \textbf{1.94} & 1.80 & 1.56 & \textbf{-0.07} & +0.12 & -0.19 & \textbf{-0.11} & -0.38 & -0.76 \\
+ &  & BERTScore & \textbf{0.44} & \textbf{0.44} & 0.34 & -0.02 & \textbf{-0.01} & -0.01 & \textbf{-0.01} & -0.12 & -0.17 \\
+ &  & LERC & 10.96 & 14.50 & \textbf{16.09} & +4.36 & -6.05 & \textbf{-3.26} & -3.70 & -3.07 & \textbf{+2.06} \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}

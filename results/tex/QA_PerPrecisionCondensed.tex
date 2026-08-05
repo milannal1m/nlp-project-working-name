@@ -1,0 +1,34 @@
+\begin{table*}[b]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\caption{Evaluation metrics on NewsQASum for every precision$\times$prompt configuration. Columns are grouped by precision, prompt is the inner row grouping. BERTScore and LERC are mean$\pm$standard deviation across articles; ROUGE-L is a single aggregate value with no per-article deviation recorded. Within each row group, the best mean per metric is in \textbf{bold}. Computed on the first 500 of 10388 NewsQASum articles.}
+\label{tab:eval-per-precision-condensed-qa}
+\resizebox{\ifdim\width>\textwidth\textwidth\else\width\fi}{!}{%
+\begin{tabular}{llccccccccc}
+\toprule
+\multirow{2}{*}{\textbf{Model}} & \multirow{2}{*}{\textbf{Prompt}} & \multicolumn{3}{c}{\textbf{16-bit}} & \multicolumn{3}{c}{\textbf{8-bit}} & \multicolumn{3}{c}{\textbf{4-bit}} \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}\cmidrule(lr){9-11}
+ &  & \textbf{ROUGE-L} & \textbf{BERTScore} & \textbf{LERC} & \textbf{ROUGE-L} & \textbf{BERTScore} & \textbf{LERC} & \textbf{ROUGE-L} & \textbf{BERTScore} & \textbf{LERC} \\
+\midrule
+\multirow{3}{*}{Llama-3.2-3B} & \multirow{1}{*}{P1} & 0.216 & \textbf{0.871{\scriptsize$\pm$0.017}} & 3.678{\scriptsize$\pm$2.085} & 0.216 & \textbf{0.871{\scriptsize$\pm$0.018}} & 3.662{\scriptsize$\pm$2.096} & \textbf{0.219} & \textbf{0.871{\scriptsize$\pm$0.018}} & 3.553{\scriptsize$\pm$2.127} \\
+\cmidrule(lr){2-11}
+ & \multirow{1}{*}{P2} & 0.217 & \textbf{0.871{\scriptsize$\pm$0.017}} & 3.660{\scriptsize$\pm$2.076} & 0.216 & \textbf{0.871{\scriptsize$\pm$0.017}} & \textbf{3.712{\scriptsize$\pm$2.056}} & 0.217 & \textbf{0.871{\scriptsize$\pm$0.018}} & 3.594{\scriptsize$\pm$2.129} \\
+\cmidrule(lr){2-11}
+ & \multirow{1}{*}{P3} & 0.206 & 0.869{\scriptsize$\pm$0.018} & 3.286{\scriptsize$\pm$2.262} & 0.205 & 0.869{\scriptsize$\pm$0.018} & 3.224{\scriptsize$\pm$2.257} & 0.204 & 0.869{\scriptsize$\pm$0.018} & 3.131{\scriptsize$\pm$2.298} \\
+\midrule
+\multirow{3}{*}{Phi-3-mini} & \multirow{1}{*}{P1} & 0.230 & \textbf{0.874{\scriptsize$\pm$0.018}} & 3.485{\scriptsize$\pm$2.129} & 0.229 & \textbf{0.874{\scriptsize$\pm$0.018}} & 3.470{\scriptsize$\pm$2.148} & 0.224 & 0.873{\scriptsize$\pm$0.018} & 3.424{\scriptsize$\pm$2.228} \\
+\cmidrule(lr){2-11}
+ & \multirow{1}{*}{P2} & \textbf{0.232} & \textbf{0.874{\scriptsize$\pm$0.018}} & 3.516{\scriptsize$\pm$2.128} & 0.228 & 0.873{\scriptsize$\pm$0.018} & \textbf{3.541{\scriptsize$\pm$2.118}} & 0.222 & 0.873{\scriptsize$\pm$0.018} & 3.392{\scriptsize$\pm$2.207} \\
+\cmidrule(lr){2-11}
+ & \multirow{1}{*}{P3} & 0.219 & 0.873{\scriptsize$\pm$0.018} & 3.189{\scriptsize$\pm$2.265} & 0.215 & 0.872{\scriptsize$\pm$0.018} & 3.201{\scriptsize$\pm$2.274} & 0.208 & 0.870{\scriptsize$\pm$0.020} & 3.199{\scriptsize$\pm$2.278} \\
+\midrule
+\multirow{3}{*}{Qwen2-1.5B} & \multirow{1}{*}{P1} & 0.222 & 0.872{\scriptsize$\pm$0.020} & 3.207{\scriptsize$\pm$2.221} & 0.223 & \textbf{0.873{\scriptsize$\pm$0.020}} & 3.163{\scriptsize$\pm$2.230} & 0.223 & \textbf{0.873{\scriptsize$\pm$0.020}} & 3.244{\scriptsize$\pm$2.229} \\
+\cmidrule(lr){2-11}
+ & \multirow{1}{*}{P2} & 0.222 & 0.872{\scriptsize$\pm$0.020} & 3.248{\scriptsize$\pm$2.203} & 0.221 & 0.872{\scriptsize$\pm$0.019} & \textbf{3.308{\scriptsize$\pm$2.190}} & \textbf{0.226} & \textbf{0.873{\scriptsize$\pm$0.019}} & 3.278{\scriptsize$\pm$2.203} \\
+\cmidrule(lr){2-11}
+ & \multirow{1}{*}{P3} & 0.203 & 0.868{\scriptsize$\pm$0.019} & 3.138{\scriptsize$\pm$2.289} & 0.205 & 0.868{\scriptsize$\pm$0.019} & 3.171{\scriptsize$\pm$2.292} & 0.210 & 0.870{\scriptsize$\pm$0.021} & 3.118{\scriptsize$\pm$2.297} \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}

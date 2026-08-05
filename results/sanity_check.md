@@ -1677,6 +1677,679 @@ Outcome: The article highlights the negative effects of long commutes on workers
 
 Summary: The article reveals that a growing number of UK workers are enduring long commutes due to factors like stagnant wages and high living costs. Some individuals, like Phil Cresswell and Sam Cookney, have adopted unconventional methods to mitigate the impact of these commutes on their lives.
 
+## Qwen2_P1_16bit_cnn_dailymail_full_summaries.jsonl
+
+### Summary 409
+
+Summary: Mike Pence, a Koch favorite, drew huge heat for signing a religious freedom law that opened the door to discrimination against gays and lesbians. This controversy has dragged the entire Republican field farther to the right than the party had hoped.
+
+### Summary 1824
+
+Wales midfielder Aaron Ramsey has told his English team-mates at Arsenal to beware of being overtaken by Wales in the FIFA rankings. Wales climbed to 22, their highest-ever position in football's world order, in the April rankings to move within eight places of England.
+
+### Summary 4012
+
+Summary: Barnet secured promotion back to the Football League after defeating Gateshead 2-0 in the Conference clash, ending a two-year absence from the top flight.
+
+### Summary 4506
+
+A man named Matthew Colvin, 26, has been arrested for stealing Elton John's iconic heart-shaped glasses from a Memphis museum. Colvin is facing up to 12 years in prison for the theft.
+
+### Summary 10476
+
+Summary: A herd of buffalo that escaped from a farm in upstate New York and swam across the Hudson River were shot dead by law enforcement on Friday.
+
+## Qwen2_P1_16bit_xsum_full_summaries.jsonl
+
+### Summary 409
+
+Summary: A former player has revealed that he is not expecting any money from the sale of his former teammate to a new club, as the Gulls continue to search for new owners despite being forced to close down their academy and cut costs due to financial difficulties.
+
+### Summary 1824
+
+Summary: The public services union, Unison, has endorsed Jeremy Corbyn as its second choice for the Labour leadership, despite initially seeing him as an outsider in the contest. This endorsement could potentially boost Corbyn's chances of becoming the next leader of the party.
+
+### Summary 4012
+
+Summary: Over one billion contactless transactions were completed in 2015, making them the most popular payment method in the UK.
+
+### Summary 4506
+
+Summary: Aberdeen have signed former Manchester City defender Scott Brown on a permanent basis after agreeing to terms with the Scottish Premier League club.
+
+### Summary 10476
+
+Summary: Groups concerned about litter in bothies as use of these shelters increases during summer months. Association issues message urging visitors to help maintain cleanliness.
+
+## Qwen2_P1_16bit_xu_cnndm_500_summaries.jsonl
+
+### Summary 409
+
+Summary: Researchers have discovered marks on the fossils of two adults and a child from the French region of Poitou-Charentes, suggesting they were likely killed and eaten by their own kin.
+
+## Qwen2_P1_16bit_xu_xsum_500_summaries.jsonl
+
+### Summary 409
+
+Summary: Spending two hours commuting each day is a reality for many UK workers, says data that suggests Britons are willing to travel further and longer.
+
+## Qwen2_P1_4bit_cnn_dailymail_full_summaries.jsonl
+
+### Summary 409
+
+Summary: Mike Pence, a Koch favorite, drew huge heat for signing a religious freedom law that opened the door to discrimination against gays and lesbians. This controversy has dragged the entire Republican field farther to the right than the party had hoped.
+
+### Summary 1824
+
+Summary: Aaron Ramsey has told his English team-mates at Arsenal to beware Wales overtaking them in the FIFA rankings. Wales climbed to 22, their highest-ever position in football's world order, in the April rankings to move within eight places of England. Chris Coleman's side are unbeaten in Euro 2016 qualifying and would be within touching distance of the finals in France should they beat Belgium in June - and Wales midfielder Ramsey admits the banter with the likes of Theo Walcott, Jack Wilshere and Danny Welbeck is already flying on the Arsenal training ground.
+
+### Summary 4012
+
+Summary: After defeating Gateshead 2-0, Barnet secured promotion back to the Football League following a two-year absence.
+
+### Summary 4506
+
+A man named Matthew Colvin, 26, has been arrested for stealing Elton John's iconic heart-shaped glasses from a Memphis museum. Colvin is currently behind bars in Southaven, Mississippi, and will be extradited back to Memphis on Wednesday.
+
+### Summary 10476
+
+Summary: An entire herd of buffalo has been shot dead by law enforcement in upstate New York after they escaped from a farm.
+
+## Qwen2_P1_4bit_xsum_full_summaries.jsonl
+
+### Summary 409
+
+Summary: The Republic of Ireland midfielder, O'Kane, has signed for the Cherries on a free transfer from the Gulls, with the player moving for an undisclosed fee. The sale is part of the club's efforts to improve its financial situation, which was severely impacted by the departure of millionaire former owner Thea Bristow.
+
+### Summary 1824
+
+Summary: The public services union, Unison, has endorsed Jeremy Corbyn over Yvette Cooper in the upcoming leadership election for the Labour Party. This endorsement does not guarantee support from all Unison members, but it is seen as a significant blow to Andy Burnham, who had hoped for union backing for his campaign.
+
+### Summary 4012
+
+Summary: Over one billion contactless transactions were completed in 2015, making it the busiest year yet for the technology. More was spent using this technology last year than during the previous seven years combined.
+
+### Summary 4506
+
+Summary: Aberdeen have signed former Manchester City defender Scott Brown on a permanent basis after agreeing to terms with the player.
+
+### Summary 10476
+
+Summary: Groups concerned about litter at mountain bothies issue new message urging visitors to clean up after themselves.
+
+## Qwen2_P1_4bit_xu_cnndm_500_summaries.jsonl
+
+### Summary 409
+
+Summary: Researchers have discovered marks on the fossils of two adults and a child from the French region of Poitou-Charentes, indicating that Neanderthals may have eaten recently deceased friends and family either for food or in bizarre funeral rituals.
+
+## Qwen2_P1_4bit_xu_xsum_500_summaries.jsonl
+
+### Summary 409
+
+Summary: Spending two hours commuting each day is a reality for many UK workers, according to new data released by the Office for National Statistics (ONS). The average daily commute lasted 57.1 minutes in 2015, and 3.7 million workers travel for two hours or longer every weekday. This has become an accepted part of many people's daily routine, causing issues such as missed family events and increased stress levels. Employers must take action to prevent excessive commutes, according to Frances O'Grady of the Trades Union Congress.
+
+## Qwen2_P1_8bit_cnn_dailymail_full_summaries.jsonl
+
+### Summary 409
+
+Summary: The article discusses how Mike Pence, a Koch favorite, drew controversy after signing a religious freedom law that opened the door to discrimination against gays and lesbians. The article argues that Pence ignored the pleas of Indiana's Chamber of Commerce and Republican mayor of his state capital to sign the bill, despite the fact that more than 70% of the country now lives in states where same-sex marriage is legal. The article suggests that the controversy surrounding Pence's decision will drag the entire Republican field farther to the right than the party had hoped.
+
+### Summary 1824
+
+Summary: Aaron Ramsey has told his English team-mates at Arsenal to beware Wales overtaking them in the FIFA rankings. Wales climbed to 22, their highest-ever position in football's world order, in the April rankings to move within eight places of England.
+
+### Summary 4012
+
+Summary: Barnet secured promotion back to the Football League after defeating Gateshead 2-0 in the Conference clash, ending a two-year absence from the top flight.
+
+### Summary 4506
+
+A man named Matthew Colvin, 26, has been arrested for stealing Elton John's iconic heart-shaped glasses from a Memphis museum. Colvin is facing up to 12 years in prison for the theft.
+
+### Summary 10476
+
+Summary: A herd of buffalo that escaped from a farm in upstate New York and swam across the Hudson River have been shot dead by law enforcement.
+
+## Qwen2_P1_8bit_xsum_full_summaries.jsonl
+
+### Summary 409
+
+Summary: A former player has revealed that he is not expecting any money from the sale of his former teammate to a new club, as the Gulls continue to search for new owners despite being forced to close down their academy and cut costs.
+
+### Summary 1824
+
+Summary: The public services union Unison has endorsed Jeremy Corbyn as its second choice for the Labour leadership, despite initially seeing him as an outsider in the contest. This could potentially boost Corbyn's chances of becoming the next leader of the party.
+
+### Summary 4012
+
+Summary: Over one billion contactless transactions were completed in 2015, making it the most used payment method globally. The UK Cards Association reported that more was spent using contactless technology last year than during the previous seven years combined.
+
+### Summary 4506
+
+Summary: Aberdeen have signed former Manchester City defender Scott Brown on a permanent basis after agreeing to terms with the Scottish Premier League club.
+
+### Summary 10476
+
+Summary: Groups concerned about litter left in bothies as use of these shelters increases during summer months. Association issues message urging visitors to help maintain cleanliness.
+
+## Qwen2_P1_8bit_xu_cnndm_500_summaries.jsonl
+
+### Summary 409
+
+Summary: A study has revealed that Neanderthals may have eaten recently deceased friends and family either for food or in bizarre funeral rituals, based on cuts seen on a number of fossils dating back 57,600 years.
+
+## Qwen2_P1_8bit_xu_xsum_500_summaries.jsonl
+
+### Summary 409
+
+Summary: Spending two hours commuting each day is a reality for many UK workers, says data that suggests Britons are willing to travel further and longer.
+
+## Qwen2_P2_16bit_cnn_dailymail_full_summaries.jsonl
+
+### Summary 409
+
+Summary: Mike Pence, a Koch favorite, drew controversy after signing a religious freedom law that opened the door to discrimination against gays and lesbians. This move was seen as a way to shore up his street cred among ultraconservatives, despite protests from the Indiana Chamber of Commerce and the Republican mayor of his state capital.
+
+### Summary 1824
+
+Summary: Aaron Ramsey has told his English teammates at Arsenal to beware of Wales overtaking them in the FIFA rankings, as Wales climbed to 22nd place in the April rankings to move within eight places of England.
+
+### Summary 4012
+
+Summary: After a two-year absence, Barnet secured promotion back to the Football League following a thrilling 2-0 victory over Gateshead in the Conference clash.
+
+### Summary 4506
+
+A man named Matthew Colvin, 26, has been arrested for stealing Elton John's iconic heart-shaped glasses from a Memphis museum. Colvin is currently behind bars in Southhaven, Mississippi, and will be extradited back to Memphis on Wednesday.
+
+### Summary 10476
+
+Summary: A herd of buffalo escaped from a farm in upstate New York and swam across the Hudson River, prompting law enforcement to shoot and kill the remaining animals.
+
+## Qwen2_P2_16bit_xsum_full_summaries.jsonl
+
+### Summary 409
+
+Summary: The Republic of Ireland midfielder, O'Kane, who was sold to the Cherries for £175,000 in 2012, has agreed to donate all future earnings from his contract to the struggling Gulls football club, which is now looking for new owners after being taken over by a consortium of local business people.
+
+### Summary 1824
+
+Summary: The public services union, Unison, has endorsed Jeremy Corbyn as its second choice for the Labour leadership, despite initially seeing him as an outsider in the contest. This endorsement could potentially boost Corbyn's chances of becoming the next leader of the party.
+
+### Summary 4012
+
+Summary: Over one billion contactless transactions were completed in 2015, making them the most popular payment method in the UK. The UK Cards Association reported that contactless spending increased significantly from 2014 to 2015, with one in eight purchases made on contactless cards by December. Concerns about security have been raised, but the industry says that fraud levels on contactless payments are low.
+
+### Summary 4506
+
+Summary: Aberdeen have signed former Manchester City defender Scott Brown on a permanent basis after agreeing to terms with the Scottish Premier League club.
+
+### Summary 10476
+
+Summary: The Mountaineering Council of Scotland has urged people to help keep bothies clean, as concerns over littering have been raised by associations and groups.
+
+## Qwen2_P2_16bit_xu_cnndm_500_summaries.jsonl
+
+### Summary 409
+
+Summary: Researchers have discovered marks on the fossils of two adults and a child from the French region of Poitou-Charentes, suggesting they were likely killed and eaten by Neanderthals for food or in bizarre funeral rituals.
+
+## Qwen2_P2_16bit_xu_xsum_500_summaries.jsonl
+
+### Summary 409
+
+Summary: A report has revealed that over three million British workers spend two hours or more commuting each day, with Frances O'Grady calling on employers to take action to reduce excessive journeys.
+
+## Qwen2_P2_4bit_cnn_dailymail_full_summaries.jsonl
+
+### Summary 409
+
+Summary: Mike Pence, a Koch favorite, drew huge heat for signing a religious freedom law that opened the door to discrimination against gays and lesbians. This controversy has dragged the entire Republican field further to the right than the party had hoped.
+
+### Summary 1824
+
+Summary: Aaron Ramsey has told his English teammates at Arsenal to beware of Wales overtaking them in the FIFA rankings, as Wales climbed to its highest-ever position in football's world order, moving within eight places of England.
+
+### Summary 4012
+
+Summary: After defeating Gateshead 2-0, Barnet secured promotion back to the Football League following a two-year absence.
+
+### Summary 4506
+
+A man named Matthew Colvin, 26, has been arrested for stealing Elton John's iconic heart-shaped glasses from a Memphis museum. Colvin is currently behind bars in Southaven, Mississippi, and will be extradited back to Memphis on Wednesday.
+
+### Summary 10476
+
+Summary: A herd of 15 buffalo escaped from a farm in Schodack, upstate New York, and swam across the Hudson River, eventually making its way towards Bethlehem, New York. Three men hired by the farm were cleared to open fire in a stream in woods in the town of Coeymans, about 10 miles south of the state capital Albany. The decision was made after experts agreed tranquilizers would not be effective and no portable corrals could hold the animals.
+
+## Qwen2_P2_4bit_xsum_full_summaries.jsonl
+
+### Summary 409
+
+Summary: The National League sold Republic of Ireland midfielder Jack O'Kane to the Cherries for £175,000 in 2012, with a 15% sell-on clause included in the deal. However, O'Kane moved for an undisclosed fee, and any money received from his sale will be used to help the cash-strapped club. The Gulls are still looking for new owners after being taken over by a consortium of local business people last summer.
+
+### Summary 1824
+
+Summary: The public services union, Unison, has endorsed Jeremy Corbyn as its preferred candidate for the leadership of the Labour Party, despite initially being seen as an outsider in the contest. This endorsement does not guarantee support from all Unison members, but it is seen as a significant development in the race.
+
+### Summary 4012
+
+Summary: Over one billion contactless transactions were completed in 2015, making it the busiest year for contactless payments. More was spent using this technology last year than during the previous seven years combined.
+
+### Summary 4506
+
+Summary: Aberdeen manager Derek McInnes is delighted to announce that former Manchester City defender Scott Brown has signed a new contract with the club, joining the team on a permanent basis after spending time on loan at the club earlier this year.
+
+### Summary 10476
+
+Summary: The Mountaineering Council of Scotland has issued a new message urging people to help keep bothies in a tidy state as use of bothies increases in summer months.
+
+## Qwen2_P2_4bit_xu_cnndm_500_summaries.jsonl
+
+### Summary 409
+
+Summary: Researchers have discovered marks on the fossils of two adults and a child from the French region of Poitou-Charentes, indicating that Neanderthals may have eaten recently deceased friends and family either for food or in bizarre funeral rituals.
+
+## Qwen2_P2_4bit_xu_xsum_500_summaries.jsonl
+
+### Summary 409
+
+Summary: A study has revealed that 3.7 million British workers spend two hours or more traveling to and from work each weekday, with the average daily commute lasting 57.1 minutes in 2015. This is due to stagnant wages, high house prices and rental costs, resulting in employees being unable to afford to live near their workplaces. Employers must take action to prevent excessive commutes, according to Frances O'Grady of the Trades Union Congress.
+
+## Qwen2_P2_8bit_cnn_dailymail_full_summaries.jsonl
+
+### Summary 409
+
+Summary: Mike Pence, a Koch favorite, drew controversy after signing a religious freedom law that opened the door to discrimination against gays and lesbians. This move was seen as a way to shore up his street cred among ultraconservatives, despite protests from the Indiana Chamber of Commerce and the Republican mayor of his state capital. The backlash against Pence's decision has led to concerns about the future of the Republican Party and the possibility of a conservative candidate winning the 2016 presidential election.
+
+### Summary 1824
+
+Summary: Aaron Ramsey has told his English teammates at Arsenal to beware of Wales overtaking them in the FIFA rankings, as Wales climbed to 22nd place in the April rankings to move within eight places of England.
+
+### Summary 4012
+
+After defeating Gateshead 2-0, Barnet secured promotion back to the Football League following a two-year absence. This was achieved through a late goal from Mauro Vilhete, who scored twice in the match.
+
+### Summary 4506
+
+A man named Matthew Colvin, 26, has been arrested for stealing Elton John's iconic heart-shaped glasses from a Memphis museum. Colvin is currently behind bars in Southhaven, Mississippi, and will be extradited back to Memphis on Wednesday.
+
+### Summary 10476
+
+An entire herd of buffalo has been shot dead by law enforcement in upstate New York after they escaped from a farm.
+
+## Qwen2_P2_8bit_xsum_full_summaries.jsonl
+
+### Summary 409
+
+Summary: Former Republic of Ireland international James O'Kane has agreed to join Plymouth Argyle on loan from Premier League side Southampton, with the club reportedly agreeing to pay the player's transfer fee.
+
+### Summary 1824
+
+Summary: The public services union Unison has endorsed Jeremy Corbyn as its second choice for the Labour leadership, potentially boosting his chances of becoming the next leader of the party. This endorsement comes after some bookmakers made Corbyn the favorite to replace Ed Miliband, following the initial perception that he was an outsider in the contest. However, sources in Andy Burnham's campaign suggested that the decision was a setback for Mrs Cooper, who had hoped for union backing for her campaign.
+
+### Summary 4012
+
+Summary: Over one billion contactless transactions were completed in 2015, making them the most popular payment method globally. The UK Cards Association reported that contactless spending increased significantly from 2014 to 2015, with one in eight purchases made through contactless technology by December. Concerns about security have been raised, but the industry claims that fraud levels remain low.
+
+### Summary 4506
+
+Summary: Aberdeen have signed former Manchester City defender Scott Brown on a permanent basis after agreeing to terms with the player.
+
+### Summary 10476
+
+Summary: The Mountaineering Council of Scotland has urged people to help keep bothies clean, as concerns over littering have been raised by associations and groups.
+
+## Qwen2_P2_8bit_xu_cnndm_500_summaries.jsonl
+
+### Summary 409
+
+Summary: Researchers have discovered marks on the fossils of two adults and a child from the French region of Poitou-Charentes, suggesting that Neanderthals may have eaten recently deceased friends and family either for food or in bizarre funeral rituals.
+
+## Qwen2_P2_8bit_xu_xsum_500_summaries.jsonl
+
+### Summary 409
+
+Summary: A study has revealed that over three million British workers spend two hours or more commuting each day, with the average daily commute lasting 57.1 minutes in 2015. This is due to stagnant wages, high house prices and rental costs, resulting in workers being unable to afford to live near their workplaces. Employers must take action to prevent excessive commuting times.
+
+## Qwen2_P3_16bit_cnn_dailymail_full_summaries.jsonl
+
+### Summary 409
+
+Main Event: Mike Pence signs a religious freedom law in Indiana that allows businesses to refuse service to LGBTQ individuals on religious grounds.
+
+Key People Involved: Mike Pence, Indiana Governor; Koch brothers, conservative lobbying groups
+
+Outcome: Pence faces intense backlash and criticism for signing the law, which has sparked protests and calls for his resignation.
+
+Summary: Mike Pence, a Koch favorite, signed a controversial religious freedom law in Indiana that allows businesses to refuse service to LGBTQ individuals on religious grounds, sparking widespread protests and calls for his resignation.
+
+### Summary 1824
+
+Main Event: Aaron Ramsey tells his English teammates at Arsenal to beware of Wales overtaking them in the FIFA rankings.
+
+Key People Involved: Aaron Ramsey, Chris Coleman, Gary Speed, Wales, England, Theo Walcott, Jack Wilshere, Danny Welbeck, Belgium, Wales' Euro 2016 qualification, UEFA Euro 2016, FIFA World Rankings, 2018 World Cup Qualifying Draw
+
+Outcome: Wales climbed to 22nd place in the FIFA rankings, moving within eight places of England, and could potentially qualify for the 2018 World Cup if they defeat Belgium in June.
+
+Summary: Aaron Ramsey encourages his English teammates at Arsenal to watch out for Wales overtaking them in the FIFA rankings, as Wales climbed to 22nd place, moving closer to England, and could potentially qualify for the 2018 World Cup if they defeat Belgium in June.
+
+### Summary 4012
+
+Main Event: Barnet's return to the Football League after a two-year absence.
+
+Key People Involved: Martin Allen, Curtis Weston, Mauro Vilhete
+
+Outcome: Barnet secured promotion to the Football League.
+
+Summary: After a two-year absence, Barnet returned to the Football League following a thrilling victory over Gateshead. Martin Allen's fourth stint as manager proved to be his most successful, with Mauro Vilhete scoring twice to secure the promotion.
+
+### Summary 4506
+
+Main Event: A man named Matthew Colvin stole Elton John's iconic heart-shaped glasses from a Memphis museum.
+
+Key People Involved:
+- Matthew Colvin, 26-year-old suspect
+- Elton John, famous musician
+
+Outcome: Matthew Colvin was arrested and will be extradited back to Memphis on Wednesday.
+
+Summary: Matthew Colvin, a 26-year-old suspect, was arrested for stealing Elton John's iconic heart-shaped glasses from a Memphis museum. He will be extradited back to Memphis on Wednesday.
+
+### Summary 10476
+
+Main Event: A herd of buffalo escaped from a farm in Schodack, upstate New York, and swam across the Hudson River, eventually making their way towards Bethlehem, New York. Key People Involved: Three men hired by the farm, who were cleared to open fire in a stream in Coeymans, about 10 miles south of Albany. Outcome: All 15 buffalo were shot dead by law enforcement.
+
+Summary: A herd of buffalo escaped from a farm in Schodack, upstate New York, and swam across the Hudson River, eventually making their way towards Bethlehem, New York. The three men hired by the farm were cleared to open fire in a stream in Coeymans, about 10 miles south of Albany. All 15 buffalo were shot dead by law enforcement.
+
+## Qwen2_P3_16bit_xsum_full_summaries.jsonl
+
+### Summary 409
+
+Main Event: The National League sold Republic of Ireland midfielder Jack O'Kane to the Bristol City Football Club.
+
+Key People Involved:
+- Jack O'Kane (player)
+- Bristol City Football Club (new team)
+
+Outcome: The National League sold Jack O'Kane to Bristol City for £175,000 in 2012, with a 15% sell-on clause included in the deal. However, O'Kane has not received any money from the sale as he does not believe it is worth his time or effort to pursue it further. The Gulls are still looking for new owners after being taken over by a consortium of local business people last summer. They were forced to close down the club's academy and drastically reduce the playing budget after millionaire former owner Thea Bristow left the club.
+
+### Summary 1824
+
+Summary: The public services union Unison has endorsed Jeremy Corbyn as its preferred candidate for the Labour leadership election, despite initially being seen as an outsider in the contest. This move could potentially boost Corbyn's chances of becoming the next leader of the party, but it remains to be seen how much support he will receive from his union members. Meanwhile, Andy Burnham, another candidate in the race, has been hit by criticism from within the party over his campaign strategy.
+
+### Summary 4012
+
+Summary: In 2015, just over one billion contactless transactions were completed in the UK, representing a significant increase from the previous seven years combined. About half of all debit and credit cards are equipped with contactless capabilities, allowing shoppers to make purchases up to £30 without needing to enter a PIN. The most common way to use contactless technology is on the London Underground network, where millions of journeys are made daily through the use of credit and debit cards placed near sensors at stations. Concerns about the security of contactless cards have been raised, but fraud levels remain low. Every contactless card has an in-built security check requiring a PIN to be entered after several consecutive contactless payments to confirm the genuine cardholder.
+
+### Summary 4506
+
+Main Event: Aberdeen have signed former Manchester City defender Scott Brown to their squad.
+
+Key People Involved: Derek McInnes (Aberdeen manager), Scott Brown (former Manchester City player)
+
+Outcome: Aberdeen have secured the signing of Scott Brown, who will be joining the team as a free agent after leaving Manchester City.
+
+Summary: Aberdeen have announced the signing of former Manchester City defender Scott Brown, who will join the team as a free agent after leaving the club.
+
+### Summary 10476
+
+Main Event: Groups raise concern over litter in mountain bothies.
+
+Key People Involved: The Mountaineering Council of Scotland, the MBA (Mountain Bothies Association), and one volunteer at Corrour Bothy.
+
+Outcome: The MBA issues a message urging visitors to help maintain bothies' cleanliness by removing their own trash.
+
+Summary: The Mountain Bothies Association (MBA) has urged hikers to clean up after themselves when visiting mountain bothies, as these facilities do not have regular garbage collection services. This initiative aims to promote environmental responsibility among climbers and hikers.
+
+## Qwen2_P3_16bit_xu_cnndm_500_summaries.jsonl
+
+### Summary 409
+
+Summary: Researchers have discovered marks on the fossils of two adults and a child from the French region of Poitou-Charentes, suggesting they were likely killed and eaten by Neanderthals. The findings challenge previous theories about the end of the Neanderthal species and could shed light on their social behavior and diet.
+
+## Qwen2_P3_16bit_xu_xsum_500_summaries.jsonl
+
+### Summary 409
+
+Main Event: Many British workers spend two hours or more commuting each day.
+
+Key People Involved: Frances O'Grady, Trades Union Congress; Nick Seymour, solicitor from Exeter; Phil Cresswell, media advertising professional; Sam Cookney, blogger.
+
+Outcome: Commuting times have increased due to stagnant wages, high housing costs, and rising property prices.
+
+Summary: Summary: Many British workers spend two hours or more commuting each day, exacerbated by stagnant wages, high housing costs, and rising property prices.
+
+## Qwen2_P3_4bit_cnn_dailymail_full_summaries.jsonl
+
+### Summary 409
+
+Main Event: Indiana Governor Mike Pence signs a religious freedom law that allows discrimination against gays and lesbians.
+
+Key People Involved: Mike Pence, Indiana Governor
+
+Outcome: Pence faces intense backlash from the LGBT community and other progressive groups, and some Republicans are distancing themselves from his stance.
+
+Summary: Indiana Governor Mike Pence's controversial signing of a religious freedom law allowing discrimination against gays and lesbians has sparked widespread outrage and calls for his resignation. Some Republicans are distancing themselves from Pence's position, and the controversy threatens to damage the Republican Party's chances of winning the 2016 presidential election.
+
+### Summary 1824
+
+Main Event: Aaron Ramsey tells his English teammates not to underestimate Wales' progress in the FIFA rankings.
+
+Key People Involved: Aaron Ramsey, Chris Coleman, Wales
+
+Outcome: Wales has climbed to its highest-ever ranking in the FIFA world rankings, moving within eight places of England.
+
+Summary: Aaron Ramsey warns his English teammates that Wales is closing in on them in the FIFA rankings, and if they don't take Wales seriously, they risk being overtaken.
+
+### Summary 4012
+
+Main Event: Barnet's return to the Football League after a two-year absence.
+
+Key People Involved: Martin Allen, Mauro Vilhete, Curtis Weston, and the Barnet team.
+
+Outcome: Barnet secured promotion back to the Football League.
+
+Summary: After a two-year absence, Barnet returned to the Football League following a thrilling victory over Gateshead. Mauro Vilhete scored twice, ensuring Martin Allen's fourth spell in charge of the club would be his most successful.
+
+### Summary 4506
+
+Main Event: Matthew Colvin, 26, was arrested for stealing Elton John's iconic heart-shaped glasses from a Memphis museum.
+
+Key People Involved: Matthew Colvin, Elton John
+
+Outcome: Matthew Colvin is currently in custody in Mississippi and will be extradited back to Memphis on Wednesday.
+
+Summary: Matthew Colvin, 26, was arrested for stealing Elton John's iconic heart-shaped glasses from a Memphis museum.
+
+### Summary 10476
+
+Main Event: A herd of buffalo escaped from a farm in Schodack, upstate New York, and swam across the Hudson River to the nearby town of Bethlehem, where they were shot dead by law enforcement.
+
+Key People Involved:
+- Law Enforcement (three men)
+- Farm Owner (George Mesick)
+
+Outcome: All 15 buffalo were killed by law enforcement.
+
+Summary: Summary: An entire herd of buffalo escaped from a farm in Schodack, upstate New York, and swam across the Hudson River to the nearby town of Bethlehem, where they were shot dead by law enforcement.
+
+## Qwen2_P3_4bit_xsum_full_summaries.jsonl
+
+### Summary 409
+
+Main Event: The National League sold the Republic of Ireland midfielder to the Cherries.
+
+Key People Involved: The National League, the Cherries, and the player (O'Kane).
+
+Outcome: O'Kane moved for an undisclosed fee, but any money received will go towards helping the cash-strapped club.
+
+Summary: The National League sold the Republic of Ireland midfielder to the Cherries, who is now looking for new ways to improve their financial situation.
+
+### Summary 1824
+
+Summary: The public services union, Unison, has endorsed Jeremy Corbyn as its preferred candidate for the leadership of the Labour Party, despite initially being seen as an outsider in the contest. This endorsement does not guarantee that all Unison members will support Corbyn, but it is seen as a significant blow to Andy Burnham, who had hoped for union backing for his campaign. The outcome of the leadership election is expected to be decided at a special conference on 12 September.
+
+Main Event: Unison's endorsement of Jeremy Corbyn
+
+Key People Involved: Unison, Jeremy Corbyn, Andy Burnham, Liz Kendall
+
+Outcome: Unison's endorsement of Jeremy Corbyn as its preferred candidate for the leadership of the Labour Party
+
+Summary: Jeremy Corbyn has received the endorsement of Unison, the country's largest public sector union, which represents over 1.3 million workers. However, this endorsement does not guarantee that all Unison members will support Corbyn, and the outcome of the leadership election remains uncertain.
+
+### Summary 4012
+
+Summary:
+In 2015, just over one billion contactless transactions were completed in the United Kingdom, marking a significant increase from the previous seven years. This technology allowed shoppers to make purchases up to £30 without needing to enter a four-digit PIN. Contactless payments increased from one in 13 purchases to one in eight by December, according to the UK Cards Association. The most common way to use the technology is on the London Underground network, where more than a million journeys a day are paid for by placing credit and debit cards next to sensors when entering and exiting stations. Concerns about security have been raised in the past, but the industry reported low fraud levels on contactless payments. Every contactless card has an in-built security check requiring a PIN to be entered after a certain number of consecutive contactless payments to verify the genuine cardholder.
+
+### Summary 4506
+
+Main Event: The 28-year-old former Manchester City defender has signed for Aberdeen.
+
+Key People Involved: Derek McInnes, the manager of Aberdeen; the player who has signed for Aberdeen.
+
+Outcome: The player has signed for Aberdeen, joining the club on a permanent basis after being on loan from Brentford.
+
+Summary: The 28-year-old former Manchester City defender has signed for Aberdeen, joining the club on a permanent basis after being on loan from Brentford.
+
+### Summary 10476
+
+Main Event: The use of bothies is increasing in summer months.
+
+Key People Involved: The Association, groups like the Mountaineering Council of Scotland, and the MBA (Mountain Bothies Management Association).
+
+Outcome: The MBA has issued a new message asking people to help keep bothies in a tidy state.
+
+Summary: The Mountain Bothies Management Association (MBA) has issued a new message urging people to help keep mountain bothies clean and tidy during the summer months when they are most commonly visited by hikers.
+
+## Qwen2_P3_4bit_xu_cnndm_500_summaries.jsonl
+
+### Summary 409
+
+Main Event: The discovery of marks on the fossils of two adults and a child at the Marillac site in the French region of Poitou-Charentes.
+
+Key People Involved: Researchers from the Complutense University of Madrid and the Universitat Rovira i Virgili in Tarragona, Spain.
+
+Outcome: The marks found on the fossils indicate that Neanderthals may have eaten recently deceased friends and family either for food or in bizarre funeral rituals.
+
+Summary: Researchers from the Complutense University of Madrid and the Universitat Rovira i Virgili in Tarragona, Spain have discovered marks on the fossils of two adults and a child at the Marillac site in the French region of Poitou-Charentes. These marks suggest that Neanderthals may have eaten recently deceased friends and family either for food or in bizarre funeral rituals.
+
+## Qwen2_P3_4bit_xu_xsum_500_summaries.jsonl
+
+### Summary 409
+
+Main Event: Long commutes are becoming increasingly common among British workers.
+
+Key People Involved: Frances O'Grady, the Trades Union Congress; the Office for National Statistics (ONS); and other individuals who experience long commutes.
+
+Outcome: Long commutes are eating into people's family time and can be detrimental to their working lives.
+
+Summary: The Office for National Statistics has revealed that 3.7 million Britons spend two hours or more traveling to and from work each weekday. This is a significant increase from 2.8 million people in 2010. Frances O'Grady, the Trades Union Congress, has called on employers to take action to prevent excessive commutes.
+
+## Qwen2_P3_8bit_cnn_dailymail_full_summaries.jsonl
+
+### Summary 409
+
+Main Event: Mike Pence signs a religious freedom law in Indiana that allows businesses to refuse service to LGBTQ individuals on religious grounds.
+
+Key People Involved: Mike Pence, Indiana Governor; Koch brothers, conservative lobbying groups
+
+Outcome: Pence faces intense backlash and criticism for signing the law, which has sparked protests and calls for his resignation.
+
+Summary: Mike Pence, a Koch favorite, signed a controversial religious freedom law in Indiana that allows businesses to refuse service to LGBTQ individuals on religious grounds, sparking widespread protests and calls for his resignation.
+
+### Summary 1824
+
+Main Event: Aaron Ramsey tells his English teammates at Arsenal to beware of Wales overtaking them in the FIFA rankings.
+
+Key People Involved: Aaron Ramsey, Chris Coleman, Gary Speed, Wales, England, Theo Walcott, Jack Wilshere, Danny Welbeck, Belgium, Wales' Euro 2016 qualification, UEFA Euro 2016, FIFA World Rankings, 2018 World Cup Qualifying Draw
+
+Outcome: Wales climbed to 22nd place in the FIFA rankings, moving within eight places of England, and could potentially qualify for the 2018 World Cup if they defeat Belgium in June.
+
+Summary: Aaron Ramsey encourages his English teammates at Arsenal to be wary of Wales overtaking them in the FIFA rankings, as Wales climbed to 22nd place, moving within eight places of England, and could potentially qualify for the 2018 World Cup if they defeat Belgium in June.
+
+### Summary 4012
+
+Summary: After a two-year absence, Barnet secured promotion back to the Football League following a thrilling match against Gateshead, where Mauro Vilhete scored twice to secure the Conference title. The victory ensured Martin Allen's fourth spell in charge of the club would be his most successful.
+
+### Summary 4506
+
+Main Event: A man named Matthew Colvin stole Elton John's iconic heart-shaped glasses from a Memphis museum.
+
+Key People Involved:
+- Matthew Colvin, the man who stole the glasses
+- Elton John, the famous musician whose glasses were stolen
+
+Outcome: Matthew Colvin was arrested and will be extradited back to Memphis on Wednesday.
+
+Summary: Matthew Colvin, the man who stole Elton John's iconic heart-shaped glasses from a Memphis museum, was arrested and will be extradited back to Memphis on Wednesday.
+
+### Summary 10476
+
+Main Event: A herd of buffalo escaped from a farm in Schodack, upstate New York, and swam across the Hudson River, eventually making its way towards Bethlehem, New York. Key People Involved: Three men hired by the farm, who were cleared to open fire in a stream in Coeymans, about 10 miles south of Albany. Outcome: All 15 buffalo were shot dead by law enforcement.
+
+Summary: A herd of buffalo escaped from a farm in Schodack, upstate New York, and swam across the Hudson River, eventually making its way towards Bethlehem, New York. The three men hired by the farm were cleared to open fire in a stream in Coeymans, about 10 miles south of Albany. All 15 buffalo were shot dead by law enforcement.
+
+## Qwen2_P3_8bit_xsum_full_summaries.jsonl
+
+### Summary 409
+
+Main Event: The National League sold Republic of Ireland midfielder Jack O'Kane to the Bristol City Football Club.
+
+Key People Involved:
+- Jack O'Kane (Republic of Ireland midfielder)
+- Bristol City Football Club
+
+Outcome: The National League sold Jack O'Kane to Bristol City for £175,000 in 2012, with a 15% sell-on clause included in the deal. However, O'Kane has not received any money from the sale as he does not believe it is worth his time pursuing it. The Gulls are still looking for new owners after being taken over by a consortium of local business people last summer. They were forced to close down the club's academy and drastically reduce the playing budget after millionaire former owner Thea Bristow left the club.
+
+### Summary 1824
+
+Summary: The public services union Unison has endorsed Jeremy Corbyn as its preferred candidate for the Labour leadership election, despite initially being seen as an outsider in the contest. This endorsement could potentially boost Corbyn's chances of becoming the next leader of the party. However, Andy Burnham, another candidate in the race, is still hopeful of securing union support. The outcome of the election remains uncertain, with the final result expected to be announced at a special conference on 12 September.
+
+### Summary 4012
+
+Summary: In 2015, just over one billion contactless transactions were completed in the UK, representing a significant increase from the previous seven years combined. About half of all debit and credit cards are equipped with contactless capabilities, allowing shoppers to make purchases up to £30 without needing to enter a PIN. The most common way to use contactless technology is on the London Underground network, where millions of journeys are made each day through the use of credit and debit cards placed near sensors at stations. Concerns about the security of contactless cards have been raised, but fraud levels remain relatively low. To protect against unauthorized access, every contactless card has an in-built security check requiring a PIN to be entered after several consecutive contactless payments.
+
+### Summary 4506
+
+Main Event: Aberdeen have signed former Manchester City defender Connor Goldson on a permanent basis.
+
+Key People Involved: Derek McInnes (Aberdeen manager), Connor Goldson (former Manchester City player)
+
+Outcome: Connor Goldson has agreed to join Aberdeen on a permanent basis after spending time on loan at the club previously.
+
+Summary: Aberdeen has secured the signing of Connor Goldson, a former Manchester City defender, on a permanent basis. This move comes as a significant boost for the team under manager Derek McInnes.
+
+### Summary 10476
+
+Main Event: Groups raise concern over litter left in mountain bothies.
+
+Key People Involved: The Mountaineering Council of Scotland, MBA
+
+Outcome: The MBA issues a message urging people to help maintain bothies' cleanliness.
+
+Summary: The Mountaineering Council of Scotland and other groups have expressed concerns about litter left in mountain bothies, which is particularly prevalent during summer months when more people visit these shelters. In response, the MBA has issued a message encouraging individuals to take responsibility for keeping bothies clean by removing their own trash and disposing of it properly. This initiative aims to promote environmental stewardship among hikers and ensure that bothies remain accessible and enjoyable spaces for all users.
+
+## Qwen2_P3_8bit_xu_cnndm_500_summaries.jsonl
+
+### Summary 409
+
+Summary: Researchers have discovered marks on the fossils of two adults and a child from the French region of Poitou-Charentes, suggesting they were likely killed and then eaten by Neanderthals. The marks include cuts made on the bones shortly after death, indicating the use of lytic instruments. The discovery could shed light on the social dynamics and dietary habits of Neanderthals.
+
+## Qwen2_P3_8bit_xu_xsum_500_summaries.jsonl
+
+### Summary 409
+
+Main Event: Many British workers spend two hours or more commuting each day.
+
+Key People Involved: Frances O'Grady, Trades Union Congress; Nick Seymour, solicitor from Exeter; Phil Cresswell, media advertising professional; Sam Cookney, blogger.
+
+Outcome: Commuting times have increased due to stagnant wages, high housing costs, and rising property prices.
+
+Summary: Summary: Many British workers spend two hours or more commuting each day, exacerbated by stagnant wages, high housing costs, and rising property prices.
+
 ## TFIDF_cnn_dailymail_full_summaries.jsonl
 
 ### Summary 409

@@ -84,6 +84,42 @@ Generated summaries whose re-tokenized length reached the prompt's `max_new_toke
 | Phi_P3_8bit_xsum_full_summaries.jsonl | Phi | P3 | 1000 | 11334 | 34 | 0.3% |
 | Phi_P3_8bit_xu_cnndm_500_summaries.jsonl | Phi | P3 | 1000 | 500 | 0 | 0.0% |
 | Phi_P3_8bit_xu_xsum_500_summaries.jsonl | Phi | P3 | 1000 | 500 | 0 | 0.0% |
+| Qwen2_P1_16bit_cnn_dailymail_full_summaries.jsonl | Qwen2 | P1 | 1000 | 11490 | 2 | 0.0% |
+| Qwen2_P1_16bit_xsum_full_summaries.jsonl | Qwen2 | P1 | 1000 | 11334 | 2 | 0.0% |
+| Qwen2_P1_16bit_xu_cnndm_500_summaries.jsonl | Qwen2 | P1 | 1000 | 500 | 0 | 0.0% |
+| Qwen2_P1_16bit_xu_xsum_500_summaries.jsonl | Qwen2 | P1 | 1000 | 500 | 0 | 0.0% |
+| Qwen2_P1_4bit_cnn_dailymail_full_summaries.jsonl | Qwen2 | P1 | 1000 | 11490 | 6 | 0.1% |
+| Qwen2_P1_4bit_xsum_full_summaries.jsonl | Qwen2 | P1 | 1000 | 11334 | 2 | 0.0% |
+| Qwen2_P1_4bit_xu_cnndm_500_summaries.jsonl | Qwen2 | P1 | 1000 | 500 | 0 | 0.0% |
+| Qwen2_P1_4bit_xu_xsum_500_summaries.jsonl | Qwen2 | P1 | 1000 | 500 | 0 | 0.0% |
+| Qwen2_P1_8bit_cnn_dailymail_full_summaries.jsonl | Qwen2 | P1 | 1000 | 11490 | 2 | 0.0% |
+| Qwen2_P1_8bit_xsum_full_summaries.jsonl | Qwen2 | P1 | 1000 | 11334 | 1 | 0.0% |
+| Qwen2_P1_8bit_xu_cnndm_500_summaries.jsonl | Qwen2 | P1 | 1000 | 500 | 0 | 0.0% |
+| Qwen2_P1_8bit_xu_xsum_500_summaries.jsonl | Qwen2 | P1 | 1000 | 500 | 0 | 0.0% |
+| Qwen2_P2_16bit_cnn_dailymail_full_summaries.jsonl | Qwen2 | P2 | 1000 | 11490 | 1 | 0.0% |
+| Qwen2_P2_16bit_xsum_full_summaries.jsonl | Qwen2 | P2 | 1000 | 11334 | 2 | 0.0% |
+| Qwen2_P2_16bit_xu_cnndm_500_summaries.jsonl | Qwen2 | P2 | 1000 | 500 | 0 | 0.0% |
+| Qwen2_P2_16bit_xu_xsum_500_summaries.jsonl | Qwen2 | P2 | 1000 | 500 | 0 | 0.0% |
+| Qwen2_P2_4bit_cnn_dailymail_full_summaries.jsonl | Qwen2 | P2 | 1000 | 11490 | 2 | 0.0% |
+| Qwen2_P2_4bit_xsum_full_summaries.jsonl | Qwen2 | P2 | 1000 | 11334 | 3 | 0.0% |
+| Qwen2_P2_4bit_xu_cnndm_500_summaries.jsonl | Qwen2 | P2 | 1000 | 500 | 0 | 0.0% |
+| Qwen2_P2_4bit_xu_xsum_500_summaries.jsonl | Qwen2 | P2 | 1000 | 500 | 0 | 0.0% |
+| Qwen2_P2_8bit_cnn_dailymail_full_summaries.jsonl | Qwen2 | P2 | 1000 | 11490 | 2 | 0.0% |
+| Qwen2_P2_8bit_xsum_full_summaries.jsonl | Qwen2 | P2 | 1000 | 11334 | 1 | 0.0% |
+| Qwen2_P2_8bit_xu_cnndm_500_summaries.jsonl | Qwen2 | P2 | 1000 | 500 | 0 | 0.0% |
+| Qwen2_P2_8bit_xu_xsum_500_summaries.jsonl | Qwen2 | P2 | 1000 | 500 | 0 | 0.0% |
+| Qwen2_P3_16bit_cnn_dailymail_full_summaries.jsonl | Qwen2 | P3 | 1000 | 11490 | 43 | 0.4% |
+| Qwen2_P3_16bit_xsum_full_summaries.jsonl | Qwen2 | P3 | 1000 | 11334 | 29 | 0.3% |
+| Qwen2_P3_16bit_xu_cnndm_500_summaries.jsonl | Qwen2 | P3 | 1000 | 500 | 6 | 1.2% |
+| Qwen2_P3_16bit_xu_xsum_500_summaries.jsonl | Qwen2 | P3 | 1000 | 500 | 3 | 0.6% |
+| Qwen2_P3_4bit_cnn_dailymail_full_summaries.jsonl | Qwen2 | P3 | 1000 | 11490 | 53 | 0.5% |
+| Qwen2_P3_4bit_xsum_full_summaries.jsonl | Qwen2 | P3 | 1000 | 11334 | 84 | 0.7% |
+| Qwen2_P3_4bit_xu_cnndm_500_summaries.jsonl | Qwen2 | P3 | 1000 | 500 | 2 | 0.4% |
+| Qwen2_P3_4bit_xu_xsum_500_summaries.jsonl | Qwen2 | P3 | 1000 | 500 | 4 | 0.8% |
+| Qwen2_P3_8bit_cnn_dailymail_full_summaries.jsonl | Qwen2 | P3 | 1000 | 11490 | 44 | 0.4% |
+| Qwen2_P3_8bit_xsum_full_summaries.jsonl | Qwen2 | P3 | 1000 | 11334 | 30 | 0.3% |
+| Qwen2_P3_8bit_xu_cnndm_500_summaries.jsonl | Qwen2 | P3 | 1000 | 500 | 2 | 0.4% |
+| Qwen2_P3_8bit_xu_xsum_500_summaries.jsonl | Qwen2 | P3 | 1000 | 500 | 1 | 0.2% |
 | TFIDF_cnn_dailymail_full_summaries.jsonl | — | — | — | — | — | baseline (no cap) |
 | TFIDF_xsum_full_summaries.jsonl | — | — | — | — | — | baseline (no cap) |
 | TFIDF_xu_cnndm_500_summaries.jsonl | — | — | — | — | — | baseline (no cap) |
@@ -92,4 +128,4 @@ Generated summaries whose re-tokenized length reached the prompt's `max_new_toke
 | TextRank_xsum_full_summaries.jsonl | — | — | — | — | — | baseline (no cap) |
 | TextRank_xu_cnndm_500_summaries.jsonl | — | — | — | — | — | baseline (no cap) |
 | TextRank_xu_xsum_500_summaries.jsonl | — | — | — | — | — | baseline (no cap) |
-| **TOTAL** |  |  |  | 428832 | 324 | 0.1% |
+| **TOTAL** |  |  |  | 643248 | 651 | 0.1% |
