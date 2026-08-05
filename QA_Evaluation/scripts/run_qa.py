@@ -1,8 +1,9 @@
 """Score the merged summary matrix with QAFactEval (LERC).
 
-Reads master_evaluation_dataset.jsonl (produced by summaries_merger.py) and writes
-final_evaluation_results.jsonl. Paths default to this script's own directory, so it
-behaves the same whether it is launched from here or from the repo root.
+Reads QA_Evaluation/results/master_evaluation_dataset.jsonl (produced by
+summaries_merger.py) and writes QA_Evaluation/results/final_evaluation_results.jsonl.
+Paths are anchored to the repository layout, not the working directory, so it behaves
+the same whether it is launched from QA_Evaluation/ or from the repo root.
 
 Usage:
     python run_qa.py                     # full dataset
@@ -15,15 +16,16 @@ import os
 
 from qa_evaluator import QAFactEvaluator
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+QA_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # QA_Evaluation/
+RESULTS_DIR = os.path.join(QA_DIR, "results")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--master", default=os.path.join(SCRIPT_DIR, "master_evaluation_dataset.jsonl"),
+    parser.add_argument("--master", default=os.path.join(RESULTS_DIR, "master_evaluation_dataset.jsonl"),
                         help="Merged matrix from summaries_merger.py")
-    parser.add_argument("--output", default=os.path.join(SCRIPT_DIR, "final_evaluation_results.jsonl"),
+    parser.add_argument("--output", default=os.path.join(RESULTS_DIR, "final_evaluation_results.jsonl"),
                         help="Where to write the per-article scores")
     parser.add_argument("--max-articles", type=int, default=None,
                         help="Stop after N articles (smoke test). Default: whole dataset.")

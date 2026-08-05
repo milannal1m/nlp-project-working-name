@@ -1,6 +1,0 @@
-# QA Evaluation Pipeline Dependencies
-# IMPORTANT: Must be installed in a Python 3.8 environment
---extra-index-url https://download.pytorch.org/whl/cu124
-setuptools<70.0.0
-torch==1.6.0
-qafacteval==0.10

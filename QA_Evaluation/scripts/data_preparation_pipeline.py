@@ -11,11 +11,14 @@ from transformers import set_seed
 
 set_seed(42)
 
+# The repo root is two levels up (QA_Evaluation/scripts/ -> QA_Evaluation/ -> repo),
+# and it must be the repo root exactly: the imports below resolve the top-level src/
+# package, so putting QA_Evaluation/ on the path instead would shadow it.
 current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.abspath(os.path.join(current_dir, ".."))
+repo_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
 
-if parent_dir not in sys.path:
-    sys.path.insert(0, parent_dir)
+if repo_root not in sys.path:
+    sys.path.insert(0, repo_root)
 
 from src.model import SummarizationModel, RunConfig
 from src.prompts import PROMPT_CONFIGS

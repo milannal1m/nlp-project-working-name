@@ -92,13 +92,13 @@ def verify_merge(output_file, n_variations):
 
 
 def main():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
+    qa_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # QA_Evaluation/
 
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--outputs-dir", default=os.path.join(script_dir, "Outputs"),
+    parser.add_argument("--outputs-dir", default=os.path.join(qa_dir, "Outputs"),
                         help="Directory of per-variation .jsonl files")
-    parser.add_argument("--output", default=os.path.join(script_dir, "master_evaluation_dataset.jsonl"),
+    parser.add_argument("--output", default=os.path.join(qa_dir, "results", "master_evaluation_dataset.jsonl"),
                         help="Path to write the master matrix to")
     parser.add_argument("--union", action="store_true",
                         help="Keep every article any variation covers. Default is the "

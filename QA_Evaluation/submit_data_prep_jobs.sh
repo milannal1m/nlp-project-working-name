@@ -2,9 +2,9 @@
 # Submit every (model x quant x prompt) combination as SEPARATE Slurm jobs
 # (currently 3 models x 3 quants x 3 prompts = 27).
 #
-# Use this instead of run_data_prep.sh when job arrays sit forever in the queue:
-# the scheduler sees independent jobs it can start one-by-one as GPUs free up,
-# rather than one array it may treat as a single large allocation.
+# Submits independent jobs rather than a job array, so the scheduler can start them
+# one-by-one as GPUs free up instead of treating the whole grid as a single large
+# allocation that sits in the queue.
 #
 # Usage:  bash QA_Evaluation/submit_data_prep_jobs.sh [-s N]
 #
@@ -28,7 +28,7 @@ done
 
 mkdir -p logs
 
-# Configuration lists (must match run_data_prep.sh)
+# Configuration lists
 MODELS=("unsloth/Llama-3.2-3B-Instruct")
 QUANTS=("None" "8bit" "4bit")
 PROMPTS=("P1" "P2" "P3")
@@ -96,7 +96,7 @@ if [[ -n "${SAMPLE:-}" ]]; then
     SAMPLE_ARGS=(--sample "$SAMPLE")
 fi
 
-python QA_Evaluation/data_preparation_pipeline.py \
+python QA_Evaluation/scripts/data_preparation_pipeline.py \
     --model_path "$MODEL" \
     --quant "$QUANT" \
     --prompt_id "$PROMPT" \

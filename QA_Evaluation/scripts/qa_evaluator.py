@@ -7,8 +7,10 @@ import torch  # Added to auto-detect hardware
 # ==========================================
 # 1. DYNAMIC PATH RESOLUTION
 # ==========================================
-# This automatically anchors to wherever the script is currently running
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+# Anchors to QA_Evaluation/, the parent of this scripts/ directory -- that is where the
+# heavy offline model folders live (see README.md, "TODO: Installation of ...").
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+CURRENT_DIR = os.path.dirname(SCRIPT_DIR)
 PATH_TO_QAEVAL = os.path.join(CURRENT_DIR, "qaeval")
 PATH_TO_QAFACTEVAL = os.path.join(CURRENT_DIR, "QAFactEval")
 
