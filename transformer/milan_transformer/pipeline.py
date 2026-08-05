@@ -40,8 +40,8 @@ from evaluator import Evaluator
 
 # --- config -----------------------------------------------------------------
 DATASETS = ["xsum", "cnn_dailymail"]
-TRAIN_N, EVAL_N = 10000, 200
-EPOCHS, BATCH, LR = 10, 16, 3e-4
+TRAIN_N, EVAL_N = 100000, 600
+EPOCHS, BATCH, LR = 100, 16, 3e-4
 MAX_SRC, MAX_TRG = 400, 64
 EMBED, LAYERS, HEADS = 256, 3, 8
 TEMPERATURE, TOP_P = 0.7, 0.9        # decoder-only (milan) sampling knobs

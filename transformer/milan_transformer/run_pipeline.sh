@@ -4,7 +4,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=16000
-#SBATCH --time=04:00:00
+#SBATCH --time=17:30:00
 #SBATCH --output=transformer/milan_transformer/logs/%x_%j.out
 #SBATCH --error=transformer/milan_transformer/logs/%x_%j.err
 #
@@ -35,7 +35,7 @@ echo "Model: $MODEL"
 mkdir -p transformer/milan_transformer/logs
 
 module load devel/miniforge/25.3.1-python-3.12
-source "$(conda info --base)/etc/profile.d/conda.sh"
+source /opt/bwhpc/common/devel/miniforge/25.3.1-py3.12/etc/profile.d/conda.sh
 conda activate nlp-project
 
 nvidia-smi
