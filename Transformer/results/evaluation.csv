@@ -1,4 +1,0 @@
-file,bleu,rougeL,meteor,bertscore_f1,bertscore_f1_std,qa_eval,qa_eval_std,error
-Transformer_xsum_100_summaries.jsonl,0.0,0.052759059956189666,0.0165899226752396,-0.19288113422691822,0.07494083803266119,,,qafacteval not installed
-Transformer_xsum_1_summaries.jsonl,0.0,0.02816901408450704,0.042194092827004225,-0.47424283623695374,0.0,,,qafacteval not installed
-Transformer_xsum_20_summaries.jsonl,0.0,0.10178773652911585,0.03242912530416745,-0.18551898282021284,0.07938620784022778,,,qafacteval not installed
