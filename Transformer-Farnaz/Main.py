@@ -122,6 +122,9 @@ class SelfAttention(nn.Module):
         self.queries = nn.Linear(self.head_dim, self.head_dim, bias=False)
         self.fc_out = nn.Linear(heads * self.head_dim, embed_size)
 
+        from torchtune.modules import RotaryPositionalEmbeddings
+        self.rope = RotaryPositionalEmbeddings(dim=self.head_dim)
+
     def forward(self, values, keys, query, mask):
         N = query.shape[0]  # number of examples in the batch
         value_len, key_len, query_len = values.shape[1], keys.shape[1], query.shape[1]
@@ -134,6 +137,9 @@ class SelfAttention(nn.Module):
         values = self.values(values)  # (N, value_len, heads, head_dim)
         keys = self.keys(keys)  # (N, key_len, heads, head_dim)
         queries = self.queries(queries)  # (N, query_len, heads, head_dim)
+
+        queries = self.rope(queries)
+        keys = self.rope(keys)
 
         energy = torch.einsum("nqhd,nkhd->nhqk", [queries, keys])  # (N, heads, query_len, key_len)
 
@@ -192,7 +198,6 @@ class Encoder(nn.Module):
         self.embed_size = embed_size
         self.device = device
         self.word_embedding = nn.Embedding(src_vocab_size, embed_size)
-        self.position_embedding = nn.Embedding(max_length, embed_size)
 
         self.layers = nn.ModuleList(
             [
@@ -208,14 +213,10 @@ class Encoder(nn.Module):
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, x, mask):
-        N, seq_length = x.shape
-        # Absolute positions 0..seq_length-1 for every row; padded positions get a
-        # real embedding but are ignored downstream via the source padding mask.
-        positions = torch.arange(0, seq_length, device=self.device).expand(N, seq_length)
-        out = self.dropout(self.word_embedding(x) + self.position_embedding(positions))
+        out = self.dropout(self.word_embedding(x))
 
         for layer in self.layers:
-            out = layer(out, mask) #signature of TransformerBlock.forward is now (x, mask)
+            out = layer(out, mask)
 
         return out
 
@@ -266,7 +267,6 @@ class Decoder(nn.Module):
         super(Decoder, self).__init__()
         self.device = device
         self.word_embedding = nn.Embedding(trg_vocab_size, embed_size)
-        self.position_embedding = nn.Embedding(max_length, embed_size)
 
         self.layers = nn.ModuleList(
             [
@@ -278,9 +278,7 @@ class Decoder(nn.Module):
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, x, enc_out, src_mask, trg_mask):
-        N, seq_length = x.shape
-        positions = torch.arange(0, seq_length, device=self.device).expand(N, seq_length)
-        x = self.dropout(self.word_embedding(x) + self.position_embedding(positions))
+        x = self.dropout(self.word_embedding(x))
 
         for layer in self.layers:
             x = layer(x, enc_out, enc_out, src_mask, trg_mask)
