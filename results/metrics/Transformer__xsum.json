@@ -1,0 +1,23 @@
+{
+  "label": "Transformer",
+  "dataset": "xsum",
+  "file": "Transformer_xsum_summaries.jsonl",
+  "num_samples": 11334,
+  "errors": {
+    "qa_eval": "qafacteval not installed"
+  },
+  "bleu": 0.014045762444640675,
+  "rougeL": 0.14296363950910743,
+  "meteor": 0.13825399638258432,
+  "bertscore_f1": 0.8482052296826043,
+  "bertscore_f1_std": 0.022467196183495252,
+  "summac": 0.36845976384161666,
+  "summac_std": 0.08115616009927282,
+  "qa_eval": null,
+  "avg_news_len": 385.4004764425622,
+  "avg_ref_len": 21.73001588141874,
+  "avg_gen_len": 23.903740956414328,
+  "std_gen_len": 6.059777381496922,
+  "avg_gen_sents": 1.198958884771484,
+  "avg_compression": 0.11102671671196675
+}
