@@ -1,19 +1,3 @@
-"""Train the traditional-ML extractive summarizers.
-
-Four resumable phases per dataset:
-  1. extract  — stream the full train split, oracle-label sentences, cache
-                features to gzip chunks (resumable via a manifest).
-  2. search   — hyperparameter search per model on an in-memory subsample.
-  3. fit      — fit each model on the full split with the best params
-                (out-of-core partial_fit for logreg/nb; full-batch for xgb).
-  4. calibrate— tune the inference selection policy (k, trigram blocking) on the
-                validation split against the balanced ROUGE-L+METEOR+BLEU composite.
-
-    python -m traditional_ml.train --dataset cnn_dailymail
-    python -m traditional_ml.train --dataset xsum --sample 300 --val_docs 60 --hparam_subsample 2000
-"""
-
-
 import argparse
 
 import gzip
@@ -93,7 +77,6 @@ def _iter_rows(path: str):
 
 def extract_features(dataset: str, sample, features_dir: str, seed: int) -> dict:
 
-    """Stream the train split and write oracle-labeled feature chunks (resumable)."""
 
     out_dir = _chunk_dir(features_dir, dataset)
 
@@ -210,11 +193,6 @@ def _load_rows(dataset: str, features_dir: str, limit=None, shuffle_chunks=False
 
                with_texts: bool = True):
 
-    """Return (dense ndarray, texts list|None, y ndarray) from the cache, up to ``limit`` rows.
-
-    ``with_texts=False`` skips materializing the sentence strings — used by the XGBoost
-    full-split fit (dense-only), which otherwise holds ~8.6M strings in RAM.
-    """
 
     paths = _chunk_paths(features_dir, dataset)
 
@@ -249,7 +227,6 @@ def _load_rows(dataset: str, features_dir: str, limit=None, shuffle_chunks=False
 
 def _xgb_classifier(seed: int, **params):
 
-    """XGBoost hist-tree classifier (imported lazily so the module loads without it)."""
 
     from xgboost import XGBClassifier
 
@@ -288,13 +265,6 @@ def _base_estimator(name: str, seed: int):
 
 def hparam_search(dataset: str, name: str, features_dir: str, seed: int) -> dict:
 
-    """Search hyperparameters over the cached feature rows.
-
-    ``config.HPARAM_SUBSAMPLE = None`` means every cached row. The intermediates
-    are deleted before the search runs because ``GridSearchCV``/``RandomizedSearchCV``
-    fork worker processes, and anything still referenced here is copied into each
-    one -- on the full matrix that is enough to exhaust memory.
-    """
 
     dense, texts, y = _load_rows(dataset, features_dir, limit=config.HPARAM_SUBSAMPLE,
 
@@ -421,7 +391,6 @@ def _score_doc(model, name: str, sentences: list[str]) -> np.ndarray:
 
 def _legacy_from_policy(policy: dict, dataset: str) -> tuple[int, bool]:
 
-    """Back-compat best_k/use_blocking for a policy (budget modes fall back)."""
 
     if policy["mode"] == "topk":
 
@@ -636,11 +605,6 @@ def parse_args():
 
 def main():
 
-    """Entry point.
-
-    ``--sample 0``, ``--val_docs 0`` and ``--hparam_subsample 0`` all mean "use
-    everything", matching the ``None`` defaults in :mod:`traditional_ml.config`.
-    """
 
     args = parse_args()
 

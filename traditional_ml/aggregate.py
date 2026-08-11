@@ -1,14 +1,3 @@
-"""Collate traditional-ML metric JSONs into a CSV + Markdown report (+ charts).
-
-Self-contained (no shared import). Also prints a head-to-head vs the published
-Lead-3 bar so the score goal is easy to check. Those Lead-3 numbers are the
-published baseline measured on the same full test splits by the main pipeline,
-hard-coded here so this package stays standalone.
-
-    python -m traditional_ml.aggregate
-"""
-
-
 import argparse
 
 import csv

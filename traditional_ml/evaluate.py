@@ -1,14 +1,3 @@
-"""Self-contained metric scoring for the traditional-ML pipeline.
-
-Wraps HuggingFace ``evaluate`` (BLEU / ROUGE-L / METEOR / optional BERTScore)
-with the same key names the shared evaluator uses, so numbers are directly
-comparable to the main ``results/results.csv``. Also exposes ``MetricScorer``
-for the training-time validation calibration (lexical metrics only).
-
-    python -m traditional_ml.evaluate --models logreg --datasets xsum --no_bertscore
-"""
-
-
 import argparse
 
 import json
@@ -24,8 +13,6 @@ from .features import sent_tokenize
 
 
 class MetricScorer:
-
-    """Lazily loads HF metric backends once and reuses them."""
 
 
     def __init__(self):
@@ -54,12 +41,6 @@ class MetricScorer:
 
     def _safe(self, fn, default=0.0):
 
-        """Run ``fn``; on failure report loudly and fall back to ``default``.
-
-        A silent fallback here is dangerous: METEOR needs the nltk ``wordnet``
-        and ``omw-1.4`` corpora, and without them every score would read as a
-        plausible 0.0 in the published table and in the calibration composite.
-        """
 
         try:
 
@@ -74,7 +55,6 @@ class MetricScorer:
 
     def lexical(self, generated: list[str], references: list[str]) -> dict:
 
-        """BLEU / ROUGE-L / METEOR — used by validation calibration."""
 
         self._load_lexical()
 
@@ -92,7 +72,6 @@ class MetricScorer:
 
     def bertscore_f1(self, generated: list[str], references: list[str]):
 
-        """Mean BERTScore-F1, or (None, None) if the backend is unavailable."""
 
         try:
 
@@ -128,7 +107,6 @@ def score_file(path: str, label: str, dataset: str, scorer: MetricScorer,
 
                with_bertscore: bool = True) -> dict:
 
-    """Score one summaries JSONL file into a metrics dict (+ length stats)."""
 
     generated, references, news = [], [], []
 

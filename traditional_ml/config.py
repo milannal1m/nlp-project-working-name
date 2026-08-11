@@ -1,32 +1,3 @@
-"""Central configuration for the traditional-ML pipeline.
-
-Self-contained: defines datasets, output locations, the model list, the oracle
-and inference grids, and the hyperparameter-search space. All outputs live under
-``traditional_ml/`` so the pipeline never writes into the main repo tree.
-
-Scale knobs -- READ THIS BEFORE RUNNING LOCALLY. Three settings default to
-``None``, and ``None`` means FULL DATA in every case:
-
-``SAMPLE = None``
-    Use the whole train split: 287,113 CNN/DailyMail and 204,045 XSum documents.
-``VAL_DOCS = None``
-    Calibrate the selection policy over the whole validation split (13,368
-    CNN/DailyMail, 11,332 XSum), scoring every policy in the grid -- 40 policies
-    for CNN/DailyMail, 25 for XSum. This is the slowest stage by far, and
-    ``--sample`` alone does NOT bound it.
-``HPARAM_SUBSAMPLE = None``
-    Search over every cached sentence row (~10.2M CNN/DailyMail, ~3.9M XSum).
-
-These are cluster-scale settings. On a laptop pass all three explicitly, e.g.
-``--sample 200 --val_docs 40 --hparam_subsample 2000``.
-
-``HPARAM_N_JOBS = 4`` is a cap, not a maximum: nested joblib (CV workers times
-estimator threads) over a multi-GB matrix oversubscribes cores and balloons
-memory. ``USES_SPARSE`` records which models consume the hashed bag-of-words
-block in addition to the dense features.
-"""
-
-
 import os
 
 
@@ -149,7 +120,6 @@ FALLBACK_SELECTION = {
 
 def selection_policy_grid(dataset: str) -> list[dict]:
 
-    """All selection policies to sweep for ``dataset`` (length x redundancy)."""
 
     lengths = [{"mode": "topk", "k": k} for k in K_GRID if k <= K_CAP[dataset]]
 

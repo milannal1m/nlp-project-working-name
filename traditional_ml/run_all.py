@@ -1,13 +1,3 @@
-"""Local orchestrator: train -> generate -> evaluate -> aggregate.
-
-Runs the whole traditional-ML pipeline in one process for local/dev use. The
-cluster uses ``slurm/submit_all.sh`` instead (dependency-chained array jobs).
-
-    python -m traditional_ml.run_all --sample 300 --val_docs 60 --hparam_subsample 2000
-    python -m traditional_ml.run_all                 # full split (slow, prefer SLURM)
-"""
-
-
 import argparse
 
 import subprocess

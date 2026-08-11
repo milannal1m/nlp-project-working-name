@@ -1,12 +1,3 @@
-"""Self-contained dataset loading for the traditional-ML pipeline.
-
-Streams CNN/DailyMail and XSum via HuggingFace ``datasets`` and extracts the
-(news, reference) fields. This is an independent copy of the shared loader's
-behavior (shuffle seed 42, dateline stripping) so the package imports nothing
-from the main repo and stays merge-independent.
-"""
-
-
 import re
 
 
@@ -18,7 +9,6 @@ from . import config
 
 def strip_dateline(text: str) -> str:
 
-    """Strip a leading dateline such as ``LONDON (CNN) --`` from an article."""
 
     prefix = text[:120]
 
@@ -65,7 +55,6 @@ def _load(dataset: str, split: str, streaming: bool):
 
 def load_test(dataset: str, sample: int | None = None, seed: int = config.SEED):
 
-    """Stream the test split, shuffled, optionally capped at ``sample``."""
 
     ds = _load(dataset, "test", streaming=True).shuffle(seed=seed)
 
@@ -80,11 +69,6 @@ def load_split(dataset: str, split: str = "train", sample: int | None = None,
 
                seed: int = config.SEED, buffer_size: int = 10000):
 
-    """Stream a train or validation split.
-
-    Train is shuffled through a buffer because streaming has no global shuffle;
-    validation is deliberately left in dataset order so calibration is reproducible.
-    """
 
     ds = _load(dataset, split, streaming=True)
 
@@ -101,7 +85,6 @@ def load_split(dataset: str, split: str = "train", sample: int | None = None,
 
 def extract_fields(dataset: str, item: dict) -> tuple[str, str]:
 
-    """Return ``(news_text, reference_summary)`` for one record, stripping datelines."""
 
     text_key, summary_key = config.FIELD_MAP[dataset]
 

@@ -1,18 +1,3 @@
-"""Render the traditional-ML pipeline architecture to a PNG.
-
-Two panels on one canvas:
-  1. Method anatomy — how a summary is produced: the supervised training path
-     (oracle labels -> features -> hyperparameter search -> fit -> validation
-     calibration) and the inference path (score -> select top-k), bridged by the
-     trained model.
-  2. Code pipeline  — module + data flow across the self-contained package:
-     train -> generate -> evaluate -> aggregate.
-
-    python -m traditional_ml.architecture_diagram          # -> traditional_ml/architecture.png
-    python -m traditional_ml.architecture_diagram --out foo.png
-"""
-
-
 import argparse
 
 import os
@@ -47,7 +32,6 @@ DEFAULT_OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "architec
 
 def _tint(hex_color: str, alpha: float) -> tuple:
 
-    """Blend a hex colour toward white by ``1 - alpha`` (a soft fill)."""
 
     r, g, b = (int(hex_color[i:i + 2], 16) / 255 for i in (1, 3, 5))
 
@@ -82,7 +66,6 @@ def arrow(ax, p1, p2, color=INK, lw=1.7, style="-|>", ls="-"):
 
 def draw_method(ax):
 
-    """Panel 1 — the supervised training path and the inference path."""
 
     ax.text(25, 95, "①  Method anatomy — supervised extractive summarization",
 
@@ -163,7 +146,6 @@ def draw_method(ax):
 
 def draw_pipeline(ax):
 
-    """Panel 2 — module + data flow across the self-contained package."""
 
     ax.text(76, 95, "②  Code pipeline  (self-contained package)",
 

@@ -1,14 +1,3 @@
-"""Generate extractive summaries with a trained traditional-ML model.
-
-Loads ``model.joblib`` + ``meta.json`` (for the validation-tuned ``best_k`` and
-``use_blocking``), scores each test sentence, selects the top-k with trigram
-blocking, and writes JSONL summaries in the standard schema.
-
-    python -m traditional_ml.generate --model logreg
-    python -m traditional_ml.generate --model xgb --sample 20
-"""
-
-
 import argparse
 
 import json
@@ -37,7 +26,6 @@ def _count_records(path: str) -> int:
 
 def _policy_from_meta(meta: dict, dataset: str) -> dict:
 
-    """Resolve the selection policy: new `selection` dict → legacy keys → fallback."""
 
     sel = meta.get("selection")
 

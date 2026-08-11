@@ -1,11 +1,3 @@
-"""Feature engineering, oracle labeling, and sentence selection.
-
-Shared by training (feature extraction + validation calibration) and inference
-so the exact same sentence splitter, feature vector, and selection policy are
-used everywhere. No dependency on the main repo.
-"""
-
-
 import math
 
 import re
@@ -51,11 +43,6 @@ _SPACED_PERIOD = re.compile(r"\s\.\s+")
 
 def _load_punkt():
 
-    """Lazily load nltk's punkt tokenizer; fall back to the regex splitter.
-
-    Punkt fixes abbreviation splits (U.S., Dr., p.m.) that the regex botches.
-    nltk + punkt_tab are already project dependencies, so this adds nothing new.
-    """
 
     global _PUNKT, SPLITTER
 
@@ -103,7 +90,6 @@ def _regex_sents(text: str) -> list[str]:
 
 def _is_junk(sentence: str) -> bool:
 
-    """True for pure caption chrome (dropped for CNN/DM only)."""
 
     low = sentence.strip().lower().rstrip(" .")
 
@@ -127,14 +113,6 @@ def _punkt_or_regex(text: str) -> list[str]:
 
 def split_sentences(text: str, dataset: str | None = None) -> list[str]:
 
-    """Split ``text`` into sentences, dataset-aware.
-
-    For ``cnn_dailymail`` we first break the "spaced period" caption boundaries
-    (``... video . Police ...``) into their own segments — those captions are
-    kept as candidate sentences because they often paraphrase the reference —
-    then punkt-tokenize each segment and drop pure junk (photo-caption chrome,
-    <4-word fragments). Other datasets are punkt-tokenized directly, unfiltered.
-    """
 
     text = text.strip()
 
@@ -171,7 +149,6 @@ def split_sentences(text: str, dataset: str | None = None) -> list[str]:
 
 def sent_tokenize(text: str) -> list[str]:
 
-    """Backward-compatible splitter (regex cues). Prefer ``split_sentences``."""
 
     return _regex_sents(text)
 
@@ -209,12 +186,6 @@ def _f1(overlap: int, cand_total: int, ref_total: int) -> float:
 
 def oracle_labels(sentences: list[str], reference: str, max_k: int) -> list[int]:
 
-    """Return a 0/1 label per sentence: 1 if selected by the greedy oracle.
-
-    Greedily adds the sentence that most increases the summary-level mean of
-    ROUGE-1 and ROUGE-2 F1 vs the reference, stopping at ``max_k`` or when no
-    sentence improves the score.
-    """
 
     n = len(sentences)
 
@@ -315,7 +286,6 @@ DENSE_DIM = len(DENSE_FEATURE_NAMES)
 
 def _centroid_cosine(sentences: list[str]) -> np.ndarray:
 
-    """Cosine similarity of each sentence's TF-IDF vector to the doc centroid."""
 
     n = len(sentences)
 
@@ -352,20 +322,6 @@ def _centroid_cosine(sentences: list[str]) -> np.ndarray:
 
 def dense_features(sentences: list[str]) -> np.ndarray:
 
-    """Per-sentence dense features, all bounded to [0, 1] so no scaler is needed.
-
-    The rows of the returned array are positionally coupled to
-    ``DENSE_FEATURE_NAMES``; the assignment below fills them in exactly that
-    order:
-
-        rel_pos, abs_pos_norm, is_first, in_first_3, word_norm, len_vs_mean,
-        tfidf_centroid_cos, unigram_overlap_rest, numeral_ratio, cap_ratio,
-        quote_flag, stopword_ratio, log_doc_sents, log_doc_words
-
-    Adding a feature to one list and not the other silently invalidates every
-    cached feature chunk and every trained model, so the two must change
-    together. The [0, 1] bound is also a hard precondition for MultinomialNB.
-    """
 
     n = len(sentences)
 
@@ -446,11 +402,6 @@ def dense_features(sentences: list[str]) -> np.ndarray:
 
 def build_hashing_vectorizer(normalize: bool = False) -> HashingVectorizer:
 
-    """Stateless hashed bag-of-words (1-2 grams). Non-negative counts for NB.
-
-    ``normalize=True`` l2-normalizes rows (used for the linear model); the NB
-    path keeps raw non-negative counts.
-    """
 
     return HashingVectorizer(
 
@@ -479,11 +430,6 @@ def _get_vectorizer(normalize: bool) -> HashingVectorizer:
 
 def build_model_matrix(name: str, sentences: list[str], dense: np.ndarray | None = None):
 
-    """Feature matrix for a model: dense only (xgb) or dense + hashed BoW (logreg/nb).
-
-    ``dense`` may be passed precomputed (from the feature cache); otherwise it is
-    computed from ``sentences``. Returns an ndarray (xgb) or CSR matrix.
-    """
 
     if dense is None:
 
@@ -524,18 +470,6 @@ def _trigram_jaccard(a: set, b: set) -> float:
 
 def select_sentences_v2(scores, sentences: list[str], policy: dict) -> list[int]:
 
-    """Select sentence indices under a selection ``policy``, returned in doc order.
-
-    ``policy`` keys:
-      mode:       "topk" (stop after ``k`` sentences) | "budget" (stop at ``budget`` words)
-      k / budget: the limit for that mode
-      redundancy: "none" | "block" (skip any shared-trigram candidate)
-                  | "mmr"  (rank by lambda*score - (1-lambda)*max trigram-Jaccard)
-      lambda:     MMR trade-off (only for redundancy == "mmr")
-
-    A candidate is always kept if nothing has been selected yet, so the result is
-    never empty for a non-empty document.
-    """
 
     n = len(sentences)
 
