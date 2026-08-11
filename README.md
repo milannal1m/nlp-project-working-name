@@ -66,6 +66,10 @@ run: `--sample` bounds only feature extraction, while calibration is governed by
 arguments reproduces the full configuration below (491,158 training documents,
 ≈14.1M labelled sentences).
 
+On SLURM the whole chain — train, generate, evaluate, aggregate — is submitted
+with `bash traditional_ml/slurm/submit_all.sh`; the individual stage scripts sit
+next to it.
+
 ---
 
 ## Results
@@ -121,7 +125,8 @@ identical models under different quantization produced scores from 0.29 to 0.97.
 ## Generated summaries against references
 
 Three cases from ML-XGB, with the source article, the reference, and the system
-output, for sanity checking.
+output, for sanity checking. Ten sampled triples per model and dataset are under
+`results/examples/`.
 
 ### 1. CNN/DailyMail — successful extraction
 
