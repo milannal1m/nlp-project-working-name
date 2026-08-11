@@ -14,7 +14,6 @@ from evaluator import Evaluator, tokenize, sent_count
 
 def _truncate(src: str, dst: str, sample: int | None) -> int:
 
-    """Copy up to ``sample`` lines from ``src`` to ``dst``, returning how many."""
 
     os.makedirs(os.path.dirname(dst), exist_ok=True)
 
@@ -37,7 +36,6 @@ def _truncate(src: str, dst: str, sample: int | None) -> int:
 
 def _length_stats(path: str) -> dict:
 
-    """Word-level length / compression statistics for one JSONL file."""
 
     news_lens, ref_lens, gen_lens, gen_sents, compression = [], [], [], [], []
 
@@ -87,7 +85,6 @@ def _length_stats(path: str) -> dict:
 
 def evaluate_target(target: dict, sample: int) -> dict:
 
-    """Run every metric group on one (model, dataset) summary file."""
 
     src = os.path.join(OUTPUT_DIR, target["filename"])
 

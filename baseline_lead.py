@@ -13,7 +13,6 @@ from dataset import extract_fields, load_datasets_streaming
 
 def sent_tokenize(text: str) -> list[str]:
 
-    """Split text into sentences using punctuation + capital-letter cues."""
 
     parts = re.split(r'(?<=[.!?])\s+(?=[A-Z])', text.strip())
 
@@ -22,7 +21,6 @@ def sent_tokenize(text: str) -> list[str]:
 
 def lead_n(text: str, n: int) -> str:
 
-    """Return the first n sentences of text as a single string."""
 
     return " ".join(sent_tokenize(text)[:n])
 

@@ -48,7 +48,6 @@ class Evaluator:
 
     def evaluate_metrics(self, file_path):
 
-        """Calculates BLEU, ROUGE, METEOR and BERTScore against the reference summary."""
 
         self._load_metrics()
 
@@ -94,7 +93,6 @@ class Evaluator:
 
     def evaluate_summac(self, file_path):
 
-        """Calculates factual consistency against the original news text using SummaC."""
 
         if self.summac_model is None:
 
@@ -178,7 +176,6 @@ class Evaluator:
 
     def evaluate_qa(self, file_path):
 
-        """Calculates factual consistency using the dual-context QA pipeline."""
 
         try:
 
@@ -239,7 +236,6 @@ class Evaluator:
 
     def run_and_log(self, file_path, log_path="evaluation.log"):
 
-        """Runs all metrics and appends results to evaluation.log."""
 
         logger = logging.getLogger(__name__)
 
@@ -300,14 +296,12 @@ class Evaluator:
 
 def tokenize(text: str) -> list[str]:
 
-    """Simple whitespace + punctuation tokenizer."""
 
     return re.findall(r"\b\w+\b", text.lower())
 
 
 def sent_count(text: str) -> int:
 
-    """Rough sentence count."""
 
     return max(len(re.split(r"[.!?]+", text.strip())) - 1, 1)
 
@@ -319,7 +313,6 @@ def ngrams(tokens: list[str], n: int) -> Counter:
 
 def rouge_n(reference: str, hypothesis: str, n: int) -> dict:
 
-    """Compute ROUGE-N precision, recall, F1."""
 
     ref_tokens = tokenize(reference)
 
@@ -342,7 +335,6 @@ def rouge_n(reference: str, hypothesis: str, n: int) -> dict:
 
 def rouge_l(reference: str, hypothesis: str) -> dict:
 
-    """Compute ROUGE-L via LCS."""
 
     ref_tokens = tokenize(reference)
 
@@ -382,7 +374,6 @@ def rouge_l(reference: str, hypothesis: str) -> dict:
 
 def analyze_file(filepath: str) -> dict:
 
-    """Return aggregate metrics for one JSONL file."""
 
     news_lens = []
 
@@ -495,7 +486,6 @@ def _model_name(filename: str) -> str:
 
 def write_markdown(all_results: list[dict], path: Path):
 
-    """Write a Markdown analysis report (ROUGE-L only; ROUGE-1/2 excluded)."""
 
     cnn_results = [r for r in all_results if "cnn_dailymail" in r["file"]]
 
@@ -653,7 +643,6 @@ def write_markdown(all_results: list[dict], path: Path):
 
 def write_csv(all_results: list[dict], path: Path):
 
-    """Write a CSV spreadsheet with all metrics."""
 
     fieldnames = [
 

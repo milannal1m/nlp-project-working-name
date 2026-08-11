@@ -102,6 +102,50 @@ CNN/DailyMail and 0.1155 on XSum.
 ![bleu](results/charts/bleu.png)
 ![bertscore](results/charts/bertscore_f1.png)
 
+### Prompt sensitivity
+
+The fine-tuned adapter re-run under four prompt phrasings from `prompts.py`,
+everything else held fixed. `Phi-3-LoRA-Full_4bit` is the training prompt.
+
+| prompt | phrasing |
+|---|---|
+| training | the string baked into `model.py`, used at both training and inference |
+| P1 | direct instruction: "Summarize the news in two sentences." |
+| P2 | persona framing: "You are a news summarizer." |
+| P3 | reason first, then summarize after a `Summary:` marker |
+| P4 | one-shot in-context example drawn from the train split |
+
+XSum:
+
+| | training | P1 | P2 | P3 | P4 |
+|---|---|---|---|---|---|
+| ROUGE-L | **0.2969** | 0.2761 | 0.1923 | 0.1727 | 0.0848 |
+| BLEU | **0.0911** | 0.0759 | 0.0335 | 0.0276 | 0.0062 |
+| METEOR | **0.3222** | 0.3073 | 0.2978 | 0.2833 | 0.0759 |
+| BERTScore-F1 | **0.9010** | 0.8966 | 0.8756 | 0.8696 | 0.8148 |
+| words | 20.3 | 23.1 | 55.2 | 64.8 | 14.8 |
+
+CNN/DailyMail:
+
+| | training | P1 | P2 | P3 | P4 |
+|---|---|---|---|---|---|
+| ROUGE-L | **0.2222** | 0.2213 | 0.2148 | 0.2074 | 0.0946 |
+| BLEU | **0.0503** | 0.0458 | 0.0396 | 0.0356 | 0.0042 |
+| METEOR | 0.2767 | 0.2729 | 0.2746 | **0.2807** | 0.0759 |
+| BERTScore-F1 | 0.8706 | 0.8706 | **0.8707** | 0.8680 | 0.8176 |
+| words | 51.2 | 57.4 | 60.3 | 67.9 | 18.1 |
+
+At P4 the original Phi-3 runs under the identical prompt, so fine-tuned vs
+original is free of prompt confound:
+
+| ROUGE-L at P4 | fine-tuned 4-bit | original fp16 | original 4-bit | original 8-bit |
+|---|---|---|---|---|
+| XSum | 0.0848 | 0.0986 | 0.1189 | 0.0910 |
+| CNN/DailyMail | 0.0946 | 0.1353 | 0.1431 | 0.1268 |
+
+Model indices 12–14 are P1–P3, 15 is the fine-tuned model at P4, and 16–18 are
+the original Phi-3 at fp16 / 4-bit / 8-bit at P4.
+
 ### Training configuration
 
 | | |
@@ -123,7 +167,8 @@ CNN/DailyMail and 0.1155 on XSum.
 
 ## Generated summaries against references
 
-Three cases from the fine-tuned model.
+Ten sampled article/reference/generated triples per model and dataset are under
+`results/examples/`. Three cases from the fine-tuned model follow.
 
 ### 1. XSum
 

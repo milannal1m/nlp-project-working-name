@@ -18,7 +18,6 @@ from dataset import extract_fields, load_datasets_streaming
 
 def tfidf_summarize(text: str, n_sentences: int = 2) -> str:
 
-    """Summarize text by extracting top n_sentences using TF-IDF scoring."""
 
     parser = PlaintextParser.from_string(text, Tokenizer("english"))
 

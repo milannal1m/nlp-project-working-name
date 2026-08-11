@@ -1,0 +1,23 @@
+{
+  "label": "Phi-3_4bit_P4",
+  "dataset": "cnn_dailymail",
+  "file": "Phi-3_4bit_P4_cnn_dailymail_summaries.jsonl",
+  "num_samples": 11490,
+  "errors": {
+    "qa_eval": "qafacteval not installed"
+  },
+  "bleu": 0.011575652085534988,
+  "rougeL": 0.1430737771478366,
+  "meteor": 0.22347990789090028,
+  "bertscore_f1": 0.8381066531280106,
+  "bertscore_f1_std": 0.01998491759897961,
+  "summac": 0.5701839801491448,
+  "summac_std": 0.11043268758261446,
+  "qa_eval": null,
+  "avg_news_len": 694.5741514360313,
+  "avg_ref_len": 52.900870322019145,
+  "avg_gen_len": 110.05604873803307,
+  "std_gen_len": 48.41981373686688,
+  "avg_gen_sents": 6.6143603133159266,
+  "avg_compression": 0.2003076438010432
+}

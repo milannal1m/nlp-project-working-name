@@ -18,9 +18,6 @@ from dataset import extract_fields, load_datasets_streaming
 
 def textrank_summarize(text: str, n_sentences: int = 2) -> str:
 
-    """Summarize text by extracting the top n_sentences using TextRank.
-    We use n_sentences=2 to match the prompt we give Llama ("summarize in two sentences"), keeping the comparison fair.
-    """
 
     parser = PlaintextParser.from_string(text, Tokenizer("english"))
 

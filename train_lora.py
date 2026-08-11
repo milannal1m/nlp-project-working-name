@@ -1,13 +1,3 @@
-"""QLoRA fine-tuning of Phi-3-mini for news summarization.
-
-Trains a LoRA adapter over a 4-bit NF4 base and saves it to
-``adapters/phi3-lora-news-full``, which ``pipeline_config.py`` attaches as
-``Phi-3-LoRA-Full_4bit`` (index 11) for a like-for-like comparison against the
-un-adapted ``Phi-3_4bit`` row. Loss is taken only on the summary and its EOS, so
-the model learns where to stop; the prompt is the same string used at inference.
-"""
-
-
 import argparse
 
 import glob
@@ -53,14 +43,12 @@ PHI3_TARGET_MODULES = ["qkv_proj", "o_proj", "gate_up_proj", "down_proj"]
 
 def local_rank() -> int:
 
-    """This process's GPU index under torchrun (0 when running single-process)."""
 
     return int(os.environ.get("LOCAL_RANK", 0))
 
 
 def is_main() -> bool:
 
-    """True only on global rank 0 — used to keep logging/saving single-writer."""
 
     return int(os.environ.get("RANK", 0)) == 0
 
@@ -74,13 +62,6 @@ def log(msg: str) -> None:
 
 def allow_own_checkpoint_load() -> None:
 
-    """Permit ``torch.load`` for optimizer state this job itself wrote.
-
-    transformers refuses ``torch.load`` below torch 2.6 (CVE-2025-32434, an
-    untrusted-pickle risk). torch is pinned at 2.5.1 for the bitsandbytes/CUDA
-    build, and ``optimizer.pt`` is not safetensors, so resume is otherwise
-    impossible. Only self-written checkpoints are ever loaded here.
-    """
 
     try:
 
@@ -96,7 +77,6 @@ def allow_own_checkpoint_load() -> None:
 
 def latest_checkpoint(trainer_dir: str):
 
-    """Newest ``checkpoint-<step>`` under ``trainer_dir``, or None."""
 
     cks = glob.glob(os.path.join(trainer_dir, "checkpoint-*"))
 
@@ -123,8 +103,6 @@ def build_tokenizer(base_model: str):
 
 
 def make_tokenize_fn(tok, max_seq_length: int, max_summary_tokens: int):
-
-    """Return a fn mapping (article, summary) -> {input_ids, labels} with completion-only loss."""
 
 
     overhead = len(tok(PROMPT_TEMPLATE.format(news=""), add_special_tokens=True).input_ids)
@@ -160,7 +138,6 @@ def make_tokenize_fn(tok, max_seq_length: int, max_summary_tokens: int):
 
 def make_collate_fn(tok):
 
-    """Right-pad a batch to a multiple of 8; pad labels with -100 so padding is ignored."""
 
     pad_id = tok.pad_token_id
 
@@ -203,11 +180,6 @@ def build_dataset(tok, datasets: list[str], per_dataset_samples, seed: int,
 
                   max_seq_length: int, max_summary_tokens: int) -> Dataset:
 
-    """Tokenize a combined (article, summary) train set.
-
-    ``per_dataset_samples=None`` uses each full train split, so the mix is
-    unbalanced in source proportion (CNN/DailyMail 287k, XSum 204k).
-    """
 
     articles, summaries = [], []
 
@@ -234,7 +206,6 @@ def build_dataset(tok, datasets: list[str], per_dataset_samples, seed: int,
 
 def load_quantized_model(base_model: str, compute_dtype):
 
-    """Load the 4-bit NF4 base and make it QLoRA-trainable."""
 
     bnb = BitsAndBytesConfig(
 
@@ -348,7 +319,6 @@ def parse_args():
 
 def resolve_dataset(args, tok) -> Dataset:
 
-    """Load the pre-tokenized cache when present, else build (and optionally save) it."""
 
     datasets = [d.strip() for d in args.datasets.split(",") if d.strip()]
 

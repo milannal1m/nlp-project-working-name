@@ -1,6 +1,6 @@
 # Summarization Experiment Results
 
-**Models**: 11 &nbsp;|&nbsp; **Datasets**: CNN/DailyMail, XSum &nbsp;|&nbsp; **Samples/dataset**: None
+**Models**: 8 &nbsp;|&nbsp; **Datasets**: CNN/DailyMail, XSum &nbsp;|&nbsp; **Samples/dataset**: None
 
 **Metrics**: BLEU, ROUGE-L, METEOR, BERTScore-F1, SummaC, QAFactEval (ROUGE-1 / ROUGE-2 excluded). Higher is better for all.
 
@@ -10,19 +10,16 @@
 
 | Model | BLEU | ROUGE-L | METEOR | BERTScore-F1 | SummaC | QAFactEval | Gen Len | Compression |
 |-------|------:|------:|------:|------:|------:|------:|--------:|------------:|
-| Lead-1 | 0.0365 | 0.1831 | 0.1682 | 0.8593 ± 0.0237 | 0.7739 ± 0.1435 | — | 25.7 | 0.0475 |
-| Lead-3 | 0.1150 | 0.2428 | 0.3854 | 0.8691 ± 0.0223 | 0.8914 ± 0.0661 | — | 82.2 | 0.1529 |
-| TextRank | 0.0597 | 0.1808 | 0.2540 | 0.8488 ± 0.0218 | 0.1034 ± 0.0901 | — | 78.3 | 0.1394 |
-| TFIDF | 0.0648 | 0.1733 | 0.2163 | 0.8504 ± 0.0223 | 0.8476 ± 0.0475 | — | 47.6 | 0.0881 |
-| Llama_None | 0.0836 | 0.2389 | 0.3381 | 0.8729 ± 0.0192 | 0.0375 ± 0.0440 | — | 73.4 | 0.1319 |
-| Llama_4bit | 0.0813 | 0.2359 | 0.3289 | 0.8717 ± 0.0198 | 0.0461 ± 0.0551 | — | 71.7 | 0.1285 |
-| Llama_8bit | 0.0842 | 0.2392 | 0.3373 | 0.8731 ± 0.0191 | 0.0618 ± 0.0951 | — | 72.6 | 0.1309 |
-| Phi-3_None | 0.0485 | 0.1846 | 0.3008 | 0.8521 ± 0.0180 | 0.7257 ± 0.1288 | — | 103.0 | 0.1959 |
-| Phi-3_4bit | 0.0455 | 0.1836 | 0.2880 | 0.8510 ± 0.0191 | 0.2898 ± 0.1241 | — | 98.4 | 0.1882 |
-| Phi-3_8bit | 0.0500 | 0.1854 | 0.3035 | 0.8521 ± 0.0180 | 0.9718 ± 0.0505 | — | 103.9 | 0.1972 |
 | Phi-3-LoRA-Full_4bit | 0.0503 | 0.2222 | 0.2767 | 0.8706 ± 0.0189 | 0.5355 ± 0.0507 | — | 51.2 | 0.0895 |
+| Phi-3-LoRA-Full_4bit_P1 | 0.0458 | 0.2213 | 0.2729 | 0.8706 ± 0.0199 | 0.5630 ± 0.0423 | — | 57.4 | 0.0908 |
+| Phi-3-LoRA-Full_4bit_P2 | 0.0396 | 0.2148 | 0.2746 | 0.8707 ± 0.0193 | 0.3798 ± 0.1059 | — | 60.3 | 0.0982 |
+| Phi-3-LoRA-Full_4bit_P3 | 0.0356 | 0.2074 | 0.2807 | 0.8680 ± 0.0191 | 0.0592 ± 0.0542 | — | 67.9 | 0.1119 |
+| Phi-3-LoRA-Full_4bit_P4 | 0.0042 | 0.0946 | 0.0759 | 0.8176 ± 0.0370 | 0.7534 ± 0.3479 | — | 18.1 | 0.0327 |
+| Phi-3_None_P4 | 0.0089 | 0.1353 | 0.2041 | 0.8334 ± 0.0249 | 0.3057 ± 0.0913 | — | 109.3 | 0.1849 |
+| Phi-3_4bit_P4 | 0.0116 | 0.1431 | 0.2235 | 0.8381 ± 0.0200 | 0.5702 ± 0.1104 | — | 110.1 | 0.2003 |
+| Phi-3_8bit_P4 | 0.0085 | 0.1268 | 0.2086 | 0.8304 ± 0.0234 | 0.6350 ± 0.1069 | — | 127.4 | 0.2294 |
 
-**Best per metric:** BLEU: **Lead-3** (0.1150); ROUGE-L: **Lead-3** (0.2428); METEOR: **Lead-3** (0.3854); BERTScore-F1: **Llama_8bit** (0.8731); SummaC: **Phi-3_8bit** (0.9718)
+**Best per metric:** BLEU: **Phi-3-LoRA-Full_4bit** (0.0503); ROUGE-L: **Phi-3-LoRA-Full_4bit** (0.2222); METEOR: **Phi-3-LoRA-Full_4bit_P3** (0.2807); BERTScore-F1: **Phi-3-LoRA-Full_4bit_P2** (0.8707); SummaC: **Phi-3-LoRA-Full_4bit_P4** (0.7534)
 
 ---
 
@@ -30,46 +27,37 @@
 
 | Model | BLEU | ROUGE-L | METEOR | BERTScore-F1 | SummaC | QAFactEval | Gen Len | Compression |
 |-------|------:|------:|------:|------:|------:|------:|--------:|------------:|
-| Lead-1 | 0.0070 | 0.1178 | 0.1312 | 0.8554 ± 0.0199 | 0.2265 ± 0.1271 | — | 24.3 | 0.1124 |
-| Lead-3 | 0.0077 | 0.1155 | 0.2089 | 0.8546 ± 0.0184 | 0.2276 ± 0.1265 | — | 69.4 | 0.3024 |
-| TextRank | 0.0092 | 0.1147 | 0.1974 | 0.8497 ± 0.0188 | 0.2245 ± 0.1275 | — | 65.0 | 0.2605 |
-| TFIDF | 0.0080 | 0.1151 | 0.1812 | 0.8513 ± 0.0189 | 0.2267 ± 0.1273 | — | 44.2 | 0.1946 |
-| Llama_None | 0.0256 | 0.1639 | 0.2762 | 0.8736 ± 0.0196 | 0.8417 ± 0.1240 | — | 60.4 | 0.2664 |
-| Llama_4bit | 0.0251 | 0.1646 | 0.2721 | 0.8735 ± 0.0200 | 0.7845 ± 0.1217 | — | 57.7 | 0.2606 |
-| Llama_8bit | 0.0250 | 0.1631 | 0.2751 | 0.8734 ± 0.0195 | 0.7028 ± 0.1013 | — | 60.3 | 0.2665 |
-| Phi-3_None | 0.0121 | 0.1131 | 0.2257 | 0.8527 ± 0.0161 | 0.4035 ± 0.0456 | — | 102.9 | 0.4815 |
-| Phi-3_4bit | 0.0122 | 0.1189 | 0.2261 | 0.8537 ± 0.0178 | 0.5644 ± 0.1354 | — | 97.3 | 0.4564 |
-| Phi-3_8bit | 0.0124 | 0.1136 | 0.2267 | 0.8526 ± 0.0164 | 0.2091 ± 0.1645 | — | 103.3 | 0.4837 |
 | Phi-3-LoRA-Full_4bit | 0.0911 | 0.2969 | 0.3222 | 0.9010 ± 0.0283 | 0.5969 ± 0.0857 | — | 20.3 | 0.0918 |
+| Phi-3-LoRA-Full_4bit_P1 | 0.0759 | 0.2761 | 0.3073 | 0.8966 ± 0.0290 | 0.3020 ± 0.1261 | — | 23.1 | 0.0965 |
+| Phi-3-LoRA-Full_4bit_P2 | 0.0335 | 0.1923 | 0.2978 | 0.8756 ± 0.0248 | 0.5561 ± 0.0127 | — | 55.2 | 0.2422 |
+| Phi-3-LoRA-Full_4bit_P3 | 0.0276 | 0.1727 | 0.2833 | 0.8696 ± 0.0241 | 0.5649 ± 0.0781 | — | 64.8 | 0.2965 |
+| Phi-3-LoRA-Full_4bit_P4 | 0.0062 | 0.0848 | 0.0759 | 0.8148 ± 0.0313 | 0.2587 ± 0.0205 | — | 14.8 | 0.0587 |
+| Phi-3_None_P4 | 0.0055 | 0.0986 | 0.1797 | 0.8425 ± 0.0243 | 0.6590 ± 0.0819 | — | 114.3 | 0.5169 |
+| Phi-3_4bit_P4 | 0.0078 | 0.1189 | 0.1972 | 0.8516 ± 0.0231 | 0.6518 ± 0.0768 | — | 88.3 | 0.4093 |
+| Phi-3_8bit_P4 | 0.0054 | 0.0910 | 0.1751 | 0.8394 ± 0.0229 | 0.4994 ± 0.0537 | — | 127.4 | 0.5953 |
 
-**Best per metric:** BLEU: **Phi-3-LoRA-Full_4bit** (0.0911); ROUGE-L: **Phi-3-LoRA-Full_4bit** (0.2969); METEOR: **Phi-3-LoRA-Full_4bit** (0.3222); BERTScore-F1: **Phi-3-LoRA-Full_4bit** (0.9010); SummaC: **Llama_None** (0.8417)
+**Best per metric:** BLEU: **Phi-3-LoRA-Full_4bit** (0.0911); ROUGE-L: **Phi-3-LoRA-Full_4bit** (0.2969); METEOR: **Phi-3-LoRA-Full_4bit** (0.3222); BERTScore-F1: **Phi-3-LoRA-Full_4bit** (0.9010); SummaC: **Phi-3_None_P4** (0.6590)
 
 ---
 
 ## Notes — metrics that did not run
 
-- `Lead-1` / CNN/DailyMail — **qa_eval**: qafacteval not installed
-- `Lead-1` / XSum — **qa_eval**: qafacteval not installed
-- `Lead-3` / CNN/DailyMail — **qa_eval**: qafacteval not installed
-- `Lead-3` / XSum — **qa_eval**: qafacteval not installed
-- `Llama_4bit` / CNN/DailyMail — **qa_eval**: qafacteval not installed
-- `Llama_4bit` / XSum — **qa_eval**: qafacteval not installed
-- `Llama_8bit` / CNN/DailyMail — **qa_eval**: qafacteval not installed
-- `Llama_8bit` / XSum — **qa_eval**: qafacteval not installed
-- `Llama_None` / CNN/DailyMail — **qa_eval**: qafacteval not installed
-- `Llama_None` / XSum — **qa_eval**: qafacteval not installed
+- `Phi-3-LoRA-Full_4bit_P1` / CNN/DailyMail — **qa_eval**: qafacteval not installed
+- `Phi-3-LoRA-Full_4bit_P1` / XSum — **qa_eval**: qafacteval not installed
+- `Phi-3-LoRA-Full_4bit_P2` / CNN/DailyMail — **qa_eval**: qafacteval not installed
+- `Phi-3-LoRA-Full_4bit_P2` / XSum — **qa_eval**: qafacteval not installed
+- `Phi-3-LoRA-Full_4bit_P3` / CNN/DailyMail — **qa_eval**: qafacteval not installed
+- `Phi-3-LoRA-Full_4bit_P3` / XSum — **qa_eval**: qafacteval not installed
+- `Phi-3-LoRA-Full_4bit_P4` / CNN/DailyMail — **qa_eval**: qafacteval not installed
+- `Phi-3-LoRA-Full_4bit_P4` / XSum — **qa_eval**: qafacteval not installed
 - `Phi-3-LoRA-Full_4bit` / CNN/DailyMail — **qa_eval**: qafacteval not installed
 - `Phi-3-LoRA-Full_4bit` / XSum — **qa_eval**: qafacteval not installed
-- `Phi-3_4bit` / CNN/DailyMail — **qa_eval**: qafacteval not installed
-- `Phi-3_4bit` / XSum — **qa_eval**: qafacteval not installed
-- `Phi-3_8bit` / CNN/DailyMail — **qa_eval**: qafacteval not installed
-- `Phi-3_8bit` / XSum — **qa_eval**: qafacteval not installed
-- `Phi-3_None` / CNN/DailyMail — **qa_eval**: qafacteval not installed
-- `Phi-3_None` / XSum — **qa_eval**: qafacteval not installed
-- `TFIDF` / CNN/DailyMail — **qa_eval**: qafacteval not installed
-- `TFIDF` / XSum — **qa_eval**: qafacteval not installed
-- `TextRank` / CNN/DailyMail — **qa_eval**: qafacteval not installed
-- `TextRank` / XSum — **qa_eval**: qafacteval not installed
+- `Phi-3_4bit_P4` / CNN/DailyMail — **qa_eval**: qafacteval not installed
+- `Phi-3_4bit_P4` / XSum — **qa_eval**: qafacteval not installed
+- `Phi-3_8bit_P4` / CNN/DailyMail — **qa_eval**: qafacteval not installed
+- `Phi-3_8bit_P4` / XSum — **qa_eval**: qafacteval not installed
+- `Phi-3_None_P4` / CNN/DailyMail — **qa_eval**: qafacteval not installed
+- `Phi-3_None_P4` / XSum — **qa_eval**: qafacteval not installed
 
 ## Charts
 
