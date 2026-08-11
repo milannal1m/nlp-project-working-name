@@ -7,15 +7,6 @@
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --error=logs/%x_%j.err
 
-# Stage 5/5 — aggregate both pipelines and assemble ONE folder holding
-# everything needed to evaluate the run, then tar it for a single-command pull.
-#
-# Runs with `afterany` on both chains, so a partial run still produces a bundle
-# that shows exactly what landed and what did not.
-
-# Slurm copies the batch script into /var/spool/slurmd, so $0 does NOT resolve
-# to the repo — resolve helpers via SLURM_SUBMIT_DIR instead, and fail loudly if
-# the helper is missing rather than running on with an unconfigured environment.
 set -euo pipefail
 COMMON="${SLURM_SUBMIT_DIR:-.}/slurm/_common.sh"
 [[ -f "$COMMON" ]] || { echo "FATAL: cannot find $COMMON" >&2; exit 1; }
@@ -24,14 +15,12 @@ source "$COMMON"
 BUNDLE="RESULTS_BUNDLE"
 banner "collecting -> ${BUNDLE}"
 
-# --- aggregate whatever metrics exist (never fatal) ----------------------
 "$PY" aggregate.py                      || echo "[warn] main aggregate failed"
 "$PY" -m traditional_ml.aggregate       || echo "[warn] traditional_ml aggregate failed"
 
 rm -rf "${BUNDLE}"
 mkdir -p "${BUNDLE}"/{metrics,summaries,charts,logs,models,adapter}
 
-# --- metrics + tables ----------------------------------------------------
 cp -f results/metrics/*.json                   "${BUNDLE}/metrics/"            2>/dev/null || true
 cp -f traditional_ml/results/metrics/*.json    "${BUNDLE}/metrics/"            2>/dev/null || true
 cp -f results/results.csv results/results.md   "${BUNDLE}/"                    2>/dev/null || true
@@ -40,11 +29,9 @@ cp -f traditional_ml/results/results.md        "${BUNDLE}/results_traditional_ml
 cp -f results/charts/*.png                     "${BUNDLE}/charts/"             2>/dev/null || true
 cp -f traditional_ml/results/charts/*.png      "${BUNDLE}/charts/"             2>/dev/null || true
 
-# --- generated summaries (the new LoRA rows + all traditional-ML rows) ----
 cp -f summaries/Phi-3-LoRA-Full_4bit_*_summaries.jsonl "${BUNDLE}/summaries/"  2>/dev/null || true
 cp -f traditional_ml/summaries/ML-*_summaries.jsonl    "${BUNDLE}/summaries/"  2>/dev/null || true
 
-# --- model artifacts -----------------------------------------------------
 cp -f "${ADAPTER_DIR}"/adapter_config.json "${BUNDLE}/adapter/"                2>/dev/null || true
 cp -f "${ADAPTER_DIR}"/trainer_logs/trainer_state.json "${BUNDLE}/adapter/"    2>/dev/null || true
 for ds in "${DATASETS[@]}"; do
@@ -55,11 +42,9 @@ for ds in "${DATASETS[@]}"; do
   done
 done
 
-# --- logs ----------------------------------------------------------------
 cp -f logs/*.out logs/*.err                     "${BUNDLE}/logs/"             2>/dev/null || true
 cp -f traditional_ml/logs/*.out traditional_ml/logs/*.err "${BUNDLE}/logs/"   2>/dev/null || true
 
-# --- manifest ------------------------------------------------------------
 {
   echo "# Run manifest"
   echo

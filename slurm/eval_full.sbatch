@@ -9,19 +9,6 @@
 #SBATCH --output=logs/%x_%A_%a.out
 #SBATCH --error=logs/%x_%A_%a.err
 
-# Stage 4/5 — score the fine-tuned rows. Array indices map to
-# pipeline_config.EVAL_TARGETS: 22 = Phi-3-LoRA-Full_4bit/cnn_dailymail,
-# 23 = .../xsum. Metrics: BLEU, ROUGE-L, METEOR, BERTScore, SummaC.
-#
-# On GPU deliberately: BERTScore (roberta-large) and SummaC (albert-xlarge) on
-# CPU is what pushed the previous traditional-ML eval to 7h45 of an 8h limit.
-#
-# Refuses to score a short file — a partial JSONL would silently produce a wrong
-# number that looks perfectly plausible in the results table.
-
-# Slurm copies the batch script into /var/spool/slurmd, so $0 does NOT resolve
-# to the repo — resolve helpers via SLURM_SUBMIT_DIR instead, and fail loudly if
-# the helper is missing rather than running on with an unconfigured environment.
 set -euo pipefail
 COMMON="${SLURM_SUBMIT_DIR:-.}/slurm/_common.sh"
 [[ -f "$COMMON" ]] || { echo "FATAL: cannot find $COMMON" >&2; exit 1; }
@@ -49,8 +36,6 @@ echo "input verified: ${GOT}/${WANT} records"
 
 "$PY" run_evaluation.py --index "${SLURM_ARRAY_TASK_ID}"
 
-# run_evaluation.py records per-metric failures into an "errors" dict and still
-# exits 0, so verify the numbers we actually need are present and non-null.
 OUT="results/metrics/${LABEL}__${DS}.json"
 "$PY" - "${OUT}" "${WANT}" <<'EOF'
 import json, sys
