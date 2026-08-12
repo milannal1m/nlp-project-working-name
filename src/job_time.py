@@ -52,6 +52,48 @@ def _parse_name(basename):
     return model, quant, prompt, dataset
 
 
+# --- QA data-prep logs (qa_prep_*.out from data_preparation_pipeline.py) -------
+# These are summarization runs over newsqasum_gold.jsonl, but with a different log
+# format than sum_*.out: config from a "Loading Model: .. | Quant: .. | Prompt: .."
+# line, and duration from "--- SUCCESS --- Generated N summaries in X.XX min" (or the
+# last "generated N | .. | elapsed=X.XX min" progress line if it timed out).
+_QA_CONFIG_RE = re.compile(r"Loading Model:\s*(\S+)\s*\|\s*Quant:\s*(\S+)\s*\|\s*Prompt:\s*(\S+)")
+_QA_SUCCESS_RE = re.compile(r"Generated (\d+) summaries in ([0-9.]+) min")
+_QA_PROGRESS_RE = re.compile(r"generated (\d+) \|.*?elapsed=([0-9.]+) min")
+_QA_DATASET = "newsqasum"  # single fixed input for the QA-prep pipeline
+
+
+def _model_token(model_path):
+    """HF path/basename -> the short model token used elsewhere (Llama/Phi/Qwen2)."""
+    b = os.path.basename(model_path).lower()
+    if "llama" in b:
+        return "Llama"
+    if "phi" in b:
+        return "Phi"
+    if "qwen" in b:
+        return "Qwen2"
+    return os.path.basename(model_path)
+
+
+def _parse_qa_log(text):
+    """(model, quant, prompt, dataset), minutes, n, complete from a qa_prep_*.out, or None."""
+    cfg_m = _QA_CONFIG_RE.search(text)
+    if not cfg_m:
+        return None
+    cfg = (_model_token(cfg_m.group(1)), cfg_m.group(2), cfg_m.group(3), _QA_DATASET)
+    succ = _QA_SUCCESS_RE.search(text)
+    if succ:
+        n, minutes, complete = int(succ.group(1)), float(succ.group(2)), True
+    else:  # no SUCCESS line -> use the last progress line (timed-out / still-running)
+        prog = _QA_PROGRESS_RE.findall(text)
+        if not prog:
+            return None
+        n, minutes, complete = int(prog[-1][0]), float(prog[-1][1]), False
+    if n <= 0:
+        return None
+    return cfg, minutes, n, complete
+
+
 def parse_logs(logs_dir="logs"):
     """Yield one record per summarization log with a recoverable per-article rate.
 
@@ -89,6 +131,22 @@ def parse_logs(logs_dir="logs"):
             "config": cfg, "minutes": minutes, "n_articles": n,
             "rate": minutes / n, "complete": complete,
         })
+
+    # QA data-prep logs (different name + format; see _parse_qa_log).
+    for path in glob.glob(os.path.join(logs_dir, "**", "qa_prep_*.out"), recursive=True):
+        try:
+            with open(path, "r", encoding="utf-8", errors="replace") as f:
+                text = f.read()
+        except OSError:
+            continue
+        parsed = _parse_qa_log(text)
+        if parsed is None:
+            continue
+        cfg, minutes, n, complete = parsed
+        records.append({
+            "config": cfg, "minutes": minutes, "n_articles": n,
+            "rate": minutes / n, "complete": complete,
+        })
     return records
 
 
@@ -114,18 +172,24 @@ def _weighted_rate(records, pred):
 OVERHEAD_MIN = 5.0
 
 
-def estimate_minutes(records, model, quant, prompt, dataset, sample, overhead=OVERHEAD_MIN):
+def estimate_minutes(records, model, quant, prompt, dataset, sample, overhead=OVERHEAD_MIN,
+                     cross_model=False):
     """Predicted minutes for a config = overhead + per-article rate x article count.
 
     Rate is the article-weighted rate over the exact (model, quant, prompt, dataset)
     logs, falling back to the same (model, quant, prompt) across datasets (so xu_*
     reuses cnn/xsum, and a cell measured only on one dataset covers the other).
-    Article count is the requested `sample`, or the dataset's full size for full runs.
-    Returns None if the config is unmeasured.
+    With ``cross_model=True`` there is a final fallback that reuses the same
+    (quant, prompt) rate measured on ANY model — so a model with no logs of its own
+    (e.g. Phi) inherits an estimate from the model that was actually run (e.g. Llama),
+    instead of dropping to the flat fallback. Article count is the requested
+    ``sample``, or the dataset's full size for full runs. Returns None if unmeasured.
     """
     rate = _weighted_rate(records, lambda r: r["config"] == (model, quant, prompt, dataset))
     if rate is None:
         rate = _weighted_rate(records, lambda r: r["config"][:3] == (model, quant, prompt))
+    if rate is None and cross_model:
+        rate = _weighted_rate(records, lambda r: (r["config"][1], r["config"][2]) == (quant, prompt))
     if rate is None:
         return None
 
@@ -188,6 +252,9 @@ def main():
     p.add_argument("--floor_min", type=int, default=30)
     p.add_argument("--max", dest="max_hms", default="48:00:00")
     p.add_argument("--fallback", default="36:00:00")
+    p.add_argument("--cross-model", dest="cross_model", action="store_true",
+                   help="If a model has no logs, reuse the same (quant, prompt) rate "
+                        "measured on any other model instead of the flat fallback.")
     args = p.parse_args()
 
     records = parse_logs(args.logs_dir)
@@ -200,7 +267,8 @@ def main():
         p.error("--model, --quant, --prompt, --dataset are required (or use --report)")
 
     minutes = estimate_minutes(records, args.model, args.quant, args.prompt,
-                               args.dataset, args.sample, overhead=args.overhead)
+                               args.dataset, args.sample, overhead=args.overhead,
+                               cross_model=args.cross_model)
     if minutes is None:
         print(args.fallback)  # unmeasured config -> generous default
     else:

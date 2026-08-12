@@ -12,3 +12,7 @@ protobuf>=3.20.0
 absl-py>=1.0.0
 bert-score>=0.3.13
 nltk>=3.8.1
+# summac must be installed separately: pip install --no-deps git+https://github.com/tingofurro/summac.git
+
+# NOTE: The QA-Eval pipeline requires conflicting dependencies, hence requiring a completely isolated environment
+# To run the QA evalution, please find the folder QA_Evaluation, go through Readme_QA.md for instructions.

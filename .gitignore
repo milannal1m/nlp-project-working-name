@@ -37,6 +37,7 @@ __pycache__/
 *.pyo
 *.pyd
 .ipynb_checkpoints/
+**/mac-test-env/
 
 .venv/
 venv/
@@ -69,6 +70,19 @@ Transformer-Farnaz/summaries_*/
 # Python cache
 __pycache__/
 *.pyc
+
+
+# ==========================================
+# QAFactEval Pipeline Additions
+# ==========================================
+# 1. Model Weights
+**/QAFactEval/models/
+**/facebook/
+
+# 3. Cluster Execution Logs
+*.out
+*.err
+
 
 .github
 logs

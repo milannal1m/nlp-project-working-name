@@ -1,0 +1,3 @@
+file,bleu,rougeL,meteor,bertscore_f1,bertscore_f1_std,qa_eval,qa_eval_std,error
+Transformer_E2_cnn_dailymail_500_summaries.jsonl,0.0,0.04112648545891315,0.03442028750871661,-0.1499316462147981,0.046828551144285094,,,qafacteval not installed
+Transformer_E2_xsum_500_summaries.jsonl,0.0,0.14243686805125322,0.11548370073321383,0.0317996646692045,0.08286821651751237,,,qafacteval not installed

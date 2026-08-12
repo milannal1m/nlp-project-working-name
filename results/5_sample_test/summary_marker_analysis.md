@@ -1,0 +1,51 @@
+# Summary-marker analysis
+
+Generated summaries that do NOT contain a `Summary:` marker (regex `(?:^|\n)[^\n]*?\bsummary\s*\*{0,2}\s*:\s*\*{0,2}\s*`).
+
+| file | n | with_marker | no_marker | no_marker % |
+| --- | --- | --- | --- | --- |
+| Lead-1_cnn_dailymail_5_summaries.jsonl | 5 | 0 | 5 | 100.0% |
+| Lead-1_xsum_5_summaries.jsonl | 5 | 0 | 5 | 100.0% |
+| Lead-3_cnn_dailymail_5_summaries.jsonl | 5 | 0 | 5 | 100.0% |
+| Lead-3_xsum_5_summaries.jsonl | 5 | 0 | 5 | 100.0% |
+| Llama_P1_16bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Llama_P1_16bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Llama_P1_4bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Llama_P1_4bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Llama_P1_8bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Llama_P1_8bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Llama_P2_16bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Llama_P2_16bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Llama_P2_4bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Llama_P2_4bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Llama_P2_8bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Llama_P2_8bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Llama_P3_16bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Llama_P3_16bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Llama_P3_4bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Llama_P3_4bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Llama_P3_8bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Llama_P3_8bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P1_16bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P1_16bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P1_4bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P1_4bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P1_8bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P1_8bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P2_16bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P2_16bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P2_4bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P2_4bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P2_8bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P2_8bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P3_16bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P3_16bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P3_4bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P3_4bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P3_8bit_cnn_dailymail_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| Phi_P3_8bit_xsum_5_summaries.jsonl | 5 | 5 | 0 | 0.0% |
+| TFIDF_cnn_dailymail_5_summaries.jsonl | 5 | 0 | 5 | 100.0% |
+| TFIDF_xsum_5_summaries.jsonl | 5 | 0 | 5 | 100.0% |
+| TextRank_cnn_dailymail_5_summaries.jsonl | 5 | 0 | 5 | 100.0% |
+| TextRank_xsum_5_summaries.jsonl | 5 | 0 | 5 | 100.0% |
+| **TOTAL** | 220 | 180 | 40 | 18.2% |

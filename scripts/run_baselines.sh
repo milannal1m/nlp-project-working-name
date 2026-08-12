@@ -2,8 +2,8 @@
 #SBATCH --job-name=baselines
 #SBATCH --partition=cpu
 #SBATCH --cpus-per-task=16
-#SBATCH --mem=32000
-#SBATCH --time=12:00:00
+#SBATCH --mem=4000
+#SBATCH --time=1:00:00
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --error=logs/%x_%j.err
 #

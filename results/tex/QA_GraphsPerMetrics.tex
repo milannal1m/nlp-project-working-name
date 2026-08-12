@@ -1,0 +1,66 @@
+\begin{figure}[tbp]
+\centering
+{\large NewsQASum}\\[3pt]
+\begin{tikzpicture}[baseline, every node/.style={font=\large}]
+\draw[pOne,line width=0.9pt,mark=*,mark size=1.7pt] plot coordinates{(0,0)(0.5,0)}; \node[right] at (0.55,0){P1};
+\draw[pTwo,line width=0.9pt,mark=square*,mark size=1.7pt] plot coordinates{(1.5,0)(2.0,0)}; \node[right] at (2.05,0){P2};
+\draw[pThree,line width=0.9pt,mark=triangle*,mark size=1.9pt] plot coordinates{(3.0,0)(3.5,0)}; \node[right] at (3.55,0){P3};
+\end{tikzpicture}\\[2pt]
+\resizebox{\columnwidth}{!}{%
+\begin{tikzpicture}
+\begin{groupplot}[
+  group style={group size=3 by 3, horizontal sep=0.95cm,
+    vertical sep=0.85cm, xticklabels at=edge bottom},
+  width=3.6cm, height=2.7cm, scale only axis,
+  xmin=0.8, xmax=3.2, xtick={1,2,3}, xticklabels={16-bit,8-bit,4-bit},
+  tick label style={font=\normalsize}, title style={font=\large},
+  ylabel style={font=\large, align=center},
+  yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3},
+  every axis plot/.append style={line width=0.9pt, mark size=1.7pt},
+  grid=both, grid style={gray!25, line width=0.3pt},
+]
+% Row 1: ROUGE-L
+\nextgroupplot[title={Llama-3.2-3B}, ylabel={ROUGE-L}]
+\addplot[pOne,mark=*] coordinates {(1,0.2157) (2,0.2160) (3,0.2186)};
+\addplot[pTwo,mark=square*] coordinates {(1,0.2169) (2,0.2160) (3,0.2168)};
+\addplot[pThree,mark=triangle*] coordinates {(1,0.2060) (2,0.2053) (3,0.2041)};
+\nextgroupplot[title={Phi-3-mini}]
+\addplot[pOne,mark=*] coordinates {(1,0.2299) (2,0.2287) (3,0.2241)};
+\addplot[pTwo,mark=square*] coordinates {(1,0.2318) (2,0.2275) (3,0.2219)};
+\addplot[pThree,mark=triangle*] coordinates {(1,0.2190) (2,0.2151) (3,0.2080)};
+\nextgroupplot[title={Qwen2-1.5B}]
+\addplot[pOne,mark=*] coordinates {(1,0.2218) (2,0.2225) (3,0.2229)};
+\addplot[pTwo,mark=square*] coordinates {(1,0.2220) (2,0.2207) (3,0.2257)};
+\addplot[pThree,mark=triangle*] coordinates {(1,0.2026) (2,0.2045) (3,0.2102)};
+% Row 2: BERTScore
+\nextgroupplot[ylabel={BERTScore}]
+\addplot[pOne,mark=*] coordinates {(1,0.8710) (2,0.8709) (3,0.8709)};
+\addplot[pTwo,mark=square*] coordinates {(1,0.8709) (2,0.8710) (3,0.8711)};
+\addplot[pThree,mark=triangle*] coordinates {(1,0.8690) (2,0.8688) (3,0.8688)};
+\nextgroupplot[]
+\addplot[pOne,mark=*] coordinates {(1,0.8737) (2,0.8740) (3,0.8728)};
+\addplot[pTwo,mark=square*] coordinates {(1,0.8740) (2,0.8735) (3,0.8727)};
+\addplot[pThree,mark=triangle*] coordinates {(1,0.8729) (2,0.8718) (3,0.8697)};
+\nextgroupplot[]
+\addplot[pOne,mark=*] coordinates {(1,0.8725) (2,0.8727) (3,0.8726)};
+\addplot[pTwo,mark=square*] coordinates {(1,0.8721) (2,0.8722) (3,0.8733)};
+\addplot[pThree,mark=triangle*] coordinates {(1,0.8681) (2,0.8683) (3,0.8699)};
+% Row 3: LERC
+\nextgroupplot[ylabel={LERC}]
+\addplot[pOne,mark=*] coordinates {(1,3.6784) (2,3.6625) (3,3.5531)};
+\addplot[pTwo,mark=square*] coordinates {(1,3.6597) (2,3.7116) (3,3.5943)};
+\addplot[pThree,mark=triangle*] coordinates {(1,3.2857) (2,3.2235) (3,3.1313)};
+\nextgroupplot[]
+\addplot[pOne,mark=*] coordinates {(1,3.4854) (2,3.4703) (3,3.4242)};
+\addplot[pTwo,mark=square*] coordinates {(1,3.5156) (2,3.5407) (3,3.3916)};
+\addplot[pThree,mark=triangle*] coordinates {(1,3.1890) (2,3.2012) (3,3.1986)};
+\nextgroupplot[]
+\addplot[pOne,mark=*] coordinates {(1,3.2068) (2,3.1632) (3,3.2438)};
+\addplot[pTwo,mark=square*] coordinates {(1,3.2477) (2,3.3082) (3,3.2784)};
+\addplot[pThree,mark=triangle*] coordinates {(1,3.1381) (2,3.1707) (3,3.1175)};
+\end{groupplot}
+\end{tikzpicture}%
+}
+\caption{Evaluation metrics on NewsQASum for each quantization precision and prompt. Columns are models, rows are metrics. The vertical spread between lines is prompt sensitivity; each line's slope from 16-bit to 4-bit is that prompt's degradation under quantization. Computed on the first 500 of 10388 NewsQASum articles.}
+\label{fig:rq-metrics-qa}
+\end{figure}

@@ -21,7 +21,7 @@
 
 set -euo pipefail
 
-MODELS="Llama Phi"
+MODELS="Llama Phi Qwen2"
 DATASETS="cnn_dailymail xsum"
 QUANTS="16bit 8bit 4bit"
 PROMPTS="P1 P2 P3"
@@ -29,6 +29,18 @@ SAMPLE=""
 SEED=42
 DO_SETUP=1
 DO_BASELINES=1
+
+# Route short summarization jobs to the fast short-queue partition. A job whose
+# estimated --time is <= SHORT_MAX_MIN minutes goes to SHORT_PARTITION, the rest
+# to LONG_PARTITION. (SHORT_MAX_MIN must not exceed the short partition's own max.)
+SHORT_PARTITION="gpu_a100_short"
+LONG_PARTITION="gpu_a100_il"
+SHORT_MAX_MIN=30
+
+hms_to_min() {  # "HH:MM:SS" -> whole minutes (rounding seconds up); 10# avoids octal
+    local h m s; IFS=: read -r h m s <<< "$1"
+    echo $(( 10#$h * 60 + 10#$m + (10#$s + 59) / 60 ))
+}
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -76,11 +88,20 @@ for model in $MODELS; do
                     echo "  skip  $tag (already done)"
                     continue
                 fi
-                jid="$(sbatch --parsable --job-name="$tag" \
+                # Per-config --time from historical logs (falls back to 36h if unmeasured).
+                jtime="$(python3 src/job_time.py -m "$model" -q "$quant" -p "$prompt" \
+                    -d "$ds" ${SAMPLE:+--sample "$SAMPLE"} 2>/dev/null || echo 36:00:00)"
+                # Short jobs -> fast short partition; everything else -> the long partition.
+                if [[ $(hms_to_min "$jtime") -le $SHORT_MAX_MIN ]]; then
+                    jpart="$SHORT_PARTITION"
+                else
+                    jpart="$LONG_PARTITION"
+                fi
+                jid="$(sbatch --parsable --job-name="$tag" --partition="$jpart" --time="$jtime" \
                     scripts/run_summarization.sh -m "$model" -q "$quant" -p "$prompt" \
                     -d "$ds" $sample_flag -e "$SEED" --skip-existing)"
                 ids+=("$jid")
-                echo "  $jid  $tag"
+                echo "  $jid  $tag  ($jpart, --time=$jtime)"
             done
         done
     done
