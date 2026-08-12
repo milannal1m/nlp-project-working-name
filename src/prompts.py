@@ -21,4 +21,15 @@ PROMPT_CONFIGS = {
                     "beginning with 'Summary:'.",
         "max_new_tokens": 1000,
     },
+    # P4 — one-shot in-context example.
+    "P4": {
+        "template": "News: {example_news}\n"
+                    "Summarize the news in two sentences. "
+                    "Output only the summary, beginning with 'Summary:'.\n"
+                    "Summary: {example_summary}\n\n"
+                    "News: {news}\n"
+                    "Summarize the news in two sentences. "
+                    "Output only the summary, beginning with 'Summary:'.",
+        "max_new_tokens": 1000,
+    },
 }

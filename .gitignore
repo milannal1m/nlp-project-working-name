@@ -57,6 +57,19 @@ Thumbs.db
 # =========================
 test_dataset.py
 test_main.py
+11-the-transformer-model.py
+
+# Generated transformer outputs (regenerated each run)
+Transformer-Farnaz/checkpoints/
+Transformer-Farnaz/artifacts/
+Transformer-Farnaz/results/
+Transformer-Farnaz/summaries/
+Transformer-Farnaz/summaries_*/
+*.pt
+
+# Python cache
+__pycache__/
+*.pyc
 
 
 # ==========================================
