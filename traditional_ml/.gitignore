@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+
+traditional_ml/data/
+traditional_ml/models/
+traditional_ml/summaries/
+traditional_ml/results/
+traditional_ml/logs/
+logs/
+
+*.joblib
+*.pt
+*.bin

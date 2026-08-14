@@ -1,0 +1,17 @@
+{
+  "label": "ML-NB",
+  "dataset": "xsum",
+  "file": "ML-NB_xsum_summaries.jsonl",
+  "num_samples": 11334,
+  "bleu": 0.010999548292161983,
+  "rougeL": 0.12799376887745234,
+  "meteor": 0.19400482599407745,
+  "bertscore_f1": 0.8540721031088919,
+  "bertscore_f1_std": 0.018809654035459915,
+  "avg_news_len": 376.1446973707429,
+  "avg_ref_len": 21.097582495147343,
+  "avg_gen_len": 44.91088759484736,
+  "std_gen_len": 13.887187115529075,
+  "avg_gen_sents": 1.9661196400211751,
+  "avg_compression": 0.2025970117743692
+}

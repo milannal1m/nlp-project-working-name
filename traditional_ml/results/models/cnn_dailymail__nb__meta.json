@@ -1,0 +1,34 @@
+{
+  "label": "ML-NB",
+  "name": "nb",
+  "dataset": "cnn_dailymail",
+  "n_docs": 287113,
+  "n_sentences": 10182791,
+  "pos_rate": 0.08350087908118707,
+  "splitter": "punkt",
+  "cv_score": 0.18209556816124084,
+  "best_params": {
+    "alpha": 1.0
+  },
+  "selection": {
+    "mode": "topk",
+    "k": 3,
+    "redundancy": "mmr",
+    "lambda": 0.7,
+    "val_composite": 0.8699073086096041,
+    "val_metrics": {
+      "bleu": 0.10527017143624519,
+      "rougeL": 0.23214821998578863,
+      "meteor": 0.3542850902359064
+    }
+  },
+  "best_k": 3,
+  "use_blocking": false,
+  "val_composite": 0.8699073086096041,
+  "val_metrics": {
+    "bleu": 0.10527017143624519,
+    "rougeL": 0.23214821998578863,
+    "meteor": 0.3542850902359064
+  },
+  "train_minutes": 46.34
+}
