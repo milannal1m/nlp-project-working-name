@@ -9,16 +9,16 @@
 #SBATCH --error=logs/%x_%j.err
 #
 # Summarization worker: runs ONE (model, quant, prompt) over the given datasets.
-# run_experiment.sh submits one job PER DATASET (full test set ~11k articles
-# each), so 36h covers the slow cells (P3 = 300 tokens, 8-bit) with headroom.
-# Used standalone or submitted in parallel by run_experiment.sh.
+# run_experiment.sh submits one job PER DATASET (full test set ~11k articles each)
+# and overrides --time per job from historical logs (see src/job_time.py); the 36h
+# below is only the default for a standalone sbatch.
 #
 # Usage (run from the repo root so 'src/main.py' resolves):
 #   sbatch scripts/run_summarization.sh [-m MODEL] [-q QUANT] [-p PROMPT] [-d "DS1 DS2"] [-s N] [--skip-existing]
 #
 #   -m, --model         Model label from the registry (Llama, Phi, Qwen2, ...) (default: Llama)
-#   -q, --quant         Quantization: 16bit | 8bit | 4bit                (default: 4bit)
-#   -p, --prompt        Prompt name: P1 | P2 | P3                        (default: P1)
+#   -q, --quant         Quantization: 16bit | 8bit | 4bit | None         (default: 4bit)
+#   -p, --prompt        Prompt name: P1 | P2 | P3 | P4                   (default: P1)
 #   -d, --datasets      Space-separated dataset list                     (default: all)
 #   -s, --sample        Articles per dataset                            (default: full test set)
 #   -e, --seed          Random seed (reproducibility)                    (default: 42)

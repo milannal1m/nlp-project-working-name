@@ -10,7 +10,6 @@ DATASET_CONFIGS = {
     # Xu et al.'s released 500-article samples (local files, read verbatim).
     "xu_cnndm":               {"local_path": "xu_et_all_datasets/cnndm_sample_500_0k5_1k5_qwen_summary.jsonl"},
     "xu_xsum":                {"local_path": "xu_et_all_datasets/xsum_sample_500_0k5_1k5_qwen_summary.jsonl"},
-    #"newsroom":               {"path": "lil-lab/newsroom",                  "split": "test"},
     #"news-qa-summarization":  {"path": "glnmario/news-qa-summarization",    "split": "train"},
 }
 
@@ -22,6 +21,11 @@ _FIELD_MAP = {
     #"newsroom":               ("text",     "summary"),
     #"news-qa-summarization":  ("story",    "summary"),
 }
+# Datelines are stripped from the HuggingFace sources only. The xu_* keys are
+# INTENTIONALLY absent: Xu et al.'s released samples are read verbatim so the inputs
+# stay identical to theirs, even though ~5% of xu_cnndm articles carry a dateline the
+# cnn_dailymail path would strip. Adding them here changes those inputs and
+# invalidates every xu_* run already in summaries/.
 _DATASETS_WITH_DATELINES = {"cnn_dailymail", "news-qa-summarization"}
 
 def strip_dateline(text: str) -> str:
@@ -36,7 +40,7 @@ def strip_dateline(text: str) -> str:
         cleaned = text[text.index(' -- ') + 4:]
         if len(cleaned) > len(text) * 0.5:
             return cleaned.lstrip()
-    
+
     # Pattern 2: '(CNN)The' or '(SOURCE)Word' — no space or dash
     cleaned = re.sub(r'^\([^)]+\)', '', text).lstrip()
     if len(cleaned) > len(text) * 0.5:
@@ -44,11 +48,12 @@ def strip_dateline(text: str) -> str:
 
     return text
 
-def load_local_jsonl(path: str, sample: int = None) -> list:
+def load_local_json(path: str, sample: int = None) -> list:
     """Load a local dataset stored as a (pretty-printed) JSON array of records.
 
-    These files hold a fixed, pre-selected sample, so we do NOT shuffle; --sample
-    just caps to the first N records if N is smaller than the file.
+    Xu et al. ship these with a `.jsonl` extension, but they are single JSON arrays,
+    hence json.load rather than a line-by-line read. They hold a fixed, pre-selected
+    sample, so we do NOT shuffle; --sample just caps to the first N records.
     """
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -69,7 +74,7 @@ def load_datasets_streaming(sample: int = None, seed: int = 42, names=None, spli
     for name in selected:
         cfg = DATASET_CONFIGS[name]
         if "local_path" in cfg:
-            result[name] = load_local_jsonl(cfg["local_path"], sample)
+            result[name] = load_local_json(cfg["local_path"], sample)
             label = f"first {sample}" if sample is not None else "all"
             print(f"  [ready] {name} ({label} records, local file)", flush=True)
             continue
@@ -114,7 +119,7 @@ if __name__ == "__main__":
             if "local_path" in cfg:
                 if not os.path.exists(cfg["local_path"]):
                     raise FileNotFoundError(cfg["local_path"])
-                n = len(load_local_jsonl(cfg["local_path"]))
+                n = len(load_local_json(cfg["local_path"]))
                 print(f"[OK]   {name} ({n} records, local)")
                 continue
             from datasets import load_dataset

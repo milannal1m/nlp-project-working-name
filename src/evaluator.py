@@ -1,6 +1,5 @@
 import csv
 import json
-import evaluate
 import os
 import logging
 import re
@@ -16,10 +15,8 @@ class Evaluator:
     _LEADING_MARKER = re.compile(r"^\**\s*summary\s*\*{0,2}\s*:\s*\*{0,2}\s*", re.IGNORECASE)
 
     def __init__(self):
-        self.bleu = None
-        self.rouge = None
-        self.meteor = None
-        self.bertscorer = None
+        self._metrics_loaded = False
+        self._qa_evaluator = None
 
     @classmethod
     def extract_summary(cls, text):
@@ -41,15 +38,25 @@ class Evaluator:
         return result
 
     def _load_metrics(self):
-        if self.bleu is None:
-            self.bleu = evaluate.load("bleu")
-            self.rouge = evaluate.load("rouge")
-            self.meteor = evaluate.load("meteor")
-            # Use bert_score directly (what `evaluate` wraps) so a single scoring
-            # pass yields both raw and baseline-rescaled F1: the rescale is affine,
-            # so raw = scaled * (1 - baseline) + baseline.
-            from bert_score import BERTScorer
-            self.bertscorer = BERTScorer(lang="en", rescale_with_baseline=True)
+        """Load the metric implementations once, on first use.
+
+        Both imports are deliberately lazy: they cost seconds and pull in torch, and
+        `extract_summary` / the marker regex are used by callers (src/analysis.py)
+        that never score anything.
+        """
+        if self._metrics_loaded:
+            return
+        import evaluate
+
+        self.bleu = evaluate.load("bleu")
+        self.rouge = evaluate.load("rouge")
+        self.meteor = evaluate.load("meteor")
+        # Use bert_score directly (what `evaluate` wraps) so a single scoring
+        # pass yields both raw and baseline-rescaled F1: the rescale is affine,
+        # so raw = scaled * (1 - baseline) + baseline.
+        from bert_score import BERTScorer
+        self.bertscorer = BERTScorer(lang="en", rescale_with_baseline=True)
+        self._metrics_loaded = True
 
     def evaluate_metrics(self, file_path):
         """Calculates BLEU, ROUGE, METEOR and BERTScore against the reference summary."""
@@ -89,15 +96,26 @@ class Evaluator:
             "bertscore_f1_scaled_std": scaled_std,
         }
 
+    def _load_qa_evaluator(self):
+        """The QAFactEval model, built once per Evaluator (it is scored per file).
+
+        Returns None when qafacteval is not installed, which is the normal case
+        outside the cluster — see QA_Evaluation/ for the isolated Python 3.7 env
+        that actually runs it.
+        """
+        if self._qa_evaluator is None:
+            try:
+                from qafacteval import QAFactEval
+            except ImportError:
+                return None
+            self._qa_evaluator = QAFactEval(model_folder="models/qafacteval", device="cuda")
+        return self._qa_evaluator
+
     def evaluate_qa(self, file_path):  # Highly recommended to call only in a cluster environment.
         """Calculates factual consistency using the dual-context QA pipeline."""
-        try:
-            from qafacteval import QAFactEval
-        except ImportError:
+        qa_evaluator = self._load_qa_evaluator()
+        if qa_evaluator is None:
             return {"qa_eval": None, "error": "qafacteval not installed"}
-
-        kwargs = {"model_folder": "models/qafacteval", "device": "cuda"}
-        qa_evaluator = QAFactEval(**kwargs)
 
         original_texts = []
         generated_summaries = []
@@ -168,9 +186,9 @@ class Evaluator:
         all_metrics.update(self.evaluate_metrics(file_path))
         all_metrics.update(self.evaluate_qa(file_path))
 
-        logged = set()
+        # A "_std" key is logged next to its mean, not on a line of its own.
         for key, value in all_metrics.items():
-            if key in logged or key.endswith("_std"):
+            if key.endswith("_std"):
                 continue
             std = all_metrics.get(f"{key}_std")
             if std is not None:
@@ -179,7 +197,6 @@ class Evaluator:
                 logger.info(f"  {key}: {value:.4f}")
             else:
                 logger.info(f"  {key}: {value}")
-            logged.add(key)
 
         logger.info("")
 

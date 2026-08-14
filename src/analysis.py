@@ -22,17 +22,18 @@ import re
 
 from prompts import PROMPT_CONFIGS
 from dataset import DATASET_CONFIGS
-from job_time import _parse_name  # sum_{model}_{quant}_{prompt}_{dataset}_{jobid}.out -> config
+from registry import MODEL_CONFIGS
+from evaluator import Evaluator
+from job_time import parse_log_name  # sum_{model}_{quant}_{prompt}_{dataset}_{jobid}.out -> config
 
-# Expected grid for the job-status report. Prompts/datasets (incl. the xu_* ones)
-# come from the registries; models/quants are small fixed lists so the report
-# needs no torch. Keep _STATUS_MODELS in sync with MODEL_CONFIGS in model.py.
-_STATUS_MODELS = ["Llama", "Phi"]
+# Expected grid for the job-status report. Everything but the quants comes from a
+# registry, so adding a model or prompt shows up here without a second edit. None
+# of these imports pull in torch, so the report still runs on a bare checkout.
 _STATUS_QUANTS = ["16bit", "8bit", "4bit"]
 
-# A summary "has a marker" if this pattern matches — the same 'Summary:' marker the
-# evaluator strips (tolerant of markdown bold and a lead-in on the line).
-SUMMARY_MARKERS = re.compile(r"(?:^|\n)[^\n]*?\bsummary\s*\*{0,2}\s*:\s*\*{0,2}\s*", re.IGNORECASE)
+# A summary "has a marker" if this matches. Reuses the evaluator's own pattern so
+# the audit and the extraction it audits can never disagree.
+SUMMARY_MARKERS = Evaluator._SUMMARY_MARKER
 
 
 def _read_summaries(file_path):
@@ -81,7 +82,6 @@ def analyze_token_limit(jsonl_files, out_path, tolerance=0):
     skipped. Needs `transformers` (loads each model's tokenizer, not its weights).
     """
     from transformers import AutoTokenizer  # lazy: heavy import, only for this analysis
-    from model import MODEL_CONFIGS
 
     tokenizers = {}  # model_label -> tokenizer (cached)
     rows, tot_n, tot_over = [], 0, 0
@@ -238,7 +238,7 @@ def analyze_job_status(logs_dir, expected_configs, out_path, cutoff=None):
     latest = {}  # config -> (jobid, out_path): overall newest log per config
     for path in glob.glob(os.path.join(logs_dir, "**", "sum_*.out"), recursive=True):
         base = os.path.basename(path)
-        cfg = _parse_name(base)
+        cfg = parse_log_name(base)
         if cfg is None:
             continue
         jid = _job_id(base)
@@ -296,7 +296,7 @@ def main():
     # Job status depends only on logs — run it first so it works even before any
     # summaries exist (e.g. while jobs are still running). The expected grid is every
     # model x quant x prompt x dataset (all datasets, including the xu_* ones).
-    expected = [(m, q, p, d) for m in _STATUS_MODELS for q in _STATUS_QUANTS
+    expected = [(m, q, p, d) for m in MODEL_CONFIGS for q in _STATUS_QUANTS
                 for p in PROMPT_CONFIGS for d in DATASET_CONFIGS]
     analyze_job_status("logs", expected,
                        os.path.join(args.results_dir, "job_status.md"), cutoff=args.cutoff)

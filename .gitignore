@@ -22,12 +22,12 @@ news-qa-summarization/
 # =========================
 *.bin
 *.safetensors
-*.pt
 *.pth
 *.ckpt
 *.onnx
 *.arrow
 *.parquet
+*.pt
 
 # =========================
 # Python cache and env
@@ -60,17 +60,11 @@ test_main.py
 11-the-transformer-model.py
 
 # Generated transformer outputs (regenerated each run)
-Transformer-Farnaz/checkpoints/
-Transformer-Farnaz/artifacts/
-Transformer-Farnaz/results/
-Transformer-Farnaz/summaries/
-Transformer-Farnaz/summaries_*/
-*.pt
-
-# Python cache
-__pycache__/
-*.pyc
-
+transformer/Transformer-Farnaz/checkpoints/
+transformer/Transformer-Farnaz/artifacts/
+transformer/Transformer-Farnaz/results/
+transformer/Transformer-Farnaz/summaries/
+transformer/Transformer-Farnaz/summaries_*/
 
 # ==========================================
 # QAFactEval Pipeline Additions

@@ -40,7 +40,7 @@ def _wallclock_to_minutes(s):
     return (int(days) if days else 0) * 1440 + h * 60 + m + sec / 60.0
 
 
-def _parse_name(basename):
+def parse_log_name(basename):
     """`sum_{model}_{quant}_{prompt}_{dataset}_{jobid}.out` -> (model, quant, prompt, dataset)."""
     stem = basename[:-4] if basename.endswith(".out") else basename
     parts = stem.split("_")
@@ -105,7 +105,7 @@ def parse_logs(logs_dir="logs"):
     """
     records = []
     for path in glob.glob(os.path.join(logs_dir, "**", "sum_*.out"), recursive=True):
-        cfg = _parse_name(os.path.basename(path))
+        cfg = parse_log_name(os.path.basename(path))
         if cfg is None:
             continue
         try:

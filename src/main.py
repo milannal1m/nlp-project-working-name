@@ -4,11 +4,8 @@ import json
 import os
 import time
 
-import nltk
 import torch
 from transformers import set_seed
-
-nltk.download('punkt_tab', quiet=True)
 
 from dataset import DATASET_CONFIGS, extract_fields, load_datasets_streaming
 from model import MODEL_CONFIGS, RunConfig, SummarizationModel
@@ -241,6 +238,10 @@ def run_baselines(args) -> None:
 
 
 def evaluate_all(output_dir: str, log_path: str, append: bool = False) -> None:
+    import nltk
+
+    nltk.download('punkt_tab', quiet=True)  # METEOR tokenizes with it
+
     log_dir = os.path.dirname(log_path)
     if log_dir:
         os.makedirs(log_dir, exist_ok=True)

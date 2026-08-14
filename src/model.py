@@ -1,24 +1,11 @@
-import os
 from dataclasses import dataclass
 from typing import Optional
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
-
-# Registry of supported models: short label -> HuggingFace id (or local path).
-# The label is used in output filenames and as the --model value in the scripts.
-# Add a new model here and it is automatically available to the experiment grid.
-#
-# Qwen2 uses an offline local copy on the cluster; when that folder is absent
-# (e.g. running post-hoc analysis on a laptop) we fall back to the public Hub id
-# so the tokenizer/config still resolves instead of erroring out.
-_QWEN2_LOCAL = "./Qwen2-1.5B-Instruct"
-MODEL_CONFIGS = {
-    "Llama": "unsloth/Llama-3.2-3B-Instruct",
-    "Phi":   "microsoft/Phi-3-mini-4k-instruct",
-    "Qwen2": _QWEN2_LOCAL if os.path.isdir(_QWEN2_LOCAL) else "Qwen/Qwen2-1.5B-Instruct",
-}
+# Re-exported so callers that already need torch can keep importing it from here.
+from registry import MODEL_CONFIGS  # noqa: F401
 
 
 @dataclass

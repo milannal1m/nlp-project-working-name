@@ -11,8 +11,8 @@
 # Evaluation worker: scores every .jsonl in the summaries dir (BLEU, ROUGE-L,
 # METEOR, BERTScore, optional QAFactEval) sequentially. Writes
 # results/evaluation.{log,csv}. BERTScore runs on GPU, hence the GPU partition.
-# Full grid (~44 files) is BERTScore-bound at ~20 min/file -> ~15-17h, so 24h
-# gives headroom.
+# Raise --time above 6h before scoring the whole grid (124 files): it is
+# BERTScore-bound, and the full-test-set files dominate.
 #
 # Usage (run from the repo root so 'src/main.py' resolves):
 #   sbatch scripts/run_evaluation.sh [--output-dir DIR] [--log-path PATH] [--append]

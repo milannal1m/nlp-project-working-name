@@ -1,6 +1,11 @@
 """
 TF-IDF baseline for news summarization.
 
+Extraction is sumy's LSA summarizer: a truncated SVD over the document's TF-IDF
+sentence-term matrix, which is why it lives under the `TFIDF` output prefix. That
+prefix is baked into the summaries/ filenames and into tex_report.py's row keys,
+so it stays as-is.
+
 Usage:
     python src/baselines/tfidf.py --sample 20   # local testing
     python src/baselines/tfidf.py --sample 500  # full run on cluster
@@ -22,9 +27,13 @@ from naming import baseline_filename
 
 
 def tfidf_summarize(text: str, n_sentences: int = 2) -> str:
-    """Summarize text by extracting top n_sentences using TF-IDF scoring."""
+    """Extract the top n_sentences by LSA over the TF-IDF matrix (see module docstring).
+
+    n_sentences=2 matches the prompt given to the LLMs ("summarize in two sentences"),
+    keeping the comparison fair.
+    """
     parser = PlaintextParser.from_string(text, Tokenizer("english"))
-    summarizer = LsaSummarizer()  # sumy's TF-IDF based summarizer
+    summarizer = LsaSummarizer()
     sentences = summarizer(parser.document, n_sentences)
     return " ".join(str(s) for s in sentences)
 

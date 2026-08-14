@@ -21,7 +21,7 @@
 
 set -euo pipefail
 
-MODELS="Llama Phi Qwen2"
+MODELS="$(python3 src/registry.py)"   # every label in the model registry
 DATASETS="cnn_dailymail xsum"
 QUANTS="16bit 8bit 4bit"
 PROMPTS="P1 P2 P3"
@@ -52,7 +52,8 @@ while [[ $# -gt 0 ]]; do
         --seed)        SEED="$2";      shift 2 ;;
         --no-setup)    DO_SETUP=0;     shift ;;
         --no-baselines) DO_BASELINES=0; shift ;;
-        -h|--help)     sed -n '3,21p' "$0"; exit 0 ;;
+        # Print this file's leading comment block, so --help can't drift from it.
+        -h|--help)     awk 'NR>1 && /^#/ {sub(/^# ?/, ""); print; next} NR>1 {exit}' "$0"; exit 0 ;;
         *) echo "Unknown argument: $1" >&2; exit 1 ;;
     esac
 done

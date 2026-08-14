@@ -5,15 +5,9 @@ Produces .jsonl files in the same format as main.py so they feed directly
 into the existing evaluation pipeline.
 
 Usage:
-    # Local testing — fast, tiny, no disk space issues
-    python baselines_lead.py --sample 10
-
-    # Cluster — full 500-sample run, both Lead-1 and Lead-3
-    python baselines_lead.py
-
-    # Specific n only
-    python baselines_lead.py --n 1 --sample 10
-    python baselines_lead.py --n 3 --sample 10
+    python src/baselines/lead.py --sample 10   # local testing
+    python src/baselines/lead.py               # both Lead-1 and Lead-3
+    python src/baselines/lead.py --n 1         # one specific n
 """
 
 import argparse
@@ -29,11 +23,13 @@ from dataset import extract_fields, load_datasets_streaming
 from naming import baseline_filename
 
 
-# -------------------------------------------------------------------
-# Sentence splitter — no NLTK needed
-# -------------------------------------------------------------------
 def sent_tokenize(text: str) -> list[str]:
-    """Split text into sentences using punctuation + capital-letter cues."""
+    """Split text into sentences using punctuation + capital-letter cues.
+
+    Deliberately a regex and not sumy's tokenizer (which textrank.py and tfidf.py
+    use): swapping it changes which sentences Lead-N picks, and so every Lead-1 /
+    Lead-3 file already in summaries/ and its row in results/evaluation.csv.
+    """
     parts = re.split(r'(?<=[.!?])\s+(?=[A-Z])', text.strip())
     return [s.strip() for s in parts if s.strip()]
 
@@ -43,11 +39,7 @@ def lead_n(text: str, n: int) -> str:
     return " ".join(sent_tokenize(text)[:n])
 
 
-# -------------------------------------------------------------------
-# Core runner
-# -------------------------------------------------------------------
 def run_lead(n: int, datasets: dict, output_dir: str, sample: int) -> None:
-    
     os.makedirs(output_dir, exist_ok=True)
     baseline_name = f"Lead-{n}"
 
@@ -84,9 +76,6 @@ def run_lead(n: int, datasets: dict, output_dir: str, sample: int) -> None:
         print(f"  Done in {elapsed:.1f}s -> {output_path}", flush=True)
 
 
-# -------------------------------------------------------------------
-# Entry point
-# -------------------------------------------------------------------
 def main() -> None:
     parser = argparse.ArgumentParser(description="Lead-N baseline summarization")
     parser.add_argument(

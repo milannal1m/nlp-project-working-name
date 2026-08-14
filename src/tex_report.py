@@ -36,15 +36,15 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 
 from naming import summary_filename
+from registry import MODEL_CONFIGS, MODEL_LABELS
 
 
 # --- Experiment grid (order here is the order rows/columns appear in the tex) ---
-# NB: MODELS holds the CSV/filename tokens (e.g. "Llama_P1_16bit_..."), while
-# MODEL_LABEL maps each to the name printed in the tables/figures. The full
-# official names (Llama-3.2-3B-Instruct, Phi-3-mini-4k-instruct) and their HF
-# ids belong in the paper's setup section; these are the compact labels.
-MODELS = ["Llama", "Phi", "Qwen2"]
-MODEL_LABEL = {"Llama": "Llama-3.2-3B", "Phi": "Phi-3-mini", "Qwen2": "Qwen2-1.5B"}
+# MODELS holds the CSV/filename tokens (e.g. "Llama_P1_16bit_..."), MODEL_LABEL the
+# name printed in the tables/figures — both straight from the registry, so a model
+# added there shows up in the tables.
+MODELS = list(MODEL_CONFIGS)
+MODEL_LABEL = MODEL_LABELS
 PROMPTS = ["P1", "P2", "P3"]
 QUANTS = ["16bit", "8bit", "4bit"]
 
@@ -430,15 +430,26 @@ class TexReport:
         return self._write("PerPrecisionCondensed.tex", out)
 
     # =====================================================================
-    #  Graphs: 2x4 groupplot per metric (columns=models, rows=datasets),
-    #  one line per prompt across 16-bit/8-bit/4-bit.
+    #  Graphs: a groupplot whose columns are models and whose rows are given by
+    #  the caller, one line per prompt across the precision axis. Multi-dataset
+    #  grids put one dataset per row at a fixed metric; a single-dataset grid has
+    #  no dataset axis to spread over rows, so it puts one METRIC per row instead
+    #  and prints the (one) dataset name as a subtitle. Same legend, same
+    #  per-column model title, x-axis is precision either way -- hence one builder.
     # =====================================================================
-    def _graph_figure(self, *, col: str, caption: str, label: str) -> list[str]:
+    def _graph_figure(self, *, rows: list[tuple[str, str, str, str]], caption: str,
+                      label: str, subtitle: str = "") -> list[str]:
+        """`rows` is one (row label, dataset token, sample tag, metric column) per row."""
         mark = {"P1": "*", "P2": "square*", "P3": "triangle*"}
         style = {"P1": "pOne", "P2": "pTwo", "P3": "pThree"}
+        xticklabels = ",".join(self.grid.quant_label[q] for q in self.grid.quants)
         out = [
             r"\begin{figure}[tbp]",
             r"\centering",
+        ]
+        if subtitle:
+            out.append(f"{{\\large {subtitle}}}\\\\[3pt]")
+        out += [
             r"\begin{tikzpicture}[baseline, every node/.style={font=\large}]",
             r"\draw[pOne,line width=0.9pt,mark=*,mark size=1.7pt] plot coordinates{(0,0)(0.5,0)}; \node[right] at (0.55,0){P1};",
             r"\draw[pTwo,line width=0.9pt,mark=square*,mark size=1.7pt] plot coordinates{(1.5,0)(2.0,0)}; \node[right] at (2.05,0){P2};",
@@ -447,10 +458,10 @@ class TexReport:
             r"\resizebox{\columnwidth}{!}{%",
             r"\begin{tikzpicture}",
             r"\begin{groupplot}[",
-            f"  group style={{group size={len(self.grid.models)} by 4, horizontal sep=0.95cm,",
+            f"  group style={{group size={len(self.grid.models)} by {len(rows)}, horizontal sep=0.95cm,",
             r"    vertical sep=0.85cm, xticklabels at=edge bottom},",
             r"  width=3.6cm, height=2.7cm, scale only axis,",
-            r"  xmin=0.8, xmax=3.2, xtick={1,2,3}, xticklabels={16-bit,8-bit,4-bit},",
+            f"  xmin=0.8, xmax=3.2, xtick={{1,2,3}}, xticklabels={{{xticklabels}}},",
             r"  tick label style={font=\normalsize}, title style={font=\large},",
             r"  ylabel style={font=\large, align=center},",
             r"  yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3},",
@@ -458,14 +469,14 @@ class TexReport:
             r"  grid=both, grid style={gray!25, line width=0.3pt},",
             r"]",
         ]
-        for ri, (ds_token, sample, ds_label) in enumerate(self.grid.datasets):
-            out.append(f"% Row {ri + 1}: {ds_label}")
+        for ri, (row_label, ds_token, sample, col) in enumerate(rows):
+            out.append(f"% Row {ri + 1}: {row_label}")
             for ci, model in enumerate(self.grid.models):
                 opts = []
                 if ri == 0:
                     opts.append(f"title={{{self.grid.model_label[model]}}}")
                 if ci == 0:
-                    opts.append(f"ylabel={{{ds_label}}}")
+                    opts.append(f"ylabel={{{row_label}}}")
                 out.append(f"\\nextgroupplot[{', '.join(opts)}]")
                 for prompt in self.grid.prompts:
                     coords = " ".join(
@@ -484,88 +495,33 @@ class TexReport:
         return out
 
     def graphs_per_metrics(self) -> str:
-        # A single dataset leaves nothing to fill the dataset-rows layout below
-        # with -- one row per dataset would be one row, full stop. Metrics take
-        # the row slot instead, stacked into one figure (see _metrics_graph_figure).
+        # A single dataset leaves nothing to fill the dataset-rows layout with --
+        # one row per dataset would be one row, full stop. Metrics take the row
+        # slot instead, stacked into one figure.
         if len(self.grid.datasets) == 1:
-            _, _, ds_label = self.grid.datasets[0]
-            fig = self._metrics_graph_figure(
-                metrics=self._rq_metrics(),
+            ds_token, sample, ds_label = self.grid.datasets[0]
+            fig = self._graph_figure(
+                rows=[(metric_label, ds_token, sample, col)
+                      for metric_label, col in self._rq_metrics()],
+                subtitle=ds_label,
                 caption=self._caption("graph_stacked", dataset=ds_label),
                 label=self.label("fig:rq-metrics"))
             return self._write("GraphsPerMetrics.tex", fig)
 
+        # One figure per metric, each with one dataset per row.
+        def by_dataset(col):
+            return [(ds_label, ds_token, sample, col)
+                    for ds_token, sample, ds_label in self.grid.datasets]
+
         rouge = self._graph_figure(
-            col=COL_ROUGEL,
+            rows=by_dataset(COL_ROUGEL),
             caption=self._caption("graph", metric="ROUGE-L"),
             label=self.label("fig:rq-rougeL"))
         bert = self._graph_figure(
-            col=COL_BERT,
+            rows=by_dataset(COL_BERT),
             caption=self._caption("graph", metric="BERTScore"),
             label=self.label("fig:rq-bertscore"))
         return self._write("GraphsPerMetrics.tex", rouge + [""] + bert)
-
-    # =====================================================================
-    #  Single-dataset variant of the graph above: there is no dataset axis to
-    #  put in the rows, so the metrics themselves take that slot instead, and
-    #  the (one) dataset name is printed once above the whole grid rather than
-    #  repeated per row. Otherwise identical to _graph_figure: same legend,
-    #  same per-column model title, x-axis is still precision.
-    # =====================================================================
-    def _metrics_graph_figure(self, *, metrics: list[tuple[str, str]],
-                              caption: str, label: str) -> list[str]:
-        assert len(self.grid.datasets) == 1, "use _graph_figure for multi-dataset grids"
-        ds_token, sample, ds_label = self.grid.datasets[0]
-        mark = {"P1": "*", "P2": "square*", "P3": "triangle*"}
-        style = {"P1": "pOne", "P2": "pTwo", "P3": "pThree"}
-        out = [
-            r"\begin{figure}[tbp]",
-            r"\centering",
-            # Dataset name first, as a plain subtitle above the prompt legend.
-            f"{{\\large {ds_label}}}\\\\[3pt]",
-            r"\begin{tikzpicture}[baseline, every node/.style={font=\large}]",
-            r"\draw[pOne,line width=0.9pt,mark=*,mark size=1.7pt] plot coordinates{(0,0)(0.5,0)}; \node[right] at (0.55,0){P1};",
-            r"\draw[pTwo,line width=0.9pt,mark=square*,mark size=1.7pt] plot coordinates{(1.5,0)(2.0,0)}; \node[right] at (2.05,0){P2};",
-            r"\draw[pThree,line width=0.9pt,mark=triangle*,mark size=1.9pt] plot coordinates{(3.0,0)(3.5,0)}; \node[right] at (3.55,0){P3};",
-            r"\end{tikzpicture}\\[2pt]",
-            r"\resizebox{\columnwidth}{!}{%",
-            r"\begin{tikzpicture}",
-            r"\begin{groupplot}[",
-            f"  group style={{group size={len(self.grid.models)} by {len(metrics)}, horizontal sep=0.95cm,",
-            r"    vertical sep=0.85cm, xticklabels at=edge bottom},",
-            r"  width=3.6cm, height=2.7cm, scale only axis,",
-            r"  xmin=0.8, xmax=3.2, xtick={1,2,3}, xticklabels={16-bit,8-bit,4-bit},",
-            r"  tick label style={font=\normalsize}, title style={font=\large},",
-            r"  ylabel style={font=\large, align=center},",
-            r"  yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3},",
-            r"  every axis plot/.append style={line width=0.9pt, mark size=1.7pt},",
-            r"  grid=both, grid style={gray!25, line width=0.3pt},",
-            r"]",
-        ]
-        for ri, (metric_label, col) in enumerate(metrics):
-            out.append(f"% Row {ri + 1}: {metric_label}")
-            for ci, model in enumerate(self.grid.models):
-                opts = []
-                if ri == 0:
-                    opts.append(f"title={{{self.grid.model_label[model]}}}")
-                if ci == 0:
-                    opts.append(f"ylabel={{{metric_label}}}")
-                out.append(f"\\nextgroupplot[{', '.join(opts)}]")
-                for prompt in self.grid.prompts:
-                    coords = " ".join(
-                        f"({i + 1},{_fmt4(self.value(model, prompt, q, ds_token, sample, col))})"
-                        for i, q in enumerate(self.grid.quants))
-                    out.append(f"\\addplot[{style[prompt]},mark={mark[prompt]}] "
-                               f"coordinates {{{coords}}};")
-        out += [
-            r"\end{groupplot}",
-            r"\end{tikzpicture}%",
-            r"}",
-            f"\\caption{{{caption}}}",
-            f"\\label{{{label}}}",
-            r"\end{figure}",
-        ]
-        return out
 
     # =====================================================================
     #  Combined RQ table: prompt sensitivity (spread across prompts) AND the
