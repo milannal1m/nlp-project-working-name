@@ -1,0 +1,36 @@
+{
+  "label": "ML-LogReg",
+  "name": "logreg",
+  "dataset": "cnn_dailymail",
+  "n_docs": 287113,
+  "n_sentences": 10182791,
+  "pos_rate": 0.08350087908118707,
+  "splitter": "punkt",
+  "cv_score": 0.24876842503694488,
+  "best_params": {
+    "alpha": 1e-05,
+    "l1_ratio": 0.0,
+    "penalty": "l2"
+  },
+  "selection": {
+    "mode": "topk",
+    "k": 3,
+    "redundancy": "mmr",
+    "lambda": 0.5,
+    "val_composite": 0.9305329980339586,
+    "val_metrics": {
+      "bleu": 0.1408619887019204,
+      "rougeL": 0.2639263573194743,
+      "meteor": 0.3887906600130516
+    }
+  },
+  "best_k": 3,
+  "use_blocking": false,
+  "val_composite": 0.9305329980339586,
+  "val_metrics": {
+    "bleu": 0.1408619887019204,
+    "rougeL": 0.2639263573194743,
+    "meteor": 0.3887906600130516
+  },
+  "train_minutes": 47.1
+}

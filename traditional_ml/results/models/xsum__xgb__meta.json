@@ -1,0 +1,39 @@
+{
+  "label": "ML-XGB",
+  "name": "xgb",
+  "dataset": "xsum",
+  "n_docs": 204045,
+  "n_sentences": 3871998,
+  "pos_rate": 0.08579498233211898,
+  "splitter": "punkt",
+  "cv_score": 0.23317451792562208,
+  "best_params": {
+    "subsample": 0.8,
+    "reg_lambda": 1.0,
+    "n_estimators": 200,
+    "max_depth": 8,
+    "learning_rate": 0.05,
+    "colsample_bytree": 0.8
+  },
+  "selection": {
+    "mode": "topk",
+    "k": 2,
+    "redundancy": "mmr",
+    "lambda": 0.7,
+    "val_composite": 0.7244737231244965,
+    "val_metrics": {
+      "bleu": 0.012667845063848942,
+      "rougeL": 0.1371462886082483,
+      "meteor": 0.1911438378327486
+    }
+  },
+  "best_k": 2,
+  "use_blocking": false,
+  "val_composite": 0.7244737231244965,
+  "val_metrics": {
+    "bleu": 0.012667845063848942,
+    "rougeL": 0.1371462886082483,
+    "meteor": 0.1911438378327486
+  },
+  "train_minutes": 26.24
+}

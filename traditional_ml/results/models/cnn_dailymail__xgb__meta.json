@@ -1,0 +1,39 @@
+{
+  "label": "ML-XGB",
+  "name": "xgb",
+  "dataset": "cnn_dailymail",
+  "n_docs": 287113,
+  "n_sentences": 10182791,
+  "pos_rate": 0.08350087908118707,
+  "splitter": "punkt",
+  "cv_score": 0.25936595390374606,
+  "best_params": {
+    "subsample": 0.8,
+    "reg_lambda": 1.0,
+    "n_estimators": 400,
+    "max_depth": 8,
+    "learning_rate": 0.05,
+    "colsample_bytree": 1.0
+  },
+  "selection": {
+    "mode": "topk",
+    "k": 3,
+    "redundancy": "mmr",
+    "lambda": 0.3,
+    "val_composite": 0.9078497238761242,
+    "val_metrics": {
+      "bleu": 0.13771823510822792,
+      "rougeL": 0.26598149611016886,
+      "meteor": 0.3940517643739155
+    }
+  },
+  "best_k": 3,
+  "use_blocking": false,
+  "val_composite": 0.9078497238761242,
+  "val_metrics": {
+    "bleu": 0.13771823510822792,
+    "rougeL": 0.26598149611016886,
+    "meteor": 0.3940517643739155
+  },
+  "train_minutes": 75.48
+}
