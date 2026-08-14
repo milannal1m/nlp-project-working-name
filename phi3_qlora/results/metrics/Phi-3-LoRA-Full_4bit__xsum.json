@@ -1,0 +1,23 @@
+{
+  "label": "Phi-3-LoRA-Full_4bit",
+  "dataset": "xsum",
+  "file": "Phi-3-LoRA-Full_4bit_xsum_summaries.jsonl",
+  "num_samples": 11334,
+  "errors": {
+    "qa_eval": "qafacteval not installed"
+  },
+  "bleu": 0.09112864525353319,
+  "rougeL": 0.29692595403483163,
+  "meteor": 0.3222479234611961,
+  "bertscore_f1": 0.9009920566595693,
+  "bertscore_f1_std": 0.028314077023933584,
+  "summac": 0.5969424666812206,
+  "summac_std": 0.08572670721046344,
+  "qa_eval": null,
+  "avg_news_len": 385.4004764425622,
+  "avg_ref_len": 21.73001588141874,
+  "avg_gen_len": 20.33377448385389,
+  "std_gen_len": 5.065618404477506,
+  "avg_gen_sents": 1.0376742544556203,
+  "avg_compression": 0.09182218235389379
+}
