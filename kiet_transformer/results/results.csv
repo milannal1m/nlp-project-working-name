@@ -1,3 +1,0 @@
-label,dataset,num_samples,bleu,rougeL,meteor,bertscore_f1,summac,qa_eval,bertscore_f1_std,summac_std,qa_eval_std,avg_news_len,avg_ref_len,avg_gen_len,std_gen_len,avg_gen_sents,avg_compression
-Transformer,cnn_dailymail,11490,0.004990,0.103329,0.085125,0.800774,0.560385,,0.016789,0.214809,,694.574151,52.900870,45.327676,6.900454,6.344038,0.086755
-Transformer,xsum,11334,0.014046,0.142964,0.138254,0.848205,0.368460,,0.022467,0.081156,,385.400476,21.730016,23.903741,6.059777,1.198959,0.111027

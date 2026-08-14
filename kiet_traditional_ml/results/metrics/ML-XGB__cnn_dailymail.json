@@ -1,0 +1,17 @@
+{
+  "label": "ML-XGB",
+  "dataset": "cnn_dailymail",
+  "file": "ML-XGB_cnn_dailymail_summaries.jsonl",
+  "num_samples": 11490,
+  "bleu": 0.1308962154407404,
+  "rougeL": 0.2605425728827675,
+  "meteor": 0.39339678247436927,
+  "bertscore_f1": 0.8723793369567944,
+  "bertscore_f1_std": 0.021703780312131278,
+  "avg_news_len": 683.360226283725,
+  "avg_ref_len": 55.00931244560488,
+  "avg_gen_len": 73.13577023498695,
+  "std_gen_len": 16.59521568418485,
+  "avg_gen_sents": 2.9610966057441255,
+  "avg_compression": 0.13874133217137533
+}
