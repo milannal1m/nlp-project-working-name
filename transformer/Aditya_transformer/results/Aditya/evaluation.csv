@@ -1,0 +1,3 @@
+file,bleu,rougeL,meteor,bertscore_f1_raw,bertscore_f1_raw_std,bertscore_f1_scaled,bertscore_f1_scaled_std,qa_eval,qa_eval_std,error
+Aditya_cnn_dailymail_summaries.jsonl,0.0,0.06136919198244871,0.04719460553246175,0.7468037108800145,0.006340608664974192,-0.5002068939208985,0.03756857916010444,,,qafacteval not installed
+Aditya_xsum_summaries.jsonl,0.0,0.09208479215349219,0.052750114487131766,0.7597635025410314,0.007020105267748708,-0.4234191619157791,0.0415946472017063,,,qafacteval not installed

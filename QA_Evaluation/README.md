@@ -30,23 +30,74 @@ same from `QA_Evaluation/` or the repo root.
 
 ---
 
-## TODO Section: Installation of qaeval, QAFactEval and bart-large
+## Manual Placement of Dependencies
 
-The three model/code folders are **not in git** (GitHub blocks >100 MB) and are not yet
-installed by any script. Until this is automated, they have to be placed by hand:
+The three core dependency folders (`QAFactEval`, `qaeval`, and `facebook`) are **not tracked in git**. Attempting to push nested git repositories and >100MB model weights directly to GitHub causes upload failures and broken links. 
 
-    scp -r facebook <user>@<cluster>:/path/to/project/QA_Evaluation/
-    scp -r models   <user>@<cluster>:/path/to/project/QA_Evaluation/QAFactEval/
-
-* `QAFactEval/` — the QAFactEval package plus `models/` (generation, answering, lerc,
-  quip-512-mocha)
-* `qaeval/` — the qaeval package it builds on
-* `facebook/bart-large/` — weights for question generation
-
-`scripts/qa_evaluator.py` raises `FileNotFoundError` at import if `QAFactEval/` or
-`qaeval/` is missing, and fails later with a `FileNotFoundError` on the weights.
+Until this is integrated into the cluster pipeline, these dependencies must be prepared locally and placed on the cluster by hand.
 
 ---
+
+### What Needs to Be Prepared
+
+Before running evaluations, you need three specific components ready on your machine:
+1. **`QAFactEval/`**: The main evaluation package from Salesforce, plus its pre-trained scoring models (`models/`).
+2. **`qaeval/`**: The base QA framework that QAFactEval depends on.
+3. **`facebook/bart-large`**: Question generation weights required by QAFactEval during framework initialization.
+
+---
+
+### Automated Preparation Script
+
+You can run the following automated commands locally to download, build, and structure all three dependencies automatically:
+
+```bash
+# 1. Clone QAFactEval and download its model weights
+git clone [https://github.com/salesforce/QAFactEval.git](https://github.com/salesforce/QAFactEval.git)
+cd QAFactEval && bash download_models.sh && cd ..
+
+# 2. Clone the underlying qaeval framework
+git clone [https://github.com/danieldeutsch/qaeval.git](https://github.com/danieldeutsch/qaeval.git)
+
+# 3. Clone BART-large and nest it inside a facebook/ folder
+git lfs install
+git clone [https://huggingface.co/facebook/bart-large](https://huggingface.co/facebook/bart-large)
+mkdir -p facebook && mv bart-large facebook/
+```
+
+#### What the Scripts actually do:
+* **Step 1 (`QAFactEval`):** Clones the official repository and runs `download_models.sh`. This script fetches Salesforce's neural network weights (LERC, Answering models, and QuIP) and extracts them directly into `QAFactEval/models/`.
+* **Step 2 (`qaeval`):** Downloads the legacy `qaeval` repository that `QAFactEval` inherits from.
+* **Step 3 (`facebook/bart-large`):** Uses Git LFS to pull the full `bart-large` model weights from Hugging Face, then creates a `facebook/` directory and moves `bart-large` inside it so that path lookups resolve correctly.
+
+---
+
+### Transfer to Cluster via SCP
+
+Once the script finishes on your local machine, run these commands to transfer the three prepared directories into `QA_Evaluation/` on your cluster:
+
+```bash
+scp -r QAFactEval <user>@<cluster>:/path/to/project/QA_Evaluation/
+scp -r qaeval     <user>@<cluster>:/path/to/project/QA_Evaluation/
+scp -r facebook   <user>@<cluster>:/path/to/project/QA_Evaluation/
+```
+
+---
+
+### Expected Remote Directory Structure
+
+After transferring, your cluster directory layout under `QA_Evaluation/` must look like this:
+
+```text
+QA_Evaluation/
+├── QAFactEval/
+│   └── models/          # Populated by download_models.sh
+├── qaeval/              # Base framework
+└── facebook/
+    └── bart-large/      # Hugging Face weights
+```
+
+`scripts/qa_evaluator.py` raises `FileNotFoundError` at import if `QAFactEval/` or `qaeval/` is missing, and fails later with a `FileNotFoundError` if the weights inside them are missing.
 
 ## Setup
 

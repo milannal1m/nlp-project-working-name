@@ -69,9 +69,10 @@ transformer/Transformer-Farnaz/summaries_*/
 # ==========================================
 # QAFactEval Pipeline Additions
 # ==========================================
-# 1. Model Weights
-**/QAFactEval/models/
+# 1. Model Weights Folders
+**/QAFactEval/
 **/facebook/
+**/qaeval/
 
 # 3. Cluster Execution Logs
 *.out
